@@ -12,10 +12,11 @@ import com.badlogic.gdx.utils.Align;
 public class PantallaNosotros extends Pantalla {
     private Texture texturafondo;
     private Stage escenaMenu;
+    private Lux juego;
 
     public PantallaNosotros(Lux juego) {
+        this.juego=juego;
     }
-
     private void crearNosotros(){
         texturafondo= new Texture("Menu/fondo.jpg");
         escenaMenu=new Stage(vista);
@@ -26,7 +27,7 @@ public class PantallaNosotros extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
-                //juego.setScreen(PantallaMenu);
+                juego.setScreen(new PantallaMenu(juego));
             }
         });
 

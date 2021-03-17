@@ -16,6 +16,7 @@ public class PantallaAyuda extends Pantalla {
     private Stage escenaMenu;
 
     public PantallaAyuda(Lux juego) {
+        this.juego=juego;
     }
 
     private void crearAyuda(){
@@ -28,7 +29,7 @@ public class PantallaAyuda extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
-                //juego.setScreen(PantallaMenu);
+                juego.setScreen(new PantallaMenu(juego));
             }
         });
 

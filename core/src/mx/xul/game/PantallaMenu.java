@@ -43,7 +43,7 @@ public class PantallaMenu extends Pantalla {
 
 
         Button btnNosotros = crearBoton("Menu/buttonnosotros.png","Menu/clicknosotros.png");
-        btnNosotros.setPosition(2*ANCHO/3,1.5f*ALTO/2.5f, Align.center);
+        btnNosotros.setPosition(2*ANCHO/3,1.2f*ALTO/2.5f, Align.center);
         // Registrar el evento click para el boton
         btnNosotros.addListener(new ClickListener(){
             @Override
@@ -54,7 +54,7 @@ public class PantallaMenu extends Pantalla {
         });
 
         Button btnAyuda= crearBoton("Menu/buttonayuda.png", "Menu/clickayuda.png");
-        btnAyuda.setPosition(2*ANCHO/3,1.8f*ALTO/4, Align.center);
+        btnAyuda.setPosition(2*ANCHO/3,0.8f*ALTO/4, Align.center);
         btnAyuda.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
