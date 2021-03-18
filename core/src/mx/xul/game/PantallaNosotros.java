@@ -18,11 +18,11 @@ public class PantallaNosotros extends Pantalla {
         this.juego=juego;
     }
     private void crearNosotros(){
-        texturafondo= new Texture("Menu/fondo.jpg");
+        texturafondo= new Texture("Menu/Fondo_Montana.jpg");
         escenaMenu=new Stage(vista);
 
-        Button btnRegresar = crearBoton("Menu/buttonregresar.png", "Menu/clickregresar.png");
-        btnRegresar.setPosition(2*ANCHO/3,1.5f*ALTO/2, Align.center);
+        Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
+        btnRegresar.setPosition(160,ALTO-80, Align.center);
         btnRegresar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

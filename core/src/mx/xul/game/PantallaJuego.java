@@ -12,11 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
+import sun.security.util.AnchorCertificates;
+
 public class PantallaJuego extends Pantalla {
     private Texture texturafondo;
     private Stage escenaMenu;
-    private Sprite personaje;
-    private float dx=10;
+    private Sprite Lumil;
+    private Sprite Esgrun;
+    private Sprite Rojel;
+    private Sprite Shiblu;
+    private float dx=5;
     private float angulo=0;
     private Lux juego;
 
@@ -25,12 +30,19 @@ public class PantallaJuego extends Pantalla {
     }
 
     private void crearJuego(){
-        texturafondo= new Texture("Menu/fondo.jpg");
-        personaje= new Sprite(new Texture("Menu/personaje.png"));
+        texturafondo= new Texture("Menu/Fondo_Montana.jpg");
+        Lumil= new Sprite(new Texture("Personajes/Lumil.png"));
+        Esgrun= new Sprite(new Texture("Personajes/Esgrun.png"));
+        Rojel= new Sprite(new Texture("Personajes/Rojel.png"));
+        Shiblu= new Sprite(new Texture("Personajes/Shiblu.png"));
+
+        Rojel.setPosition(ANCHO/2,ALTO/2);
+        Esgrun.setPosition(400,400);
+        Shiblu.setPosition(ANCHO/2+80,ALTO/3);
         escenaMenu=new Stage(vista);
 
-        Button btnRegresar = crearBoton("Menu/buttonregresar.png", "Menu/clickregresar.png");
-        btnRegresar.setPosition(2*ANCHO/3,1.5f*ALTO/2, Align.center);
+        Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
+        btnRegresar.setPosition(160,ALTO-80, Align.center);
         btnRegresar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -68,7 +80,10 @@ public class PantallaJuego extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
-        personaje.draw(batch);
+        Lumil.draw(batch);
+        Esgrun.draw(batch);
+        Rojel.draw(batch);
+        Shiblu.draw(batch);
         batch.end();
 
         escenaMenu.draw();
@@ -77,9 +92,9 @@ public class PantallaJuego extends Pantalla {
         float y= MathUtils.sinDeg(3*angulo)*100+200;
         angulo+=5;
        // personaje.setY(y);
-        personaje.setX(personaje.getX()+dx);
+        Lumil.setX(Lumil.getX()+dx);
         // Probar choque a la derecha
-        if(personaje.getX()>=ANCHO-personaje.getWidth() || personaje.getX()<=0) {
+        if(Lumil.getX()>=ANCHO-Lumil.getWidth() || Lumil.getX()<=0) {
             dx=-dx; // Cambia direccion
         }
     }
