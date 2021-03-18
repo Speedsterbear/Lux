@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 import sun.security.util.AnchorCertificates;
 
@@ -21,8 +22,15 @@ public class PantallaJuego extends Pantalla {
     private Sprite Esgrun;
     private Sprite Rojel;
     private Sprite Shiblu;
+    private Sprite gemaazul;
+    private Sprite gemaroja;
+    private Sprite gemaverde;
+    private Sprite contadorgemas;
+    private Sprite progress;
     private float dx=5;
     private float angulo=0;
+    private float angulorotacion=-60;
+    private float D_angulorotacion=1;
     private Lux juego;
 
     public PantallaJuego(Lux juego) {
@@ -35,10 +43,21 @@ public class PantallaJuego extends Pantalla {
         Esgrun= new Sprite(new Texture("Personajes/Esgrun.png"));
         Rojel= new Sprite(new Texture("Personajes/Rojel.png"));
         Shiblu= new Sprite(new Texture("Personajes/Shiblu.png"));
+        gemaazul= new Sprite(new Texture("Personajes/gemaazul.png"));
+        gemaroja= new Sprite(new Texture("Personajes/gemaroja.png"));
+        gemaverde= new Sprite(new Texture("Personajes/gemaverde.png"));
+        progress= new Sprite(new Texture("Personajes/progress.png"));
 
-        Rojel.setPosition(ANCHO/2,ALTO/2);
-        Esgrun.setPosition(400,400);
-        Shiblu.setPosition(ANCHO/2+80,ALTO/3);
+        contadorgemas= new Sprite(new Texture("Personajes/contadorgemas.png"));
+
+        Rojel.setPosition(100,400);
+        Esgrun.setPosition(600,400);
+        Shiblu.setPosition(1000,400);
+        gemaazul.setPosition(1150,500);
+        gemaverde.setPosition(700,500);
+        gemaroja.setPosition(250,500);
+        contadorgemas.setPosition(ANCHO-125,ALTO-50);
+        progress.setPosition(ANCHO/2-50,ALTO-150);
         escenaMenu=new Stage(vista);
 
         Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
@@ -77,6 +96,7 @@ public class PantallaJuego extends Pantalla {
         batch.setProjectionMatrix(camara.combined);
 
         rebotarObjeto();
+        rotarObjeto();
 
         batch.begin();
         batch.draw(texturafondo,0,0);
@@ -84,18 +104,35 @@ public class PantallaJuego extends Pantalla {
         Esgrun.draw(batch);
         Rojel.draw(batch);
         Shiblu.draw(batch);
+        gemaazul.draw(batch);
+        gemaverde.draw(batch);
+        gemaroja.draw(batch);
+        contadorgemas.draw(batch);
+        progress.draw(batch);
         batch.end();
 
         escenaMenu.draw();
     }
     private void rebotarObjeto() {
-        float y= MathUtils.sinDeg(3*angulo)*100+200;
+        float y= MathUtils.sinDeg(0.3f*angulo)*50+350;
         angulo+=5;
-       // personaje.setY(y);
+        Shiblu.setY(y);
+        Rojel.setY(y);
+        Esgrun.setY(y);
         Lumil.setX(Lumil.getX()+dx);
         // Probar choque a la derecha
         if(Lumil.getX()>=ANCHO-Lumil.getWidth() || Lumil.getX()<=0) {
             dx=-dx; // Cambia direccion
+        }
+    }
+
+    private void rotarObjeto() {
+        gemaverde.setRotation(angulorotacion);
+        gemaazul.setRotation(angulorotacion);
+        gemaroja.setRotation(angulorotacion);
+        angulorotacion += D_angulorotacion;
+        if(angulorotacion>=180 || angulorotacion<=-180){
+            D_angulorotacion=-D_angulorotacion;
         }
     }
     @Override
