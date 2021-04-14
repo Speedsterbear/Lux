@@ -87,7 +87,7 @@ public class PantallaNosotros extends Pantalla {
             }
         });
 
-        //Probar El Cambio de color
+        //Probar El Cambio de color no se va usar
 
         Button btnC = crearBoton("Nosotros/flechaIzqOff.png", "Nosotros/flechaIzqOn.png");
         btnC.setPosition(2*ANCHO - 400,150, Align.center);
