@@ -20,7 +20,7 @@ public class PantallaNosotros extends Pantalla {
 
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
-    private float avancePantalla = 25;
+    private float avancePantalla = 20;
 
     //Cristales de colores en los fondos
     private int cristalColor = 0;
