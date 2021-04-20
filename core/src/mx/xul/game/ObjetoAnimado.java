@@ -1,0 +1,96 @@
+package mx.xul.game;
+
+
+/*
+Representa objetos en el juego (Personajes, enemigos, etc..)
+puede usarse tanto para los animados como para los no animados
+Autor: Carlos Uriel Arroyo Herrera
+ */
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+public class ObjetoAnimado {
+
+    //protected es para quelas clases que heredan puedan acceder a la variable
+
+    //Usar como sprite
+    protected Sprite sprite; // Imagen, posición
+
+    //Para animar
+    protected Animation animation;
+    protected TextureRegion[] regionVector;
+    protected TextureRegion [] [] regionMatriz;
+    private TextureRegion frameActual;
+
+    //Constructor. Inicializa el objeto con la imagen y la posición
+    public ObjetoAnimado(Texture textura, float x, float y, int column, int row, float duracion, int tipo ) {
+        sprite = new Sprite(textura);
+        sprite.setPosition(x - (textura.getWidth()/column/2),y-(textura.getHeight()/row/2));
+        regionMatriz = TextureRegion.split(textura,textura.getWidth()/column, textura.getHeight()/row);
+
+        //Convertir la matiz en Vector para poder usarla
+        regionVector = new TextureRegion[column*row];
+        int k=0;
+        for (int i =0; i<row; i++){
+            for (int j=0; j<column; j++) {
+                regionVector [k] = regionMatriz [i][j];
+                k++;
+            }
+        }
+        //Se llama al inició para definir los valores de duración y el tipo de animación del objeto animado
+        animationUpdate(duracion,tipo);
+    }
+
+
+    //Se utiliza para poder cambiar la velocidad de la animación (más rapida o más lenta)
+    //Puede usarse tambien para cambiar el tipo de animación
+    public void animationUpdate (float duracion, int tipo) {
+
+
+        animation = new Animation (duracion,regionVector);
+
+        switch (tipo) {
+            case 1:
+                animation.setPlayMode(Animation.PlayMode.LOOP);
+                break;
+            case 2:
+                animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+                break;
+            case 3:
+                animation.setPlayMode(Animation.PlayMode.LOOP_RANDOM);
+                break;
+            case 4:
+                animation.setPlayMode(Animation.PlayMode.LOOP_REVERSED);
+                break;
+            case 5:
+                animation.setPlayMode(Animation.PlayMode.NORMAL);
+                break;
+            case 6:
+                animation.setPlayMode(Animation.PlayMode.REVERSED);
+                break;
+            default:
+                animation.setPlayMode(Animation.PlayMode.LOOP);
+                break;
+        }
+
+    }
+
+
+    public void animationRender(SpriteBatch batch, float tiempo){
+        float Deg = sprite.getRotation();
+        float X = sprite.getX();
+        float Y = sprite.getY();
+
+        frameActual = (TextureRegion) animation.getKeyFrame(tiempo);
+        sprite = new Sprite(frameActual);
+        sprite.setPosition(X,Y);
+        sprite.setRotation(Deg);
+        sprite.draw(batch);
+
+    }
+
+}

@@ -9,11 +9,11 @@ Autor: Carlos Uriel Arroyo Herrera
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class Cristal extends Objeto
+public class Cristal extends ObjetoAnimado
 {
 
-    public Cristal(Texture textura, float x, float y, int column, int row){
-        super(textura, x, y, column, row);
+    public Cristal(Texture textura, float x, float y, int column, int row,float duracion, int tipo){
+        super(textura, x, y, column, row,duracion,tipo);
 
     }
 }

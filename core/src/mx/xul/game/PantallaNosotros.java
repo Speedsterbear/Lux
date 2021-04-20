@@ -117,17 +117,17 @@ public class PantallaNosotros extends Pantalla {
 
     private void crearCristales() {
         texturaCristalW = new Texture("Nosotros/Cristales-W.png");
-        cristalW = new Cristal(texturaCristalW,texturafondo.getWidth()/2,texturaCristalW.getHeight()/2,7,1);
+        cristalW = new Cristal(texturaCristalW,texturafondo.getWidth()/2,texturaCristalW.getHeight()/2,7,1,1/4f,1);
         texturaCristalG = new Texture("Nosotros/Cristales-G.png");
-        cristalG = new Cristal(texturaCristalG,texturafondo.getWidth()/2,texturaCristalG.getHeight()/2,7,1);
+        cristalG = new Cristal(texturaCristalG,texturafondo.getWidth()/2,texturaCristalG.getHeight()/2,7,1,1/4f,1);
         texturaCristalR = new Texture("Nosotros/Cristales-R.png");
-        cristalR = new Cristal(texturaCristalR,texturafondo.getWidth()/2,texturaCristalR.getHeight()/2,7,1);
+        cristalR = new Cristal(texturaCristalR,texturafondo.getWidth()/2,texturaCristalR.getHeight()/2,7,1,1/4f,1);
         texturaCristalB = new Texture("Nosotros/Cristales-B.png");
-        cristalB = new Cristal(texturaCristalB,texturafondo.getWidth()/2,texturaCristalB.getHeight()/2,7,1);
+        cristalB = new Cristal(texturaCristalB,texturafondo.getWidth()/2,texturaCristalB.getHeight()/2,7,1,1/4f,1);
         texturaCristalY = new Texture("Nosotros/Cristales-Y.png");
-        cristalY = new Cristal(texturaCristalY,texturafondo.getWidth()/2,texturaCristalY.getHeight()/2,7,1);
+        cristalY = new Cristal(texturaCristalY,texturafondo.getWidth()/2,texturaCristalY.getHeight()/2,7,1,1/4f,1);
         texturaCristalC = new Texture("Nosotros/Cristales-C.png");
-        cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1);
+        cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1,1/4f,1);
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
@@ -163,25 +163,25 @@ public class PantallaNosotros extends Pantalla {
         switch (cristalColor) {
 
             case 0:
-                cristalW.animationRender(batch, 1 / 4f, Tiempo, true);
+                cristalW.animationRender(batch, Tiempo);
                 break;
             case 1:
-                cristalR.animationRender(batch,1/4f,Tiempo,true);
+                cristalR.animationRender(batch, Tiempo);
                 break;
             case 2:
-                cristalY.animationRender(batch,1/4f,Tiempo,true);
+                cristalY.animationRender(batch, Tiempo);
                 break;
             case 3:
-                cristalG.animationRender(batch,1/4f,Tiempo,true);
+                cristalG.animationRender(batch, Tiempo);
                 break;
             case 4:
-                cristalC.animationRender(batch,1/4f,Tiempo,true);
+                cristalC.animationRender(batch, Tiempo);
                 break;
             case 5:
-                cristalB.animationRender(batch,1/4f,Tiempo,true);
+                cristalB.animationRender(batch, Tiempo);
                 break;
             default:
-                cristalW.animationRender(batch, 1 / 4f, Tiempo, true);
+                cristalW.animationRender(batch, Tiempo);
                 break;
         }
 
