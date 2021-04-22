@@ -22,6 +22,9 @@ public class JuegoGS extends Pantalla {
     private float velocidadBosque = 1000;
     private FondoEnMovimiento bosque;
 
+    // Texto
+    private Texto texto; // Muestra los valores en la pantalla
+
     //Personaje principal Lumil
     private Lumil lumil;
     private Texture texturaLumil;
@@ -39,10 +42,6 @@ public class JuegoGS extends Pantalla {
     //General
     private float velocidad = velocidadBosque;
 
-
-
-
-
     public JuegoGS (Lux juego) {
         this.juego=juego;
     }
@@ -50,11 +49,9 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void show() {
-
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
-
 
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
@@ -62,7 +59,6 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearPersonajes() {
-
         //Personaje principal: Lumil
         texturaLumil = new Texture ("Personajes/Lumil_Sprites.png");
         lumil = new Lumil(texturaLumil,ANCHO/2, ALTO/2,4,1,1/10f,1);
@@ -71,23 +67,20 @@ public class JuegoGS extends Pantalla {
         texturaOscuridad = new Texture("Personajes/Oscuridad_Sprites.png");
         oscuridad = new Oscuridad(texturaOscuridad,-300,ALTO/2,4,1,1/8f,2);
 
-
+        texto=new Texto();
     }
 
 
     private void crearFondo() {
-
         bosquefondo = new Texture("Escenarios/bosque_fondo.jpg");
         bosqueatras = new Texture("Escenarios/bosque_atras.png");
         bosquemedio = new Texture("Escenarios/bosque_medio.png");
         bosquefrente = new Texture("Escenarios/bosque_frente.png");
         bosque = new FondoEnMovimiento(bosquefondo,bosqueatras,bosquemedio,bosquefrente);
-
     }
 
     @Override
     public void render(float delta) {
-
         tiempoLumil +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
         tiempoOsc +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
 
@@ -101,6 +94,8 @@ public class JuegoGS extends Pantalla {
         bosque.movSeccionesCompletas(velocidad,delta,batch,true);
         lumil.animationRender(batch,tiempoLumil);
         oscuridad.animationRender(batch,tiempoOsc);
+        // Dibuja el marcador
+        texto.mostrarMensaje(batch,"SCORE",ANCHO/2,ALTO-25);
 
         batch.end();
 

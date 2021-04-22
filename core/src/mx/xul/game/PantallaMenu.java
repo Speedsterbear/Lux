@@ -16,6 +16,7 @@ public class PantallaMenu extends Pantalla {
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
+       // Gdx.app.log("Juego:", String.valueOf(juego));
     }
 
     @Override
