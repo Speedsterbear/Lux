@@ -18,6 +18,8 @@ public class PantallaNosotros extends Pantalla {
     private Sprite aboutus;
     private Lux juego;
 
+    private Texture androidImage;
+
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
     private float avancePantalla = 20;
@@ -38,11 +40,19 @@ public class PantallaNosotros extends Pantalla {
     private Cristal cristalC;
     private float Tiempo = 0f;
 
+    //Imagenes Con info de Desarrollador
+
+    private Texture texturaUs;
+
+
+
     public PantallaNosotros(Lux juego) {
         this.juego=juego;
     }
     private void crearNosotros(){
+        androidImage= new Texture("Nosotros/Androidst.png");
         texturafondo= new Texture("Nosotros/fondoAbout.jpg");
+        //texturaUs = new   Texture("");
         escenaMenu=new Stage(vista);
         //aboutus= new Sprite(new Texture("Menu/clicknosotros.png"));
         //aboutus.setPosition(ANCHO/2-aboutus.getWidth(),ALTO/2-aboutus.getHeight());
@@ -89,17 +99,16 @@ public class PantallaNosotros extends Pantalla {
 
         //Probar El Cambio de color no se va usar
 
-        Button btnC = crearBoton("Nosotros/flechaIzqOff.png", "Nosotros/flechaIzqOn.png");
-        btnC.setPosition(2*ANCHO - 400,150, Align.center);
+        Button btnC = crearBoton("Nosotros/flechaArrOff.png", "Nosotros/flechaArrOn.png");
+        btnC.setPosition(2*ANCHO - 100,150, Align.center);
         btnC.addListener(new ClickListener(){
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Juego
-                //juego.setScreen(new PantallaCreditos(juego));
-                //2 significa que va hacia la izquierda
+        public void clicked(InputEvent event, float x, float y) {
+        // Cambiar de pantalla a Juego
+        //juego.setScreen(new PantallaCreditos(juego));
+        //2 significa que va hacia la izquierda
                 cristalColor +=1;
-
-            }
+        }
         });
 
 
@@ -113,6 +122,11 @@ public class PantallaNosotros extends Pantalla {
     public void show() {
         crearNosotros();
         crearCristales();
+        crearCreditos();
+    }
+
+    private void crearCreditos() {
+
     }
 
     private void crearCristales() {
@@ -151,6 +165,7 @@ public class PantallaNosotros extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
+        batch.draw(androidImage,150,300);
         //aboutus.draw(batch);
         dibujarCristales();
         batch.end();
