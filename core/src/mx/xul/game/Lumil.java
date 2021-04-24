@@ -8,9 +8,19 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Lumil extends ObjetoAnimado
 {
+    private EstadoLumil estado; // Arriba - Abajo - Explota
+    private Texture texturaJugando;
+    private Texture texturePierde;
+
     public Lumil(Texture textura, float x, float y, int column, int row,float duracion, int tipo){
         super(textura, x, y, column, row,duracion,tipo);
+    }
 
+    public Lumil(Texture textura, Texture textura2, float x, float y, int column, int row,float duracion, int tipo){
+        super(textura, x, y, column, row,duracion,tipo);
+        this.texturaJugando = textura;
+        this.texturePierde = textura2;
+        estado=EstadoLumil.JUGANDO;
     }
 
     //Metodo para mover el Sprite
@@ -37,4 +47,17 @@ public class Lumil extends ObjetoAnimado
         }
 
     }
+    
+    public EstadoLumil getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoLumil nuevoestado){
+        this.estado=nuevoestado;
+        if(nuevoestado==EstadoLumil.PIERDE){
+            sprite.setTexture(texturePierde);
+        }
+    }
+
+
 }
