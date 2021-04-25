@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 
 import java.security.PrivateKey;
 
@@ -17,6 +18,8 @@ public class PantallaNosotros extends Pantalla {
     private Stage escenaMenu;
     private Sprite aboutus;
     private Lux juego;
+
+    private Texture androidImage;
 
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
@@ -30,6 +33,11 @@ public class PantallaNosotros extends Pantalla {
     private Texture texturaCristalB;
     private Texture texturaCristalY;
     private Texture texturaCristalC;
+    private Texture texturaAndrea;
+    private Texture texturaDavid;
+    private Texture texturaEduardo;
+    private Texture texturaRicardo;
+    private Texture texturaCarlos;
     private Cristal cristalW;
     private Cristal cristalG;
     private Cristal cristalR;
@@ -42,7 +50,9 @@ public class PantallaNosotros extends Pantalla {
         this.juego=juego;
     }
     private void crearNosotros(){
+        androidImage= new Texture("Nosotros/Androidst.png");
         texturafondo= new Texture("Nosotros/fondoAbout.jpg");
+        //texturaUs = new   Texture("");
         escenaMenu=new Stage(vista);
         //aboutus= new Sprite(new Texture("Menu/clicknosotros.png"));
         //aboutus.setPosition(ANCHO/2-aboutus.getWidth(),ALTO/2-aboutus.getHeight());
@@ -89,17 +99,16 @@ public class PantallaNosotros extends Pantalla {
 
         //Probar El Cambio de color no se va usar
 
-        Button btnC = crearBoton("Nosotros/flechaIzqOff.png", "Nosotros/flechaIzqOn.png");
-        btnC.setPosition(2*ANCHO - 400,150, Align.center);
+        Button btnC = crearBoton("Nosotros/flechaArrOff.png", "Nosotros/flechaArrOn.png");
+        btnC.setPosition(2*ANCHO - 100,150, Align.center);
         btnC.addListener(new ClickListener(){
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Juego
-                //juego.setScreen(new PantallaCreditos(juego));
-                //2 significa que va hacia la izquierda
+        public void clicked(InputEvent event, float x, float y) {
+        // Cambiar de pantalla a Juego
+        //juego.setScreen(new PantallaCreditos(juego));
+        //2 significa que va hacia la izquierda
                 cristalColor +=1;
-
-            }
+        }
         });
 
 
@@ -128,6 +137,12 @@ public class PantallaNosotros extends Pantalla {
         cristalY = new Cristal(texturaCristalY,texturafondo.getWidth()/2,texturaCristalY.getHeight()/2,7,1,1/4f,1);
         texturaCristalC = new Texture("Nosotros/Cristales-C.png");
         cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1,1/4f,1);
+        texturaAndrea = new Texture("Nosotros/andrea.png");
+        texturaCarlos = new Texture("Nosotros/carlos.png");
+        texturaDavid = new Texture("Nosotros/david.png");
+        texturaEduardo = new Texture("Nosotros/eduardo.png");
+        texturaRicardo = new Texture("Nosotros/ricardo.png");
+
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
@@ -151,6 +166,7 @@ public class PantallaNosotros extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
+        batch.draw(androidImage,150,150);
         //aboutus.draw(batch);
         dibujarCristales();
         batch.end();
@@ -161,21 +177,25 @@ public class PantallaNosotros extends Pantalla {
     private void dibujarCristales() {
 
         switch (cristalColor) {
-
             case 0:
                 cristalW.animationRender(batch, Tiempo);
+                batch.draw(texturaAndrea,ANCHO*3/2-100,0);
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
+                batch.draw(texturaCarlos,ANCHO*3/2-100,0);
                 break;
             case 2:
                 cristalY.animationRender(batch, Tiempo);
+                batch.draw(texturaDavid,ANCHO*3/2-100,0);
                 break;
             case 3:
                 cristalG.animationRender(batch, Tiempo);
+                batch.draw(texturaRicardo,ANCHO*3/2-100,0);
                 break;
             case 4:
                 cristalC.animationRender(batch, Tiempo);
+                batch.draw(texturaEduardo,ANCHO*3/2-100,0);
                 break;
             case 5:
                 cristalB.animationRender(batch, Tiempo);
@@ -186,6 +206,7 @@ public class PantallaNosotros extends Pantalla {
         }
 
     }
+    //Case3 Carlos
 
     private void recorrerPantalla() {
         //Si se oprimen los botones para deslizar la pantalla comienza a cambiar la posición

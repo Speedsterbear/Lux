@@ -11,8 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
 
+
 import javax.swing.ImageIcon;
 //import javax.xml.soap.Text;
+
 
 // Autor: Andrea Espinosa Azuela
 // Clase que implemente la pantalla de bienvenida
