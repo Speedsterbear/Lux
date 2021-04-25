@@ -51,7 +51,7 @@ public class ObjetoAnimado {
     public void animationUpdate (float duracion, int tipo) {
 
 
-        animation = new Animation (duracion,regionVector);
+       animation = new Animation (duracion,regionVector);
 
         switch (tipo) {
             case 1:

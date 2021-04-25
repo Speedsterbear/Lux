@@ -47,6 +47,7 @@ public class PantallaNosotros extends Pantalla {
     private float Tiempo = 0f;
 
     public PantallaNosotros(Lux juego) {
+
         this.juego=juego;
     }
     private void crearNosotros(){

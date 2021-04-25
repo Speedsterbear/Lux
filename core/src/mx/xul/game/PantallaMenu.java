@@ -21,6 +21,7 @@ public class PantallaMenu extends Pantalla {
 
     @Override
     public void show() {
+
         crearMenu();
     }
 
