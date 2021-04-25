@@ -24,6 +24,9 @@ public class JuegoGS extends Pantalla {
     private float velocidadBosque = 1000;
     private FondoEnMovimiento bosque;
 
+    // Texto
+    private Texto texto; // Muestra los valores en la pantalla
+
     //Personaje principal Lumil
     private Lumil lumil;
     private Texture texturaLumilJugando;
@@ -63,6 +66,7 @@ public class JuegoGS extends Pantalla {
     private Texture texturaHijoOscuridad;
     private float DX_PASO_HIJOOSCURIDAD=150;
 
+
     public JuegoGS (Lux juego) {
         this.juego=juego;
     }
@@ -70,7 +74,6 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void show() {
-
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
@@ -79,14 +82,12 @@ public class JuegoGS extends Pantalla {
         startTimeOscuridad = TimeUtils.nanoTime();
         crearGemas();
 
-
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
 
     }
 
     private void crearPersonajes() {
-
         //Personaje principal: Lumil
         texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
         texturaLumilPierde = new Texture ("Personajes/Oscuridad_Sprites.png");
@@ -96,7 +97,7 @@ public class JuegoGS extends Pantalla {
         texturaOscuridad = new Texture("Personajes/Oscuridad_Sprites.png");
         oscuridad = new Oscuridad(texturaOscuridad,positionX,positionY,4,1,1/8f,2);
 
-
+        texto=new Texto();
     }
 
     private void crearTexturaHijoOscuridad(){
@@ -114,23 +115,23 @@ public class JuegoGS extends Pantalla {
 
 
     private void crearFondo() {
-
         bosquefondo = new Texture("Escenarios/bosque_fondo.jpg");
         bosqueatras = new Texture("Escenarios/bosque_atras.png");
         bosquemedio = new Texture("Escenarios/bosque_medio.png");
         bosquefrente = new Texture("Escenarios/bosque_frente.png");
         bosque = new FondoEnMovimiento(bosquefondo,bosqueatras,bosquemedio,bosquefrente);
-
     }
 
     @Override
     public void render(float delta) {
+
 
         actuaizar(delta);
 
         if(vidas==0){
             estado = EstadoJuego.PIERDE;
         }
+
         tiempoLumil +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
         tiempoOsc +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
 
@@ -148,6 +149,8 @@ public class JuegoGS extends Pantalla {
 
 
         oscuridad.animationRender(batch,tiempoOsc);
+        // Dibuja el marcador
+        texto.mostrarMensaje(batch,"SCORE",ANCHO/2,ALTO-25);
 
         if (TimeUtils.timeSinceNanos(startTime) > 1000000000) {
             // if time passed since the time you set startTime at is more than 1 second
