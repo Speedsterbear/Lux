@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 
 import java.security.PrivateKey;
 
@@ -32,6 +33,11 @@ public class PantallaNosotros extends Pantalla {
     private Texture texturaCristalB;
     private Texture texturaCristalY;
     private Texture texturaCristalC;
+    private Texture texturaAndrea;
+    private Texture texturaDavid;
+    private Texture texturaEduardo;
+    private Texture texturaRicardo;
+    private Texture texturaCarlos;
     private Cristal cristalW;
     private Cristal cristalG;
     private Cristal cristalR;
@@ -39,12 +45,6 @@ public class PantallaNosotros extends Pantalla {
     private Cristal cristalY;
     private Cristal cristalC;
     private float Tiempo = 0f;
-
-    //Imagenes Con info de Desarrollador
-
-    private Texture texturaUs;
-
-
 
     public PantallaNosotros(Lux juego) {
         this.juego=juego;
@@ -122,11 +122,6 @@ public class PantallaNosotros extends Pantalla {
     public void show() {
         crearNosotros();
         crearCristales();
-        crearCreditos();
-    }
-
-    private void crearCreditos() {
-
     }
 
     private void crearCristales() {
@@ -142,6 +137,12 @@ public class PantallaNosotros extends Pantalla {
         cristalY = new Cristal(texturaCristalY,texturafondo.getWidth()/2,texturaCristalY.getHeight()/2,7,1,1/4f,1);
         texturaCristalC = new Texture("Nosotros/Cristales-C.png");
         cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1,1/4f,1);
+        texturaAndrea = new Texture("Nosotros/andrea.png");
+        texturaCarlos = new Texture("Nosotros/carlos.png");
+        texturaDavid = new Texture("Nosotros/david.png");
+        texturaEduardo = new Texture("Nosotros/eduardo.png");
+        texturaRicardo = new Texture("Nosotros/ricardo.png");
+
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
@@ -165,7 +166,7 @@ public class PantallaNosotros extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
-        batch.draw(androidImage,150,300);
+        batch.draw(androidImage,150,150);
         //aboutus.draw(batch);
         dibujarCristales();
         batch.end();
@@ -176,21 +177,25 @@ public class PantallaNosotros extends Pantalla {
     private void dibujarCristales() {
 
         switch (cristalColor) {
-
             case 0:
                 cristalW.animationRender(batch, Tiempo);
+                batch.draw(texturaAndrea,ANCHO*3/2-100,0);
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
+                batch.draw(texturaCarlos,ANCHO*3/2-100,0);
                 break;
             case 2:
                 cristalY.animationRender(batch, Tiempo);
+                batch.draw(texturaDavid,ANCHO*3/2-100,0);
                 break;
             case 3:
                 cristalG.animationRender(batch, Tiempo);
+                batch.draw(texturaRicardo,ANCHO*3/2-100,0);
                 break;
             case 4:
                 cristalC.animationRender(batch, Tiempo);
+                batch.draw(texturaEduardo,ANCHO*3/2-100,0);
                 break;
             case 5:
                 cristalB.animationRender(batch, Tiempo);
@@ -201,6 +206,7 @@ public class PantallaNosotros extends Pantalla {
         }
 
     }
+    //Case3 Carlos
 
     private void recorrerPantalla() {
         //Si se oprimen los botones para deslizar la pantalla comienza a cambiar la posición
