@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
+//import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 
 import java.security.PrivateKey;
 
@@ -180,28 +180,28 @@ public class PantallaNosotros extends Pantalla {
         switch (cristalColor) {
             case 0:
                 cristalW.animationRender(batch, Tiempo);
-                batch.draw(texturaAndrea,ANCHO*3/2-100,0);
+                batch.draw(texturaAndrea,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
-                batch.draw(texturaCarlos,ANCHO*3/2-100,0);
+                batch.draw(texturaCarlos,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 2:
                 cristalY.animationRender(batch, Tiempo);
-                batch.draw(texturaDavid,ANCHO*3/2-100,0);
+                batch.draw(texturaDavid,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 3:
                 cristalG.animationRender(batch, Tiempo);
-                batch.draw(texturaRicardo,ANCHO*3/2-100,0);
+                batch.draw(texturaRicardo,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 4:
                 cristalC.animationRender(batch, Tiempo);
-                batch.draw(texturaEduardo,ANCHO*3/2-100,0);
+                batch.draw(texturaEduardo,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 5:
                 cristalB.animationRender(batch, Tiempo);
                 break;
-            default:
+            default :
                 cristalW.animationRender(batch, Tiempo);
                 break;
         }

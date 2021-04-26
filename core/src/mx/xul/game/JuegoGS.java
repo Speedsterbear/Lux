@@ -9,6 +9,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -82,9 +88,29 @@ public class JuegoGS extends Pantalla {
         startTimeOscuridad = TimeUtils.nanoTime();
         crearGemas();
 
+        Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
+        btnRegresar.setPosition(160,ALTO-80, Align.center);
+        btnRegresar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Cambiar de pantalla a Juego
+                juego.setScreen(new PantallaNosotros(juego));
+            }
+        });
+
+
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
+    }
 
+    private Button crearBoton(String archivo, String archivoclick) {
+        Texture texturaBoton=new Texture(archivo);
+        TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
+
+        Texture texturaClick=new Texture(archivoclick);
+        TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
+
+        return new Button(trdBtnRunner,trdBtnClick);
     }
 
     private void crearPersonajes() {
@@ -165,11 +191,7 @@ public class JuegoGS extends Pantalla {
         for (Gema gema:arrGemas) { // Automaticamente visita cada objeto del arreglo
             gema.render(batch);
         }
-
-
-
         batch.end();
-
     }
 
     private void moverOscuridad(float delta, EstadoOscuridad estado){
