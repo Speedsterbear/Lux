@@ -27,18 +27,23 @@ public class PantallaNosotros extends Pantalla {
 
     //Cristales de colores en los fondos
     private int cristalColor = 0;
+    //Texturas de los cristales (una por color)
     private Texture texturaCristalW;
     private Texture texturaCristalG;
     private Texture texturaCristalR;
     private Texture texturaCristalB;
     private Texture texturaCristalY;
     private Texture texturaCristalC;
+
+    //Imagenes de la información de las personas
     private Texture texturaAndrea;
     private Texture texturaDavid;
     private Texture texturaEduardo;
     private Texture texturaRicardo;
     private Texture texturaCarlos;
     private Texture texturaInicial;
+
+    //Para crear el El cristal
     private Cristal cristalW;
     private Cristal cristalG;
     private Cristal cristalR;
