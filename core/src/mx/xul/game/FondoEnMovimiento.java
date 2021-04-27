@@ -40,12 +40,12 @@ public class FondoEnMovimiento
                 xatras = 0;
             }
 
-            xmedio -= velocity*.35f*delta;
+            xmedio -= velocity*delta;
             if (xmedio <= -texturaMed.getWidth()) {
                 xmedio = 0;
             }
 
-            xfrente -= velocity*delta;
+            xfrente -= velocity*delta*3;
             if (xfrente <= -texturaFre.getWidth()) {
                 xfrente = 0;
             }

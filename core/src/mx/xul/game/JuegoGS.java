@@ -8,6 +8,8 @@ Autor: Carlos Arroyo
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,12 +24,23 @@ public class JuegoGS extends Pantalla {
 
     private Lux juego;
 
+    //Escena para Botones
+    //private Stage escenaJuego;
+
+
+    //Márgenes
+    private float margen = 20;
+    private float valorXMinExt = ANCHO + 200; //Valor mínimo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
+    private float valorXMaxExt = ANCHO *1.5f;  //Valor máximo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
+    private float valorYMinMarg = 0; // Valor mínimo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
+    private float valorYMaxMarg = ALTO; // Valor máximo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
+
     //Fondo de bosque en movimiento
     private Texture bosquefondo;
     private Texture bosqueatras;
     private Texture bosquemedio;
     private Texture bosquefrente;
-    private float velocidadBosque = 1000;
+    private float velocidadBosque = 300;
     private FondoEnMovimiento bosque;
 
     // Texto
@@ -57,7 +70,11 @@ public class JuegoGS extends Pantalla {
     private float velocidad = velocidadBosque;
 
     //Vidas
-    private int vidas = 3;
+    private int contadorVidas = 3;
+    private Texture texturaVida;
+    private LuzVida luzVida;
+    private Vidas vidas;
+    
 
     //Estado Juego
     private EstadoJuego estado = EstadoJuego.JUGANDO;
@@ -67,10 +84,52 @@ public class JuegoGS extends Pantalla {
     private float DX_PASO_GEMA=10;
     private long startTime = 0;
 
-    //Hijo de Oscuridad
+    //Hijo de Oscuridad: Del tipo que quita vidas
     private  HijoOscuridad hijoOscuridad;
     private Texture texturaHijoOscuridad;
     private float DX_PASO_HIJOOSCURIDAD=150;
+
+    //Hijos de la Oscuridad: Del tipo que Bloquean el paso
+    private Bloque bloque;
+    private Texture texturaBloque;
+    private Array<Bloque> arrBloques;
+    private float timerCrearBloque = 0;//Acumulador
+    private float tiempoParaCrearBloque =4; //Se espera esos segundos en crear el bloque.
+
+    //Barra Avance
+    private BarraAvance barraGS;
+    private BarraAvance barraRS;
+    private BarraAvance barraBS;
+    private BarraAvance barraWS;
+    private float distanciaRecorridaG = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+    private float distanciaRecorridaR = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+    private float distanciaRecorridaB = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+    private float distanciaRecorridaW = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+    private float distanciaRecorridaControl = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+
+    //Duración de las secciones
+    private float duracionVerde = 20; //Valor que repreenta los segundos de duración aproximados de la sección 1.
+    private float duracionRojo = 20; //Valor que repreenta los segundos de duración aproximados de la sección 2.
+    private float duracionAzul = 20; //Valor que repreenta los segundos de duración aproximados de la sección 3.
+    private float duracionBlanco = 20; //Valor que repreenta los segundos de duración aproximados de la sección 4.
+
+    //Velocidad normal de las secciones
+    private float velocidadVerde = 300; //Valor que repreenta los segundos de duración aproximados de la sección 1.
+    private float velocidadRojo = 300; //Valor que repreenta los segundos de duración aproximados de la sección 2.
+    private float velocidadAzul = 300; //Valor que repreenta los segundos de duración aproximados de la sección 3.
+    private float velocidadBlanco = 300; //Valor que repreenta los segundos de duración aproximados de la sección 4.
+
+    //Secciones
+    private EstadoSeccion seccion = EstadoSeccion.VERDE;
+
+    //Botones
+
+    private Texture texturaBack;
+
+
+
+
+
 
 
     public JuegoGS (Lux juego) {
@@ -83,10 +142,17 @@ public class JuegoGS extends Pantalla {
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
+        crearVidas();
         crearTexturaHijoOscuridad();
         startTime = TimeUtils.nanoTime();
         startTimeOscuridad = TimeUtils.nanoTime();
         crearGemas();
+        crearBarra();
+        crearBotonBack();
+
+        //Escena y Botón
+        //escenaJuego=new Stage(vista);
+
 
         Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
         btnRegresar.setPosition(160,ALTO-80, Align.center);
@@ -94,13 +160,36 @@ public class JuegoGS extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
-                juego.setScreen(new PantallaNosotros(juego));
+                juego.setScreen(new PantallaMenu(juego));
             }
         });
+
+        // escenaJuego.addActor(btnRegresar);
+        //Gdx.input.setInputProcessor(escenaJuego);
+
 
 
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
+    }
+
+    private void crearBotonBack() {
+        texturaBack= new Texture("Menu/buttonback.png");
+
+    }
+
+    private void crearBarra() {
+        //Los parametros de ancho final y distancia son para escalar el avance.
+        barraGS = new BarraAvance(0,1,0,1,(ANCHO/4)+70, ALTO-margen*3,12,ANCHO/8,velocidadVerde*duracionVerde);//27000 es 1 minuto y medio
+        barraRS = new BarraAvance(1,0,0,1,(ANCHO/4)+(ANCHO/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadRojo*duracionRojo);//54000 es para 3 minutos
+        barraBS = new BarraAvance(0,0,1,1,(ANCHO/4)+(ANCHO*2/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadAzul*duracionAzul);//54000 es para 3 minutos
+        barraWS = new BarraAvance(1,1,1,1,(ANCHO/4)+(ANCHO*3/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadBlanco*duracionBlanco);//54000 es para 3 minutos
+    }
+
+    private void crearVidas() {
+        texturaVida = new Texture("Utileria/vida.png");
+        //Se usa getHeight en ambas (x y) para que quede el mismo margen tanto arriba como a la derecha
+        vidas = new Vidas(texturaVida,ANCHO-margen-(texturaVida.getHeight()/2),margen+(texturaVida.getHeight()/2));
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
@@ -120,14 +209,19 @@ public class JuegoGS extends Pantalla {
         lumil = new Lumil(texturaLumilJugando,texturaLumilPierde,ANCHO/2, ALTO/2,4,1,1/10f,1);
 
         //Enemigo principal: Oscuridad
-        texturaOscuridad = new Texture("Personajes/Oscuridad_Sprites.png");
+        texturaOscuridad = new Texture("Personajes/oscuridad.png");
         oscuridad = new Oscuridad(texturaOscuridad,positionX,positionY,4,1,1/8f,2);
 
         texto=new Texto();
     }
 
     private void crearTexturaHijoOscuridad(){
+        //Para el que quita vida
         texturaHijoOscuridad = new Texture("Personajes/HijoOsc_sprite.png");
+
+        //Para el que bloquea
+        texturaBloque = new Texture("Personajes/bloque.png");
+        arrBloques = new Array<>();
     }
 
     private void crearGemas(){
@@ -154,29 +248,37 @@ public class JuegoGS extends Pantalla {
 
         actuaizar(delta);
 
-        if(vidas==0){
+        if (contadorVidas == 0) {
             estado = EstadoJuego.PIERDE;
         }
 
-        tiempoLumil +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
-        tiempoOsc +=Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
+        tiempoLumil += Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
+        tiempoOsc += Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
 
-        borrarPantalla(0,1,0);
+        borrarPantalla(0, 1, 0);
         batch.setProjectionMatrix(camara.combined);
 
         batch.begin();
         //Se dibujan los elementos
-        bosque.movSeccionesCompletas(velocidad,delta,batch,true);
-        lumil.animationRender(batch,tiempoLumil);
+        bosque.movSeccionesCompletas(velocidad, delta, batch, true);
 
-        if(hijoOscuridad!=null){
-            hijoOscuridad.animationRender(batch,tiempoOsc);
+        //Dibujar los bloques
+        for (Bloque bloque : arrBloques) {
+            bloque.animationRender(batch, tiempoLumil);
+        }
+
+        //Dibujar personaje principal
+        lumil.animationRender(batch, tiempoLumil);
+
+
+        if (hijoOscuridad != null) {
+            hijoOscuridad.animationRender(batch, tiempoOsc);
         }
 
 
-        oscuridad.animationRender(batch,tiempoOsc);
+        oscuridad.animationRender(batch, tiempoOsc);
         // Dibuja el marcador
-        texto.mostrarMensaje(batch,"SCORE",ANCHO/2,ALTO-25);
+        //texto.mostrarMensaje(batch, "SCORE", ANCHO / 2, ALTO - 25);
 
         if (TimeUtils.timeSinceNanos(startTime) > 1000000000) {
             // if time passed since the time you set startTime at is more than 1 second
@@ -188,10 +290,85 @@ public class JuegoGS extends Pantalla {
             startTime = TimeUtils.nanoTime();
         }
 
-        for (Gema gema:arrGemas) { // Automaticamente visita cada objeto del arreglo
+        for (Gema gema : arrGemas) { // Automaticamente visita cada objeto del arreglo
             gema.render(batch);
         }
+
+        //Botones
+        //escenaJuego.draw();
+
+
+        vidas.vidasRender(contadorVidas, batch);
+
+        // Dibujar back
+        batch.draw(texturaBack,margen-20,ALTO-margen-texturaBack.getHeight()+20);
+
+
         batch.end();
+
+        distanciaRecorridaControl += velocidad*delta;
+        System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
+        //Velocidad
+        //Eso divide la pantalla en las secciones de cada color.
+        //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
+        if (distanciaRecorridaControl>velocidad*duracionVerde && distanciaRecorridaControl <= velocidad*duracionVerde*2){
+            seccion = EstadoSeccion.ROJO;
+        }else if (distanciaRecorridaControl>(velocidad*duracionVerde*2) && distanciaRecorridaControl <= (velocidad*duracionVerde*3)){
+            seccion = EstadoSeccion.AZUL;
+        } else if(distanciaRecorridaControl>(velocidad*duracionVerde*3)) {
+            seccion = EstadoSeccion.BLANCO;
+        }
+
+        //Dibujar las barras
+        switch (seccion) {
+            case VERDE:
+                distanciaRecorridaG += velocidad*delta;
+                barraGS.renderAvance(distanciaRecorridaG,camara);
+                break;
+            case ROJO:
+                distanciaRecorridaR +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderAvance(distanciaRecorridaR,camara);
+                break;
+            case AZUL:
+                distanciaRecorridaB +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderEstatico(camara);
+                barraBS.renderAvance(distanciaRecorridaB,camara);
+                break;
+            case BLANCO:
+                distanciaRecorridaW +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderEstatico(camara);
+                barraBS.renderEstatico(camara);
+                if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
+                    barraWS.renderEstatico(camara);
+                    System.out.println("GANASTE!");
+                }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
+                break;
+        }
+        /*
+        distanciaRecorridaControl += velocidad*delta;
+        System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
+        //Velocidad
+        if (distanciaRecorridaControl<=velocidad*duracionVerde){
+            distanciaRecorridaG += velocidad*delta;
+            System.out.println("distancia recorridaG:"+ distanciaRecorridaG);
+        }else if (distanciaRecorridaControl>velocidad*duracionVerde && distanciaRecorridaControl <= velocidad*duracionVerde*2){
+            distanciaRecorridaR += velocidad*delta;
+            System.out.println("distancia recorridaR:"+ distanciaRecorridaR);
+        }else if (distanciaRecorridaControl>(velocidad*duracionVerde*2) && distanciaRecorridaControl <= (velocidad*duracionVerde*3){
+            distanciaRecorridaB += velocidad*delta;
+            System.out.println("distancia recorridaR:"+ distanciaRecorridaR);
+        }
+
+        //La barra de avance se debe de renderizar fuera del begin y end de batch para que no genere errores.
+        barraRS.render(distanciaRecorridaR,camara);
+        barraGS.render(distanciaRecorridaG,camara);
+            }
+
+         */
+
     }
 
     private void moverOscuridad(float delta, EstadoOscuridad estado){
@@ -207,6 +384,8 @@ public class JuegoGS extends Pantalla {
     }
 
     private void actuaizar(float delta) {
+
+        actualizarBloques(delta);
 
         //Esta programado para que la oscuridad avance poco a poco, pero según yo esto no va a pasar en el juego de verdad,
         //al menos al inicio, solo que lo puse así para apreciar el funcionamiento.
@@ -259,13 +438,46 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
+    private void actualizarBloques(float delta) {
+        timerCrearBloque += delta;
+        if(timerCrearBloque>=tiempoParaCrearBloque){
+            timerCrearBloque = 0;
+
+            //Crear Enemigo
+            float xBloque = MathUtils.random(valorXMinExt,valorXMaxExt);
+            float yBloque = MathUtils.random(valorYMinMarg,valorYMaxMarg);
+            Bloque bloque = new Bloque(texturaBloque,xBloque,yBloque,3,1,1/8f,1);
+            arrBloques.add(bloque);
+        }
+
+        //Mover los Enemigos
+        for (Bloque bloque:arrBloques) {
+            bloque.mover(delta,velocidadBosque);
+        }
+
+        //Eliminar bloques Fuera
+
+        //for (Bola bola: arrBolas) {
+        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como.
+        for (int  i=arrBloques.size-1; i>=0; i--){
+            Bloque bloque = arrBloques.get(i);
+            //Prueba si la bola debe desaparecer cuando salga de pantalla
+            if(bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
+                //Borrar el objeto
+                arrBloques.removeIndex(i);
+            }
+            }
+
+            }
+
     private void hijoOscuridadColision() {
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
             //lumil.setEstado(EstadoLumil.PIERDE);
-            vidas--;
+            contadorVidas--;
             //Gdx.app.log("hit", "hit");
             hijoOscuridad = null;
-            Gdx.app.log("Vidas", Integer.toString(vidas));
+            Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
     }
 
@@ -291,9 +503,9 @@ public class JuegoGS extends Pantalla {
     private void oscuridadColision() {
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
             //lumil.setEstado(EstadoLumil.PIERDE);
-            vidas--;
+            contadorVidas--;
             //Gdx.app.log("hit", "hit");
-            Gdx.app.log("Vidas", Integer.toString(vidas));
+            Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
     }
 
@@ -350,14 +562,32 @@ public class JuegoGS extends Pantalla {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
             if(estado==EstadoJuego.PIERDE){
-                vidas = 3;
+                contadorVidas = 3;
                 oscuridad.sprite.setX(positionXStart);
                 estado=EstadoJuego.JUGANDO;
             }else {
+                float anchoBack = texturaBack.getWidth();
+                float altoBack = texturaBack.getHeight();
+                float xBack = margen-20;
+                float yBack = ALTO-margen-texturaBack.getHeight()+20;
+
+                //margen-20,ALTO-margen-texturaBack.getHeight()+20
+
                 posicionDedo.x=screenX;
                 posicionDedo.y=screenY;
                 camara.unproject(posicionDedo);
-                isMooving = true;
+
+                // Vamos a verificar el botón de back
+                Rectangle rectBack = new Rectangle(xBack, yBack, anchoBack, altoBack);
+
+
+
+                if (posicionDedo.x>=ANCHO/4){
+                    isMooving = true;
+                 // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
+                }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
+                    juego.setScreen(new PantallaMenu(juego));
+                }
             }
 
             return true; //Porque el juego ya procesó el evento (si si hacemos algo hay que regresar TRUE)
@@ -376,7 +606,14 @@ public class JuegoGS extends Pantalla {
         //Cuando arrastro el dedo por la pantalla
         @Override
         public boolean touchDragged(int screenX, int screenY, int pointer) {
-            return false;
+
+            posicionDedo.x=screenX;
+            posicionDedo.y=screenY;
+            camara.unproject(posicionDedo);
+            if (posicionDedo.x>=ANCHO/4){
+                isMooving = true;
+            }
+            return true;
         }
 
         @Override

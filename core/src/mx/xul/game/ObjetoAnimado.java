@@ -1,6 +1,5 @@
 package mx.xul.game;
 
-
 /*
 Representa objetos en el juego (Personajes, enemigos, etc..)
 puede usarse tanto para los animados como para los no animados
@@ -28,8 +27,8 @@ public class ObjetoAnimado {
 
     //Constructor. Inicializa el objeto con la imagen y la posición
     public ObjetoAnimado(Texture textura, float x, float y, int column, int row, float duracion, int tipo ) {
-        sprite = new Sprite(textura);
-        sprite.setPosition(x - (textura.getWidth()/column/2),y-(textura.getHeight()/row/2));
+        //sprite = new Sprite(textura);
+        //sprite.setPosition(x - (textura.getWidth()/column/2),y-(textura.getHeight()/row/2));
         regionMatriz = TextureRegion.split(textura,textura.getWidth()/column, textura.getHeight()/row);
 
         //Convertir la matiz en Vector para poder usarla
@@ -41,7 +40,13 @@ public class ObjetoAnimado {
                 k++;
             }
         }
+
+        //Inicializar el Sprite
+        sprite = new Sprite(regionVector [0]);
+        sprite.setPosition(x - (sprite.getWidth()/2),y-(sprite.getHeight()/2));
+
         //Se llama al inició para definir los valores de duración y el tipo de animación del objeto animado
+        animation = new Animation (duracion,regionVector);
         animationUpdate(duracion,tipo);
     }
 
@@ -50,8 +55,8 @@ public class ObjetoAnimado {
     //Puede usarse tambien para cambiar el tipo de animación
     public void animationUpdate (float duracion, int tipo) {
 
-
-       animation = new Animation (duracion,regionVector);
+        //animation = new Animation (duracion,regionVector);
+        animation.setFrameDuration(duracion);
 
         switch (tipo) {
             case 1:
@@ -80,6 +85,7 @@ public class ObjetoAnimado {
     }
 
 
+    // Sirve para poder animar el Sprite
     public void animationRender(SpriteBatch batch, float tiempo){
         float Deg = sprite.getRotation();
         float X = sprite.getX();
@@ -92,5 +98,21 @@ public class ObjetoAnimado {
         sprite.draw(batch);
 
     }
+
+    //Sirve para seleccionar cual de los cuadros de la textura es el que Mostrará en el Sprite
+    public void setFrame (int row, int column) {
+        float Deg = sprite.getRotation();
+        float X = sprite.getX();
+        float Y = sprite.getY();
+        sprite = new Sprite(regionMatriz [row][column]);
+        sprite.setPosition(X,Y);
+        sprite.setRotation(Deg);
+    }
+
+    //Sirve para dibujar uno de los cuadroa (regiones) de la textura sin animación
+    public void frameRender (SpriteBatch batch) {
+        sprite.draw(batch);
+    }
+
 
 }

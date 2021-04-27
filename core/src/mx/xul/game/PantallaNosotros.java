@@ -38,6 +38,7 @@ public class PantallaNosotros extends Pantalla {
     private Texture texturaEduardo;
     private Texture texturaRicardo;
     private Texture texturaCarlos;
+    private Texture texturaInicial;
     private Cristal cristalW;
     private Cristal cristalG;
     private Cristal cristalR;
@@ -109,6 +110,9 @@ public class PantallaNosotros extends Pantalla {
         //juego.setScreen(new PantallaCreditos(juego));
         //2 significa que va hacia la izquierda
                 cristalColor +=1;
+                if (cristalColor > 5){
+                    cristalColor = 0;
+                }
         }
         });
 
@@ -143,6 +147,7 @@ public class PantallaNosotros extends Pantalla {
         texturaDavid = new Texture("Nosotros/david.png");
         texturaEduardo = new Texture("Nosotros/eduardo.png");
         texturaRicardo = new Texture("Nosotros/ricardo.png");
+        texturaInicial = new Texture("Nosotros/CasoInicial.png");
 
     }
 
@@ -180,11 +185,11 @@ public class PantallaNosotros extends Pantalla {
         switch (cristalColor) {
             case 0:
                 cristalW.animationRender(batch, Tiempo);
-                batch.draw(texturaAndrea,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaInicial,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
-                batch.draw(texturaCarlos,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaAndrea,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 2:
                 cristalY.animationRender(batch, Tiempo);
@@ -192,7 +197,7 @@ public class PantallaNosotros extends Pantalla {
                 break;
             case 3:
                 cristalG.animationRender(batch, Tiempo);
-                batch.draw(texturaRicardo,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaCarlos,ANCHO*3/2-200,ALTO/2-400);
                 break;
             case 4:
                 cristalC.animationRender(batch, Tiempo);
@@ -200,6 +205,7 @@ public class PantallaNosotros extends Pantalla {
                 break;
             case 5:
                 cristalB.animationRender(batch, Tiempo);
+                batch.draw(texturaRicardo,ANCHO*3/2-200,ALTO/2-400);
                 break;
             default :
                 cristalW.animationRender(batch, Tiempo);
