@@ -361,17 +361,13 @@ public class JuegoGS extends Pantalla {
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         if (distanciaRecorridaControl>velocidadBosque*duracionVerde && distanciaRecorridaControl <= velocidadBosque*duracionVerde*2){
             seccion = EstadoSeccion.ROJO;
-
         }else if (distanciaRecorridaControl>(velocidadBosque*duracionVerde*2) && distanciaRecorridaControl <= (velocidadBosque*duracionVerde*3)){
             seccion = EstadoSeccion.AZUL;
         } else if(distanciaRecorridaControl>(velocidadBosque*duracionVerde*3)) {
             seccion = EstadoSeccion.BLANCO;
         }
 
-        Gdx.app.log("Distancia", Float.toString(distanciaRecorridaControl));
-        if(distanciaRecorridaControl >= 20){
-            crearEsgrun();
-        }
+        //Gdx.app.log("Distancia", Float.toString(distanciaRecorridaControl));
 
         //Dibujar barra progreso
         dibujarBarras(delta);
@@ -382,6 +378,9 @@ public class JuegoGS extends Pantalla {
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
+            if(seccion == EstadoSeccion.ROJO){
+                crearEsgrun();
+            }
             boolean colisionLumil = hijoOscuridadColision();
             timerCrearBloque += delta;
             if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil == false) {
@@ -438,6 +437,8 @@ public class JuegoGS extends Pantalla {
             }
 
              */
+
+
         } //----------------------------------------------------------------------------------------
         if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
@@ -452,6 +453,7 @@ public class JuegoGS extends Pantalla {
             //juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
+
     }
 
     private void returnVelocidadBosque(){
@@ -490,7 +492,7 @@ public class JuegoGS extends Pantalla {
 
     private void depurarEsgrun() {
         if(lumil.sprite.getBoundingRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
-            Gdx.app.log("Hit", "collision");
+            //Gdx.app.log("Hit", "collision");
         }
     }
 
@@ -563,6 +565,7 @@ public class JuegoGS extends Pantalla {
                 distanciaRecorridaR +=velocidadBosque*delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderAvance(distanciaRecorridaR,camara);
+                System.out.println("ROJO");
                 break;
             case AZUL:
                 distanciaRecorridaB +=velocidadBosque*delta;
