@@ -9,15 +9,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
+// Clase que implementa la pantalla que aparece al perder el jugador
 // Autor: Andrea Espinosa Azuela
-public class PantallaPausa extends Pantalla{
+
+public class PantallaPerdida extends Pantalla{
     private Lux juego;
     private Texture texturafondo;
-    private Stage escenaPausa;
+    private Stage escenaPerdio;
 
-    public PantallaPausa(Lux juego) {
+    public PantallaPerdida(Lux juego) {
         this.juego=juego;
     }
+
     private Button crearBoton(String archivo, String archivoclick) {
         Texture texturaBoton=new Texture(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
@@ -30,18 +33,18 @@ public class PantallaPausa extends Pantalla{
 
     @Override
     public void show() {
-        texturafondo = new Texture("Escenarios/Pausa.png");
-        crearPausa();
+        texturafondo = new Texture("Escenarios/Perdio.png");
+        crearPerdio();
     }
 
-    private void crearPausa() {
-        texturafondo= new Texture("Escenarios/Pausa.png");
-        escenaPausa = new Stage(vista);
+    private void crearPerdio() {
+        texturafondo= new Texture("Escenarios/Perdio.png");
+        escenaPerdio = new Stage(vista);
 
-        Button btnresumen = crearBoton("Botones/btnResumen.png","Botones/btnResumenClick.png");
-        btnresumen.setPosition(ANCHO/2, ALTO/2f, Align.center);
-        escenaPausa.addActor(btnresumen);
-        btnresumen.addListener(new ClickListener() {
+        Button btnreiniciar = crearBoton("Botones/btn_reiniciar.png","Botones/btn_reiniciarClick.png");
+        btnreiniciar.setPosition(ANCHO/2, ALTO/2.5f, Align.center);
+        escenaPerdio.addActor(btnreiniciar);
+        btnreiniciar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 juego.setScreen(new JuegoGS(juego));
@@ -50,8 +53,8 @@ public class PantallaPausa extends Pantalla{
 
 
         Button btnExit = crearBoton("Botones/btnExit.png","Botones/btnExitClick.png");
-        btnExit.setPosition(ANCHO/2, ALTO/2.7f, Align.center);
-        escenaPausa.addActor(btnExit);
+        btnExit.setPosition(ANCHO/2, ALTO/3.5f, Align.center);
+        escenaPerdio.addActor(btnExit);
         btnExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -59,10 +62,8 @@ public class PantallaPausa extends Pantalla{
             }
         });
 
-        Gdx.input.setInputProcessor(escenaPausa);
+        Gdx.input.setInputProcessor(escenaPerdio);
     }
-
-
 
     @Override
     public void render(float delta) {
@@ -72,10 +73,9 @@ public class PantallaPausa extends Pantalla{
 
         batch.begin();
         batch.draw(texturafondo,0,0);
-        // help.draw(batch);
         batch.end();
 
-        escenaPausa.draw();
+        escenaPerdio.draw();
     }
 
     @Override

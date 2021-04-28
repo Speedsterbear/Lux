@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.sun.org.apache.xpath.internal.objects.XBoolean;
+//import com.sun.org.apache.xpath.internal.objects.XBoolean;
 
 public class JuegoGS extends Pantalla {
 
@@ -447,6 +447,7 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
             velocidadOsc = 0;
+            juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
     }
