@@ -376,14 +376,14 @@ public class JuegoGS extends Pantalla {
 
             moverLumil(isMooving);
             moverOscuridad(delta);
-            moverGemas();
+            //moverGemas();
             moverBloques(delta);
             if(hijoOscuridad!=null){
                 moverHijoOscuridad(delta);
             }
 
             //Depurar Elementos
-            depurarGemas();
+           // depurarGemas();
             depurarBloques();
             if(hijoOscuridad!=null){
                 depurarHijosOscuridad();
@@ -432,7 +432,7 @@ public class JuegoGS extends Pantalla {
         estado = EstadoJuego.JUGANDO;
         for(Bloque bloque: arrBloques){
             if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
-                estado = EstadoJuego.HIT;
+                //estado = EstadoJuego.HIT;
                 Gdx.app.log("Hit", "collision bloque");
             }
             else{
