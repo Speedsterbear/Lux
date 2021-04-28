@@ -16,7 +16,7 @@ public class Oscuridad extends ObjetoAnimado
         //Al restar las velocidades se puede simular el movimiento de la oscuridad
         float dx = (velocidadObj - velocidadRef) * delta;
         sprite.setX(sprite.getX() + dx);
-
     }
+
 
 }
