@@ -4,5 +4,6 @@ public enum EstadoJuego {
     JUGANDO,
     PAUSADO,
     GANA,
-    PIERDE;
+    PIERDE,
+    HIT;
 }

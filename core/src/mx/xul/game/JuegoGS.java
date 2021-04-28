@@ -44,6 +44,7 @@ public class JuegoGS extends Pantalla {
     private Texture bosqueatras;
     private Texture bosquemedio;
     private Texture bosquefrente;
+    private final float velocidadInicialBosque = 300;
     private float velocidadBosque = 300;
     private FondoEnMovimiento bosque;
 
@@ -358,7 +359,6 @@ public class JuegoGS extends Pantalla {
                 crearHijosOscuridad();
             }
 
-
             oscuridadColision();
 
             moverLumil(isMooving);
@@ -378,6 +378,22 @@ public class JuegoGS extends Pantalla {
 
         }
 
+        if(estado == EstadoJuego.HIT){
+            velocidadBosque = 0;
+            moverLumil(isMooving);
+            if(hijoOscuridad!=null){
+                moverHijoOscuridad(delta);
+            }
+
+            if(hijoOscuridad!=null){
+                depurarHijosOscuridad();
+            }
+        }
+
+    }
+
+    public void returnVelocidadBosque(){
+        velocidadBosque = velocidadInicialBosque;
     }
 
     private void depurarHijosOscuridad() {
@@ -405,17 +421,21 @@ public class JuegoGS extends Pantalla {
         //Eliminar bloques Fuera del rango de la pantalla
 
         //for (Bola bola: arrBolas) {
-        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como.
+        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como
+        estado = EstadoJuego.JUGANDO;
+        for(Bloque bloque: arrBloques){
+            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                estado = EstadoJuego.HIT;
+                Gdx.app.log("Hit", "collision bloque");
+            }
+            else{
+                //
+            }
+        }
+
         for (int  i=arrBloques.size-1; i>=0; i--){
             Bloque bloque = arrBloques.get(i);
-            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
-                Gdx.app.log("Hit", "collision");
-                contadorVidas--;
-                arrBloques.removeIndex(i);
-            }
-            //Prueba si la bola debe desaparecer cuando salga de pantalla
-            if(bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
-                //Borrar el objeto
+            if(arrBloques!= null && bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 arrBloques.removeIndex(i);
             }
         }
