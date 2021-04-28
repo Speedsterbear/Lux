@@ -298,9 +298,6 @@ public class JuegoGS extends Pantalla {
         //Dibujar personaje principal
         lumil.animationRender(batch, tiempoLumil);
 
-        //Dibujar enemigo oscuridad
-        oscuridad.animationRender(batch, tiempoOsc);
-
         //Dibujar hijos Oscuridad
         if (hijoOscuridad != null) {
             hijoOscuridad.animationRender(batch, tiempoOsc);
@@ -317,6 +314,9 @@ public class JuegoGS extends Pantalla {
                 gema.render(batch);
             }
         }
+
+        //Dibujar enemigo oscuridad
+        oscuridad.animationRender(batch, tiempoOsc);
 
 
         // Dibuja el marcador
@@ -353,10 +353,10 @@ public class JuegoGS extends Pantalla {
 
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
-        if(estado == EstadoJuego.JUGANDO){
+        if (estado == EstadoJuego.JUGANDO) {
             boolean colisionLumil = hijoOscuridadColision();
             timerCrearBloque += delta;
-            if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil==false) {
+            if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil == false) {
                 timerCrearBloque = 0;
                 crearBloques();
             }
@@ -371,34 +371,45 @@ public class JuegoGS extends Pantalla {
                 timerCrearHijoOscuridad = 0;
                 crearHijosOscuridad();
             }
-            oscuridadColision();
+
+            //Mover Lumil
             moverLumil(isMooving);
-            if(colisionLumil == false){
+
+            //Mover y Depurar Oscuridad
+            if (colisionLumil == false) {
                 moverBloques(delta);
                 returnVelocidadBosque();
             }
-            if(colisionLumil){
+
+            if (colisionLumil) {
                 velocidadBosque = 0;
+                moverOscuridad(delta);
+                oscuridadColision();
             }
-            moverOscuridad(delta);
-            if(arrGemas!=null){
+
+            if (arrGemas != null) {
                 moverGemas();
                 depurarGemas();
             }
+
             if (hijoOscuridad != null) {
                 moverHijoOscuridad(delta);
             }
             //Depurar Elementos
             depurarBloques();
+
             if (hijoOscuridad != null) {
                 depurarHijosOscuridad();
             }
-
+        } //----------------------------------------------------------------------------------------
+        if (estado == EstadoJuego.PIERDE) {
+            velocidadBosque = 0;
+            velocidadOsc = 0;
+            //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
-
     }
 
-    public void returnVelocidadBosque(){
+    private void returnVelocidadBosque(){
         velocidadBosque = velocidadInicialBosque;
     }
 
@@ -444,8 +455,8 @@ public class JuegoGS extends Pantalla {
     }
 
     private void oscuridadColision() {
-        if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
-            contadorVidas--;
+        if(lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
+            contadorVidas=0;//Muere =(
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
     }
@@ -473,7 +484,7 @@ public class JuegoGS extends Pantalla {
 
     private void moverOscuridad(float delta){
         //Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
-        oscuridad.mover(velocidadBosque,velocidadOsc, delta);
+            oscuridad.mover(velocidadBosque,velocidadOsc, delta);
     }
 
     private void moverHijoOscuridad(float delta){
@@ -558,9 +569,17 @@ public class JuegoGS extends Pantalla {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
             if(estado==EstadoJuego.PIERDE){
+                velocidadBosque=0;
+                velocidadOsc=0;
+                //Creo que esto puede sacarse del touch Down y estar junto a los otros estados.
+
+                //Codigo Ricardo
+                /*
                 contadorVidas = 3;
                 oscuridad.sprite.setX(positionXStart);
                 estado=EstadoJuego.JUGANDO;
+                 */
+
             }else {
                 float anchoBack = texturaBack.getWidth();
                 float altoBack = texturaBack.getHeight();
