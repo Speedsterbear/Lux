@@ -18,4 +18,8 @@ public class HijoOscuridad extends ObjetoAnimado {
         sprite.setX(sprite.getX() + dx);
 
     }
+
+    public float getX() {
+        return sprite.getX();
+    }
 }

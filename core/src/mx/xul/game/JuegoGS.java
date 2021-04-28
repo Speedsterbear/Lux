@@ -18,6 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
+import com.badlogic.gdx.utils.TimeUtils;
+//import com.sun.org.apache.xpath.internal.objects.XBoolean;
+
+
 public class JuegoGS extends Pantalla {
 
     private Lux juego;
@@ -35,13 +39,13 @@ public class JuegoGS extends Pantalla {
     private final float velocidadBlanco = 800; //Valor que repreenta la velocidad normal de la sección 4.
 
     //Velocidad normal de la oscuridad según las secciones
-    private final float velocidadOscVerde = velocidadVerde+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
+    private final float velocidadOscVerde = velocidadVerde; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
     private final float velocidadOscRojo = velocidadRojo+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
     private final float velocidadOscAzul = velocidadAzul+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
     private final float velocidadOscBlanco = velocidadBlanco+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
-    private final float velocidadHijoOscVerde = velocidadVerde+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscVerde = velocidadVerde+200; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
     private final float velocidadHijoOscRojo = velocidadRojo+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
     private final float velocidadHijoOscAzul = velocidadAzul+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
     private final float velocidadHijoOscBlanco = velocidadBlanco+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
@@ -90,7 +94,7 @@ public class JuegoGS extends Pantalla {
     private float velocidadOsc = velocidadOscVerde;//Velocidad Actual de la oscuridad
     private float velocidadHijosOsc = velocidadHijoOscVerde;//Velocidad Actual de hijos de la oscuridad
     private float positionXStart = -900;
-    private float positionX = -ANCHO/2;
+    private float positionX = (-ANCHO/2)+margen*2;
     private float positionY = ALTO/2;
     private long startTimeOscuridad = 0;
     //private EstadoOscuridad estadoOscuridad = EstadoOscuridad.QUIETO;
@@ -112,12 +116,12 @@ public class JuegoGS extends Pantalla {
     private Esgrun esgrun;
     private float DX_PASO_ESGRUN=10;
 
-    //Hijo de Oscuridad: Del tipo que quita vidas
-    private  HijoOscuridad hijoOscuridad;
-    private Texture texturaHijoOscuridad;
-    private float DX_PASO_HIJOOSCURIDAD=150;
-    private float timerCrearHijoOscuridad= 0;//Acumulador
-    private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
+    //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
+    //private  HijoOscuridad hijoOscuridad;
+    //private Texture texturaHijoOscuridad;
+    //private float DX_PASO_HIJOOSCURIDAD=150;
+    //private float timerCrearHijoOscuridad= 0;//Acumulador
+    //private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
 
     //Hijos de la Oscuridad: Del tipo que Bloquean el paso
     private Array<Bloque> arrBloques;
@@ -125,6 +129,14 @@ public class JuegoGS extends Pantalla {
     private Texture texturaBloque;
     private float timerCrearBloque = 0;//Acumulador
     private float tiempoParaCrearBloque =4; //Se espera esos segundos en crear el bloque.
+
+    //Hijos de la Oscuridad: Del tipo que quitan vidas
+    private Array<HijoOscuridad> arrHijosOscuridad;
+    private HijoOscuridad hijoOscuridad;
+    private Texture texturaHijoOscuridad;
+    private float timerCrearHijoOscuridad = 0;//Acumulador
+    private float tiempoParaCrearHijoOscuridad =4; //Se espera esos segundos en crear el bloque.
+
 
     //Barra Avance
     private BarraAvance barraGS;
@@ -153,6 +165,7 @@ public class JuegoGS extends Pantalla {
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
+        //crearEsgrun();
         crearVidas();
         crearTexturaHijoOscuridad();
         crearBloques();
@@ -226,6 +239,7 @@ public class JuegoGS extends Pantalla {
     private void crearTexturaHijoOscuridad(){
         //Para el que quita vida
         texturaHijoOscuridad = new Texture("Personajes/HijoOsc_sprite.png");
+        arrHijosOscuridad= new Array<>();
 
         //Para el que bloquea
         texturaBloque = new Texture("Personajes/bloque.png");
@@ -235,7 +249,7 @@ public class JuegoGS extends Pantalla {
 
     private void crearEsgrun(){
         Texture texturaEsgrun = new Texture("Personajes/Esgrun.png");
-        Esgrun esgrun = new Esgrun(texturaEsgrun, ANCHO,positionY);
+        esgrun = new Esgrun(texturaEsgrun, ANCHO,positionY);
     }
 
     //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
@@ -248,8 +262,19 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearHijosOscuridad(){
+        //Crear Enemigo
+        float xHijo = MathUtils.random(ANCHO - valorXMaxExt,ANCHO-valorXMinExt);
+        float yHijo = MathUtils.random(valorYMinMarg,valorYMaxMarg);
+        HijoOscuridad hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad,xHijo,yHijo,3,1,1/10f,1);
+        arrHijosOscuridad.add(hijoOscuridad);
+    }
+
+    //Codigo de Ricardo (Hijos Oscuridad)
+    /*
+    private void crearHijosOscuridad(){
         hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
     }
+     */
 
     private void crearFondo() {
         bosquefondo = new Texture("Escenarios/bosque_fondo.jpg");
@@ -289,8 +314,17 @@ public class JuegoGS extends Pantalla {
         //Dibujar personaje principal
         lumil.animationRender(batch, tiempoLumil);
 
+        /*
+
         //Dibujar hijos Oscuridad
         if (hijoOscuridad != null) {
+            hijoOscuridad.animationRender(batch, tiempoOsc);
+        }
+
+         */
+
+        //Dibujar los bloques
+        for (HijoOscuridad hijoOscuridad : arrHijosOscuridad) {
             hijoOscuridad.animationRender(batch, tiempoOsc);
         }
 
@@ -300,7 +334,7 @@ public class JuegoGS extends Pantalla {
         }
 
         //Dibujar Esgrun
-        if(esgrun != null)
+        if(esgrun!=null)
             esgrun.render(batch);
 
         //Dibujar enemigo oscuridad
@@ -321,16 +355,22 @@ public class JuegoGS extends Pantalla {
         batch.end();
 
         distanciaRecorridaControl += velocidadBosque*delta;
+
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         if (distanciaRecorridaControl>velocidadBosque*duracionVerde && distanciaRecorridaControl <= velocidadBosque*duracionVerde*2){
             seccion = EstadoSeccion.ROJO;
-            crearEsgrun();
+
         }else if (distanciaRecorridaControl>(velocidadBosque*duracionVerde*2) && distanciaRecorridaControl <= (velocidadBosque*duracionVerde*3)){
             seccion = EstadoSeccion.AZUL;
         } else if(distanciaRecorridaControl>(velocidadBosque*duracionVerde*3)) {
             seccion = EstadoSeccion.BLANCO;
+        }
+
+        Gdx.app.log("Distancia", Float.toString(distanciaRecorridaControl));
+        if(distanciaRecorridaControl >= 20){
+            crearEsgrun();
         }
 
         //Dibujar barra progreso
@@ -339,7 +379,6 @@ public class JuegoGS extends Pantalla {
     }
 
     private void actuaizar(float delta) {
-
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
@@ -359,6 +398,12 @@ public class JuegoGS extends Pantalla {
             //Mover Lumil
             moverLumil(isMooving);
 
+            //Mover Oscuridad
+            moverOscuridad(delta);
+
+            //Mover Hijo de Oscuridad (va afuera porque se sige moviendo aunque lúmil no se mueva, es como la oscuridad grande)
+            moverHijoOscuridad(delta);
+
             //Mover y Depurar Oscuridad
             if (colisionLumil == false) {
                 moverBloques(delta);
@@ -367,28 +412,44 @@ public class JuegoGS extends Pantalla {
 
             if (colisionLumil) {
                 velocidadBosque = 0;
-                moverOscuridad(delta);
+                //moverOscuridad(delta);
                 oscuridadColision();
             }
 
-            if (esgrun != null) {
+            if(esgrun!=null){
                 moverEsgrun();
                 depurarEsgrun();
             }
 
+            // Código Ricardo
+            /*
             if (hijoOscuridad != null) {
                 moverHijoOscuridad(delta);
             }
+
+             */
             //Depurar Elementos
             depurarBloques();
+            depurarHijosOscuridad();
 
+            /*Codigo de Ricardo (Hijos)
             if (hijoOscuridad != null) {
                 depurarHijosOscuridad();
             }
+
+             */
         } //----------------------------------------------------------------------------------------
         if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
             velocidadOsc = 0;
+            juego.setScreen(new PantallaPerdida(juego));
+            //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
+        }
+
+        if (estado == EstadoJuego.GANA) {
+            velocidadBosque = 0;
+            velocidadOsc = 0;
+            //juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
     }
@@ -398,15 +459,33 @@ public class JuegoGS extends Pantalla {
     }
 
     private void depurarHijosOscuridad() {
+
+        //Eliminar bloques Fuera del rango de la pantalla
+        for (int  i=arrHijosOscuridad.size-1; i>=0; i--){
+            HijoOscuridad hijoOscuridad = arrHijosOscuridad.get(i);
+            if(arrHijosOscuridad!= null && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
+                arrHijosOscuridad.removeIndex(i);
+                contadorVidas --;
+            }
+            if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
+                arrHijosOscuridad.removeIndex(i);
+            }
+        }
+
+
+        //Código Ricardo
+
+        /*
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
             contadorVidas--;
-            hijoOscuridad = null;
+            //hijoOscuridad = null;
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
         if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
             Gdx.app.log("Hijo", "Aqui me muero");
-            hijoOscuridad=null;
+            //hijoOscuridad=null;
         }
+         */
     }
 
     private void depurarEsgrun() {
@@ -465,7 +544,11 @@ public class JuegoGS extends Pantalla {
     }
 
     private void moverHijoOscuridad(float delta){
-        hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
+        for (HijoOscuridad hijoOscuridad:arrHijosOscuridad) {
+            hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc,delta);
+        }
+
+        //hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
     }
 
 
@@ -494,6 +577,7 @@ public class JuegoGS extends Pantalla {
                 barraBS.renderEstatico(camara);
                 if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
                     barraWS.renderEstatico(camara);
+                    estado = EstadoJuego.GANA;
                     System.out.println("GANASTE!");
                 }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
                 break;
