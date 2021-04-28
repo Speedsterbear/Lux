@@ -359,50 +359,34 @@ public class JuegoGS extends Pantalla {
         if(estado == EstadoJuego.JUGANDO){
 
             oscuridadColision();
-            if(hijoOscuridad!=null){
-                hijoOscuridadColision();
-            }
-
-            actuaizarHijoOscuridad(delta);
 
             moverLumil(isMooving);
             moverOscuridad(delta, estadoOscuridad);
             moverGemas();
             moverBloques(delta);
+            if(hijoOscuridad!=null){
+                moverHijoOscuridad(delta);
+            }
 
             //Depurar Elementos
             depurarGemas();
             depurarBloques();
+            if(hijoOscuridad!=null){
+                depurarHijosOscuridad();
+            }
 
         }
 
     }
 
-    private void hijoOscuridadColision() {
+    private void depurarHijosOscuridad() {
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
             contadorVidas--;
             hijoOscuridad = null;
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
-    }
-
-    private void bloqueOscuridadColision() {
-        for(int i=arrBloques.size-1;i>=0;i--){
-            Bloque bloque= arrBloques.get(i);
-            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
-                Gdx.app.log("Hit", "collision");
-                contadorVidas--;
-                arrGemas.removeIndex(i);
-            }
-        }
-    }
-
-    private void actuaizarHijoOscuridad(float delta) {
-        if(hijoOscuridad!=null){
-            hijoOscuridad.mover(velocidad*0.5f,velocidad*.5f + 500, delta);
-            if(hijoOscuridad.sprite.getX() > ANCHO){
-                hijoOscuridad=null;
-            }
+        if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
+            hijoOscuridad=null;
         }
     }
 
@@ -474,6 +458,10 @@ public class JuegoGS extends Pantalla {
         }else if(estado == EstadoOscuridad.QUIETO){
             oscuridad.mover(0,0, delta);
         }
+    }
+
+    private void moverHijoOscuridad(float delta){
+        hijoOscuridad.mover(velocidad*0.5f,velocidad*.5f + 500, delta);
     }
 
 
