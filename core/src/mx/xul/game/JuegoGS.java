@@ -391,27 +391,10 @@ public class JuegoGS extends Pantalla {
 
         }
 
-        if(estado == EstadoJuego.HIT){
-            velocidadBosque = 0;
-            moverOscuridad(delta);
-            moverLumil(isMooving);
-            if(hijoOscuridad!=null){
-                moverHijoOscuridad(delta);
-            }
-
-            if(hijoOscuridad!=null){
-                depurarHijosOscuridad();
-            }
-
-            oscuridadColision();
-            if (contadorVidas == 0) {
-                estado = EstadoJuego.PIERDE;
-            }
-        }
-
         if(estado==EstadoJuego.PIERDE) {
             velocidadBosque = 0;
             velocidadOsc = 0;
+            //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
     }
@@ -584,7 +567,7 @@ public class JuegoGS extends Pantalla {
             if(estado==EstadoJuego.PIERDE){
                 velocidadBosque=0;
                 velocidadOsc=0;
-                //Creo que esto puede sacarse de el touch Down y estar junto a los otros estados.
+                //Creo que esto puede sacarse del touch Down y estar junto a los otros estados.
 
                 //Codigo Ricardo
                 /*
