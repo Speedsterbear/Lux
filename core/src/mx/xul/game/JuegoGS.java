@@ -336,27 +336,28 @@ public class JuegoGS extends Pantalla {
 
     private void actuaizar(float delta) {
 
-        timerCrearBloque += delta;
-        if(timerCrearBloque>=tiempoParaCrearBloque) {
-            timerCrearBloque = 0;
-            crearBloques();
-        }
-
-        timerCrearGema += delta;
-        if(timerCrearGema>=tiempoParaCrearGema){
-            timerCrearGema = 0;
-            crearGemas();
-        }
-
-        timerCrearHijoOscuridad += delta;
-        if(timerCrearHijoOscuridad>=tiempoParaCrearHijoOscuridad){
-            timerCrearHijoOscuridad = 0;
-            crearHijosOscuridad();
-        }
-
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if(estado == EstadoJuego.JUGANDO){
+
+            timerCrearBloque += delta;
+            if(timerCrearBloque>=tiempoParaCrearBloque) {
+                timerCrearBloque = 0;
+                crearBloques();
+            }
+
+            timerCrearGema += delta;
+            if(timerCrearGema>=tiempoParaCrearGema){
+                timerCrearGema = 0;
+                crearGemas();
+            }
+
+            timerCrearHijoOscuridad += delta;
+            if(timerCrearHijoOscuridad>=tiempoParaCrearHijoOscuridad){
+                timerCrearHijoOscuridad = 0;
+                crearHijosOscuridad();
+            }
+
 
             oscuridadColision();
 
@@ -514,6 +515,7 @@ public class JuegoGS extends Pantalla {
         texturaOscuridad.dispose();
         texturaHijoOscuridad.dispose();
         arrGemas.clear();
+        arrBloques.clear();
     }
 
     //Procesador de pantalla
