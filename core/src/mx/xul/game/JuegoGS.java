@@ -25,6 +25,31 @@ public class JuegoGS extends Pantalla {
 
     private Lux juego;
 
+    //Duración de las secciones
+    private float duracionVerde = 20; //Valor que representa los segundos de duración aproximados de la sección 1.
+    private float duracionRojo = 20; //Valor que representa los segundos de duración aproximados de la sección 2.
+    private float duracionAzul = 20; //Valor que representa los segundos de duración aproximados de la sección 3.
+    private float duracionBlanco = 20; //Valor que representa los segundos de duración aproximados de la sección 4.
+
+    //Velocidad normal de las secciones
+    private final float velocidadVerde = 300; //Valor que repreenta la velocidad normal de la sección 1.
+    private final float velocidadRojo = 600; //Valor que repreenta la velocidad normal de la sección 2.
+    private final float velocidadAzul = 700; //Valor que repreenta la velocidad normal de la sección 3.
+    private final float velocidadBlanco = 800; //Valor que repreenta la velocidad normal de la sección 4.
+
+    //Velocidad normal de la oscuridad según las secciones
+    private final float velocidadOscVerde = velocidadVerde+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
+    private final float velocidadOscRojo = velocidadRojo+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
+    private final float velocidadOscAzul = velocidadAzul+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
+    private final float velocidadOscBlanco = velocidadBlanco+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
+
+    //Velocidad normal de los hijos de la oscuridad según las secciones
+    private final float velocidadHijoOscVerde = velocidadVerde+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscRojo = velocidadRojo+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
+    private final float velocidadHijoOscAzul = velocidadAzul+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
+    private final float velocidadHijoOscBlanco = velocidadBlanco+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
+
+
     //Escena para Botones
     //private Stage escenaJuego;
 
@@ -60,28 +85,28 @@ public class JuegoGS extends Pantalla {
     private static float DELTA_Y = 10; //Avance vertical de lumil
     private Vector3 posicionDedo;
     private boolean isMooving = false; //indica si el perosnaje principal debe moverse hacia arriba o abajo
-    private EstadoLumil estadoLumil = EstadoLumil.JUGANDO;
 
     //Enemigo principal: La Oscuridad
     private Oscuridad oscuridad;
     private Texture texturaOscuridad;
     float tiempoOsc =0f; //Acumulador
-    private float velocidadOsc = velocidadBosque/2f;
+    private float velocidadOsc = velocidadOscVerde;//Velocidad Actual de la oscuridad
+    private float velocidadHijosOsc = velocidadHijoOscVerde;//Velocidad Actual de hijos de la oscuridad
     private float positionXStart = -900;
-    private float positionX = -300.0f;
+    private float positionX = -ANCHO/2;
     private float positionY = ALTO/2;
     private long startTimeOscuridad = 0;
-    private EstadoOscuridad estadoOscuridad = EstadoOscuridad.QUIETO;
+    //private EstadoOscuridad estadoOscuridad = EstadoOscuridad.QUIETO;
 
     //General
-    private float velocidad = velocidadBosque;
+    //private float velocidad = velocidadBosque;
 
     //Vidas
     private int contadorVidas = 3;
     private Texture texturaVida;
     private LuzVida luzVida;
     private Vidas vidas;
-    
+
 
     //Estado Juego
     private EstadoJuego estado = EstadoJuego.JUGANDO;
@@ -118,24 +143,11 @@ public class JuegoGS extends Pantalla {
     private float distanciaRecorridaW = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
     private float distanciaRecorridaControl = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
 
-    //Duración de las secciones
-    private float duracionVerde = 20; //Valor que representa los segundos de duración aproximados de la sección 1.
-    private float duracionRojo = 20; //Valor que representa los segundos de duración aproximados de la sección 2.
-    private float duracionAzul = 20; //Valor que representa los segundos de duración aproximados de la sección 3.
-    private float duracionBlanco = 20; //Valor que representa los segundos de duración aproximados de la sección 4.
-
-    //Velocidad normal de las secciones
-    private float velocidadVerde = 300; //Valor que repreenta los segundos de duración aproximados de la sección 1.
-    private float velocidadRojo = 600; //Valor que repreenta los segundos de duración aproximados de la sección 2.
-    private float velocidadAzul = 700; //Valor que repreenta los segundos de duración aproximados de la sección 3.
-    private float velocidadBlanco = 800; //Valor que repreenta los segundos de duración aproximados de la sección 4.
-
     //Secciones
     private EstadoSeccion seccion = EstadoSeccion.VERDE;
 
     //Botones
-
-    private Texture texturaBack;
+    private Texture texturaBack;//Botón de Regreso
 
     public JuegoGS (Lux juego) {
         this.juego=juego;
@@ -278,7 +290,7 @@ public class JuegoGS extends Pantalla {
         batch.begin();
 
         //Dibujar elementos del bosque
-        bosque.movSeccionesCompletas(velocidad, delta, batch, true);
+        bosque.movSeccionesCompletas(velocidadBosque, delta, batch, true);
 
         //Dibujar vidas
         vidas.vidasRender(contadorVidas, batch);
@@ -320,15 +332,15 @@ public class JuegoGS extends Pantalla {
 
         batch.end();
 
-        distanciaRecorridaControl += velocidad*delta;
+        distanciaRecorridaControl += velocidadBosque*delta;
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
-        if (distanciaRecorridaControl>velocidad*duracionVerde && distanciaRecorridaControl <= velocidad*duracionVerde*2){
+        if (distanciaRecorridaControl>velocidadBosque*duracionVerde && distanciaRecorridaControl <= velocidadBosque*duracionVerde*2){
             seccion = EstadoSeccion.ROJO;
-        }else if (distanciaRecorridaControl>(velocidad*duracionVerde*2) && distanciaRecorridaControl <= (velocidad*duracionVerde*3)){
+        }else if (distanciaRecorridaControl>(velocidadBosque*duracionVerde*2) && distanciaRecorridaControl <= (velocidadBosque*duracionVerde*3)){
             seccion = EstadoSeccion.AZUL;
-        } else if(distanciaRecorridaControl>(velocidad*duracionVerde*3)) {
+        } else if(distanciaRecorridaControl>(velocidadBosque*duracionVerde*3)) {
             seccion = EstadoSeccion.BLANCO;
         }
 
@@ -365,7 +377,10 @@ public class JuegoGS extends Pantalla {
                 moverBloques(delta);
                 returnVelocidadBosque();
             }
-            moverOscuridad(delta, estadoOscuridad);
+            if(colisionLumil){
+                velocidadBosque = 0;
+            }
+            moverOscuridad(delta);
             if(arrGemas!=null){
                 moverGemas();
                 depurarGemas();
@@ -394,6 +409,7 @@ public class JuegoGS extends Pantalla {
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
         if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
+            Gdx.app.log("Hijo", "Aqui me muero");
             hijoOscuridad=null;
         }
     }
@@ -455,20 +471,13 @@ public class JuegoGS extends Pantalla {
         } else {lumil.sprite.setRotation(0);}
     }
 
-    private void moverOscuridad(float delta, EstadoOscuridad estado){
+    private void moverOscuridad(float delta){
         //Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
-
-        if(estado == EstadoOscuridad.ADELANTE){
-            oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, delta);
-        }else if(estado == EstadoOscuridad.ATRAS){
-            oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, -delta);
-        }else if(estado == EstadoOscuridad.QUIETO){
-            oscuridad.mover(0,0, delta);
-        }
+        oscuridad.mover(velocidadBosque,velocidadOsc, delta);
     }
 
     private void moverHijoOscuridad(float delta){
-        hijoOscuridad.mover(velocidad*0.5f,velocidad*.5f + 500, delta);
+        hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
     }
 
 
@@ -476,22 +485,22 @@ public class JuegoGS extends Pantalla {
         //Dibujar las barras
         switch (seccion) {
             case VERDE:
-                distanciaRecorridaG += velocidad*delta;
+                distanciaRecorridaG += velocidadBosque*delta;
                 barraGS.renderAvance(distanciaRecorridaG,camara);
                 break;
             case ROJO:
-                distanciaRecorridaR +=velocidad*delta;
+                distanciaRecorridaR +=velocidadBosque*delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderAvance(distanciaRecorridaR,camara);
                 break;
             case AZUL:
-                distanciaRecorridaB +=velocidad*delta;
+                distanciaRecorridaB +=velocidadBosque*delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderEstatico(camara);
                 barraBS.renderAvance(distanciaRecorridaB,camara);
                 break;
             case BLANCO:
-                distanciaRecorridaW +=velocidad*delta;
+                distanciaRecorridaW +=velocidadBosque*delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderEstatico(camara);
                 barraBS.renderEstatico(camara);
@@ -520,7 +529,6 @@ public class JuegoGS extends Pantalla {
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
         texturaHijoOscuridad.dispose();
-        arrGemas.clear();
         arrBloques.clear();
     }
 
