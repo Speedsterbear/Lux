@@ -44,7 +44,7 @@ public class JuegoGS extends Pantalla {
     private final float velocidadOscBlanco = velocidadBlanco+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
-    private final float velocidadHijoOscVerde = velocidadVerde+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscVerde = velocidadVerde+200; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
     private final float velocidadHijoOscRojo = velocidadRojo+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
     private final float velocidadHijoOscAzul = velocidadAzul+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
     private final float velocidadHijoOscBlanco = velocidadBlanco+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
@@ -118,12 +118,12 @@ public class JuegoGS extends Pantalla {
     private float timerCrearGema = 0;
     private float tiempoParaCrearGema =1;
 
-    //Hijo de Oscuridad: Del tipo que quita vidas
-    private  HijoOscuridad hijoOscuridad;
-    private Texture texturaHijoOscuridad;
-    private float DX_PASO_HIJOOSCURIDAD=150;
-    private float timerCrearHijoOscuridad= 0;//Acumulador
-    private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
+    //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
+    //private  HijoOscuridad hijoOscuridad;
+    //private Texture texturaHijoOscuridad;
+    //private float DX_PASO_HIJOOSCURIDAD=150;
+    //private float timerCrearHijoOscuridad= 0;//Acumulador
+    //private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
 
     //Hijos de la Oscuridad: Del tipo que Bloquean el paso
     private Array<Bloque> arrBloques;
@@ -131,6 +131,14 @@ public class JuegoGS extends Pantalla {
     private Texture texturaBloque;
     private float timerCrearBloque = 0;//Acumulador
     private float tiempoParaCrearBloque =4; //Se espera esos segundos en crear el bloque.
+
+    //Hijos de la Oscuridad: Del tipo que quitan vidas
+    private Array<HijoOscuridad> arrHijosOscuridad;
+    private HijoOscuridad hijoOscuridad;
+    private Texture texturaHijoOscuridad;
+    private float timerCrearHijoOscuridad = 0;//Acumulador
+    private float tiempoParaCrearHijoOscuridad =4; //Se espera esos segundos en crear el bloque.
+
 
     //Barra Avance
     private BarraAvance barraGS;
@@ -233,6 +241,7 @@ public class JuegoGS extends Pantalla {
     private void crearTexturaHijoOscuridad(){
         //Para el que quita vida
         texturaHijoOscuridad = new Texture("Personajes/HijoOsc_sprite.png");
+        arrHijosOscuridad= new Array<>();
 
         //Para el que bloquea
         texturaBloque = new Texture("Personajes/bloque.png");
@@ -257,8 +266,19 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearHijosOscuridad(){
+        //Crear Enemigo
+        float xHijo = MathUtils.random(ANCHO - valorXMaxExt,ANCHO-valorXMinExt);
+        float yHijo = MathUtils.random(valorYMinMarg,valorYMaxMarg);
+        HijoOscuridad hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad,xHijo,yHijo,3,1,1/10f,1);
+        arrHijosOscuridad.add(hijoOscuridad);
+    }
+
+    //Codigo de Ricardo (Hijos Oscuridad)
+    /*
+    private void crearHijosOscuridad(){
         hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
     }
+     */
 
     private void crearFondo() {
         bosquefondo = new Texture("Escenarios/bosque_fondo.jpg");
@@ -298,8 +318,17 @@ public class JuegoGS extends Pantalla {
         //Dibujar personaje principal
         lumil.animationRender(batch, tiempoLumil);
 
+        /*
+
         //Dibujar hijos Oscuridad
         if (hijoOscuridad != null) {
+            hijoOscuridad.animationRender(batch, tiempoOsc);
+        }
+
+         */
+
+        //Dibujar los bloques
+        for (HijoOscuridad hijoOscuridad : arrHijosOscuridad) {
             hijoOscuridad.animationRender(batch, tiempoOsc);
         }
 
@@ -378,6 +407,9 @@ public class JuegoGS extends Pantalla {
             //Mover Oscuridad
             moverOscuridad(delta);
 
+            //Mover Hijo de Oscuridad (va afuera porque se sige moviendo aunque lúmil no se mueva, es como la oscuridad grande)
+            moverHijoOscuridad(delta);
+
             //Mover y Depurar Oscuridad
             if (colisionLumil == false) {
                 moverBloques(delta);
@@ -394,16 +426,23 @@ public class JuegoGS extends Pantalla {
                 moverGemas();
                 depurarGemas();
             }
-
+            // Código Ricardo
+            /*
             if (hijoOscuridad != null) {
                 moverHijoOscuridad(delta);
             }
+
+             */
             //Depurar Elementos
             depurarBloques();
+            depurarHijosOscuridad();
 
+            /*Codigo de Ricardo (Hijos)
             if (hijoOscuridad != null) {
                 depurarHijosOscuridad();
             }
+
+             */
         } //----------------------------------------------------------------------------------------
         if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
@@ -417,15 +456,33 @@ public class JuegoGS extends Pantalla {
     }
 
     private void depurarHijosOscuridad() {
+
+        //Eliminar bloques Fuera del rango de la pantalla
+        for (int  i=arrHijosOscuridad.size-1; i>=0; i--){
+            HijoOscuridad hijoOscuridad = arrHijosOscuridad.get(i);
+            if(arrHijosOscuridad!= null && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
+                arrHijosOscuridad.removeIndex(i);
+                contadorVidas --;
+            }
+            if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
+                arrHijosOscuridad.removeIndex(i);
+            }
+        }
+
+
+        //Código Ricardo
+
+        /*
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
             contadorVidas--;
-            hijoOscuridad = null;
+            //hijoOscuridad = null;
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
         if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
             Gdx.app.log("Hijo", "Aqui me muero");
-            hijoOscuridad=null;
+            //hijoOscuridad=null;
         }
+         */
     }
 
     private void depurarGemas() {
@@ -491,7 +548,11 @@ public class JuegoGS extends Pantalla {
     }
 
     private void moverHijoOscuridad(float delta){
-        hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
+        for (HijoOscuridad hijoOscuridad:arrHijosOscuridad) {
+            hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc,delta);
+        }
+
+        //hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
     }
 
 
