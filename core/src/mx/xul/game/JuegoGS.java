@@ -450,7 +450,7 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.GANA) {
             velocidadBosque = 0;
             velocidadOsc = 0;
-            //juego.setScreen(new PantallaPerdida(juego));
+            juego.setScreen(new PantallaGana(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
