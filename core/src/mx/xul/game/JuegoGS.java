@@ -12,14 +12,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.sun.org.apache.xpath.internal.objects.XBoolean;
 
 public class JuegoGS extends Pantalla {
 
@@ -111,12 +108,9 @@ public class JuegoGS extends Pantalla {
     //Estado Juego
     private EstadoJuego estado = EstadoJuego.JUGANDO;
 
-    //Gemas
-    private Array<Gema> arrGemas; // Guarda todos los aliens
-    private float DX_PASO_GEMA=10;
-    private long startTime = 0;
-    private float timerCrearGema = 0;
-    private float tiempoParaCrearGema =1;
+    //Esgrun
+    private Esgrun esgrun;
+    private float DX_PASO_ESGRUN=10;
 
     //Hijo de Oscuridad: Del tipo que quita vidas
     private  HijoOscuridad hijoOscuridad;
@@ -161,7 +155,6 @@ public class JuegoGS extends Pantalla {
         crearPersonajes();
         crearVidas();
         crearTexturaHijoOscuridad();
-        //crearGemas();
         crearBloques();
         crearBarra();
         crearBotonBack();
@@ -240,11 +233,9 @@ public class JuegoGS extends Pantalla {
         arrBloques = new Array<>();
     }
 
-    private void crearGemas(){
-        Texture texturaGemaAzul=new Texture("Personajes/gemaazul.png");
-        arrGemas=new Array<>();
-        Gema gema= new Gema(texturaGemaAzul, ANCHO,positionY);
-        arrGemas.add(gema);  // Lo guarda en el arreglo
+    private void crearEsgrun(){
+        Texture texturaEsgrun = new Texture("Personajes/Esgrun.png");
+        Esgrun esgrun = new Esgrun(texturaEsgrun, ANCHO,positionY);
     }
 
     //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
@@ -308,12 +299,9 @@ public class JuegoGS extends Pantalla {
             bloque.animationRender(batch, tiempoLumil);
         }
 
-        //Dibujar Gemas
-        if (arrGemas != null) {
-            for (Gema gema : arrGemas) {
-                gema.render(batch);
-            }
-        }
+        //Dibujar Esgrun
+        if(esgrun != null)
+            esgrun.render(batch);
 
         //Dibujar enemigo oscuridad
         oscuridad.animationRender(batch, tiempoOsc);
@@ -338,6 +326,7 @@ public class JuegoGS extends Pantalla {
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         if (distanciaRecorridaControl>velocidadBosque*duracionVerde && distanciaRecorridaControl <= velocidadBosque*duracionVerde*2){
             seccion = EstadoSeccion.ROJO;
+            crearEsgrun();
         }else if (distanciaRecorridaControl>(velocidadBosque*duracionVerde*2) && distanciaRecorridaControl <= (velocidadBosque*duracionVerde*3)){
             seccion = EstadoSeccion.AZUL;
         } else if(distanciaRecorridaControl>(velocidadBosque*duracionVerde*3)) {
@@ -361,11 +350,6 @@ public class JuegoGS extends Pantalla {
                 crearBloques();
             }
 
-            timerCrearGema += delta;
-            if (timerCrearGema >= tiempoParaCrearGema) {
-                timerCrearGema = 0;
-                //crearGemas();
-            }
             timerCrearHijoOscuridad += delta;
             if (timerCrearHijoOscuridad >= tiempoParaCrearHijoOscuridad) {
                 timerCrearHijoOscuridad = 0;
@@ -387,9 +371,9 @@ public class JuegoGS extends Pantalla {
                 oscuridadColision();
             }
 
-            if (arrGemas != null) {
-                moverGemas();
-                depurarGemas();
+            if (esgrun != null) {
+                moverEsgrun();
+                depurarEsgrun();
             }
 
             if (hijoOscuridad != null) {
@@ -425,13 +409,9 @@ public class JuegoGS extends Pantalla {
         }
     }
 
-    private void depurarGemas() {
-        for(int i=arrGemas.size-1;i>=0;i--){
-            Gema gema= arrGemas.get(i);
-            if(lumil.sprite.getBoundingRectangle().overlaps(gema.sprite.getBoundingRectangle())){
-                Gdx.app.log("Hit", "collision");
-                arrGemas.removeIndex(i);
-            }
+    private void depurarEsgrun() {
+        if(lumil.sprite.getBoundingRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
+            Gdx.app.log("Hit", "collision");
         }
     }
 
@@ -461,11 +441,8 @@ public class JuegoGS extends Pantalla {
         }
     }
 
-    private void moverGemas(){
-        for(Gema gema: arrGemas){
-            gema.moverHorizontal(DX_PASO_GEMA);
-        }
-        //depurarGemas();
+    private void moverEsgrun(){
+        esgrun.moverHorizontal(DX_PASO_ESGRUN);
     }
 
     private void moverBloques(float delta){
