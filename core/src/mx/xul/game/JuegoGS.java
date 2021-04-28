@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.sun.org.apache.xpath.internal.objects.XBoolean;
 
 public class JuegoGS extends Pantalla {
 
@@ -105,7 +106,7 @@ public class JuegoGS extends Pantalla {
     private Texture texturaVida;
     private LuzVida luzVida;
     private Vidas vidas;
-    
+
 
     //Estado Juego
     private EstadoJuego estado = EstadoJuego.JUGANDO;
@@ -352,54 +353,63 @@ public class JuegoGS extends Pantalla {
 
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
-        if(estado == EstadoJuego.JUGANDO){
-
+        if (estado == EstadoJuego.JUGANDO) {
+            boolean colisionLumil = hijoOscuridadColision();
             timerCrearBloque += delta;
-            if(timerCrearBloque>=tiempoParaCrearBloque) {
+            if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil == false) {
                 timerCrearBloque = 0;
                 crearBloques();
             }
 
             timerCrearGema += delta;
-            if(timerCrearGema>=tiempoParaCrearGema){
+            if (timerCrearGema >= tiempoParaCrearGema) {
                 timerCrearGema = 0;
-                crearGemas();
+                //crearGemas();
             }
-
             timerCrearHijoOscuridad += delta;
-            if(timerCrearHijoOscuridad>=tiempoParaCrearHijoOscuridad){
+            if (timerCrearHijoOscuridad >= tiempoParaCrearHijoOscuridad) {
                 timerCrearHijoOscuridad = 0;
                 crearHijosOscuridad();
             }
 
-            oscuridadColision();
-
+            //Mover Lumil
             moverLumil(isMooving);
-            moverOscuridad(delta);
-            //moverGemas();
-            moverBloques(delta);
-            if(hijoOscuridad!=null){
+
+            //Mover y Depurar Oscuridad
+            if (colisionLumil == false) {
+                moverBloques(delta);
+                returnVelocidadBosque();
+            }
+
+            if (colisionLumil) {
+                velocidadBosque = 0;
+                moverOscuridad(delta);
+                oscuridadColision();
+            }
+
+            if (arrGemas != null) {
+                moverGemas();
+                depurarGemas();
+            }
+
+            if (hijoOscuridad != null) {
                 moverHijoOscuridad(delta);
             }
-
             //Depurar Elementos
-           // depurarGemas();
             depurarBloques();
-            if(hijoOscuridad!=null){
+
+            if (hijoOscuridad != null) {
                 depurarHijosOscuridad();
             }
-
-        }
-
-        if(estado==EstadoJuego.PIERDE) {
+        } //----------------------------------------------------------------------------------------
+        if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
             velocidadOsc = 0;
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
-
     }
 
-    public void returnVelocidadBosque(){
+    private void returnVelocidadBosque(){
         velocidadBosque = velocidadInicialBosque;
     }
 
@@ -410,6 +420,7 @@ public class JuegoGS extends Pantalla {
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
         if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
+            Gdx.app.log("Hijo", "Aqui me muero");
             hijoOscuridad=null;
         }
     }
@@ -426,26 +437,21 @@ public class JuegoGS extends Pantalla {
 
     private void depurarBloques(){
         //Eliminar bloques Fuera del rango de la pantalla
-
-        //for (Bola bola: arrBolas) {
-        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como
-        estado = EstadoJuego.JUGANDO;
-        for(Bloque bloque: arrBloques){
-            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
-                //estado = EstadoJuego.HIT;
-                Gdx.app.log("Hit", "collision bloque");
-            }
-            else{
-                //
-            }
-        }
-
         for (int  i=arrBloques.size-1; i>=0; i--){
             Bloque bloque = arrBloques.get(i);
             if(arrBloques!= null && bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 arrBloques.removeIndex(i);
             }
         }
+    }
+
+    private boolean hijoOscuridadColision(){
+        for(Bloque bloque: arrBloques){
+            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void oscuridadColision() {
@@ -478,8 +484,7 @@ public class JuegoGS extends Pantalla {
 
     private void moverOscuridad(float delta){
         //Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
-
-        oscuridad.mover(velocidadBosque,velocidadOsc, delta);
+            oscuridad.mover(velocidadBosque,velocidadOsc, delta);
     }
 
     private void moverHijoOscuridad(float delta){
@@ -535,7 +540,6 @@ public class JuegoGS extends Pantalla {
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
         texturaHijoOscuridad.dispose();
-        arrGemas.clear();
         arrBloques.clear();
     }
 
