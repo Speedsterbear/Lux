@@ -126,12 +126,6 @@ public class JuegoGS extends Pantalla {
 
     private Texture texturaBack;
 
-
-
-
-
-
-
     public JuegoGS (Lux juego) {
         this.juego=juego;
     }
@@ -160,7 +154,7 @@ public class JuegoGS extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
-                juego.setScreen(new PantallaMenu(juego));
+                juego.setScreen(new PantallaPausa(juego));
             }
         });
 
@@ -586,7 +580,7 @@ public class JuegoGS extends Pantalla {
                     isMooving = true;
                  // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
                 }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
-                    juego.setScreen(new PantallaMenu(juego));
+                    juego.setScreen(new PantallaPausa(juego));
                 }
             }
 
