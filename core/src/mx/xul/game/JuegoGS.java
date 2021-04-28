@@ -30,10 +30,14 @@ public class JuegoGS extends Pantalla {
 
     //Márgenes
     private float margen = 20;
-    private float valorXMinExt = ANCHO + 200; //Valor mínimo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
-    private float valorXMaxExt = ANCHO *1.5f;  //Valor máximo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
-    private float valorYMinMarg = 0; // Valor mínimo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
-    private float valorYMaxMarg = ALTO; // Valor máximo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
+    //Valor mínimo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
+    private float valorXMinExt = ANCHO + 200;
+    //Valor máximo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
+    private float valorXMaxExt = ANCHO *1.5f;
+    //Valor mínimo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
+    private float valorYMinMarg = 0;
+    //Valor máximo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
+    private float valorYMaxMarg = ALTO;
 
     //Fondo de bosque en movimiento
     private Texture bosquefondo;
@@ -44,12 +48,12 @@ public class JuegoGS extends Pantalla {
     private FondoEnMovimiento bosque;
 
     // Texto
-    private Texto texto; // Muestra los valores en la pantalla
+    //Muestra los valores en la pantalla
+    private Texto texto;
 
     //Personaje principal Lumil
     private Lumil lumil;
     private Texture texturaLumilJugando;
-    private Texture texturaLumilPierde;
     float tiempoLumil =0f; //Acumulador
     private static float DELTA_Y = 10; //Avance vertical de lumil
     private Vector3 posicionDedo;
@@ -83,6 +87,8 @@ public class JuegoGS extends Pantalla {
     private Array<Gema> arrGemas; // Guarda todos los aliens
     private float DX_PASO_GEMA=10;
     private long startTime = 0;
+    private float timerCrearGema = 0;
+    private float tiempoParaCrearGema =1;
 
     //Hijo de Oscuridad: Del tipo que quita vidas
     private  HijoOscuridad hijoOscuridad;
@@ -108,16 +114,16 @@ public class JuegoGS extends Pantalla {
     private float distanciaRecorridaControl = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
 
     //Duración de las secciones
-    private float duracionVerde = 20; //Valor que repreenta los segundos de duración aproximados de la sección 1.
-    private float duracionRojo = 20; //Valor que repreenta los segundos de duración aproximados de la sección 2.
-    private float duracionAzul = 20; //Valor que repreenta los segundos de duración aproximados de la sección 3.
-    private float duracionBlanco = 20; //Valor que repreenta los segundos de duración aproximados de la sección 4.
+    private float duracionVerde = 20; //Valor que representa los segundos de duración aproximados de la sección 1.
+    private float duracionRojo = 20; //Valor que representa los segundos de duración aproximados de la sección 2.
+    private float duracionAzul = 20; //Valor que representa los segundos de duración aproximados de la sección 3.
+    private float duracionBlanco = 20; //Valor que representa los segundos de duración aproximados de la sección 4.
 
     //Velocidad normal de las secciones
     private float velocidadVerde = 300; //Valor que repreenta los segundos de duración aproximados de la sección 1.
-    private float velocidadRojo = 300; //Valor que repreenta los segundos de duración aproximados de la sección 2.
-    private float velocidadAzul = 300; //Valor que repreenta los segundos de duración aproximados de la sección 3.
-    private float velocidadBlanco = 300; //Valor que repreenta los segundos de duración aproximados de la sección 4.
+    private float velocidadRojo = 600; //Valor que repreenta los segundos de duración aproximados de la sección 2.
+    private float velocidadAzul = 700; //Valor que repreenta los segundos de duración aproximados de la sección 3.
+    private float velocidadBlanco = 800; //Valor que repreenta los segundos de duración aproximados de la sección 4.
 
     //Secciones
     private EstadoSeccion seccion = EstadoSeccion.VERDE;
@@ -199,8 +205,7 @@ public class JuegoGS extends Pantalla {
     private void crearPersonajes() {
         //Personaje principal: Lumil
         texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
-        texturaLumilPierde = new Texture ("Personajes/Oscuridad_Sprites.png");
-        lumil = new Lumil(texturaLumilJugando,texturaLumilPierde,ANCHO/2, ALTO/2,4,1,1/10f,1);
+        lumil = new Lumil(texturaLumilJugando,ANCHO/2, ALTO/2,4,1,1/10f,1);
 
         //Enemigo principal: Oscuridad
         texturaOscuridad = new Texture("Personajes/oscuridad.png");
@@ -220,11 +225,18 @@ public class JuegoGS extends Pantalla {
 
     private void crearGemas(){
         Texture texturaGemaAzul=new Texture("Personajes/gemaazul.png");
-        // Texture texturaGemaRoja=new Texture("Space/enemigoAbajo.png");
-        // Texture texturaGemaVerde=new Texture("Space/enemigoExplota.png");
         arrGemas=new Array<>();
         Gema gema= new Gema(texturaGemaAzul, ANCHO,positionY);
         arrGemas.add(gema);  // Lo guarda en el arreglo
+    }
+
+    //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
+    private void crearBloques() {
+        //Crear Enemigo
+        float xBloque = MathUtils.random(valorXMinExt,valorXMaxExt);
+        float yBloque = MathUtils.random(valorYMinMarg,valorYMaxMarg);
+        Bloque bloque = new Bloque(texturaBloque,xBloque,yBloque,3,1,1/8f,1);
+        arrBloques.add(bloque);
     }
 
 
@@ -239,60 +251,60 @@ public class JuegoGS extends Pantalla {
     @Override
     public void render(float delta) {
 
-
         actuaizar(delta);
 
+        //Estado del juego
         if (contadorVidas == 0) {
             estado = EstadoJuego.PIERDE;
         }
 
-        tiempoLumil += Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
-        tiempoOsc += Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
+        //Tiempo que pasó entre render.
+        tiempoLumil += Gdx.graphics.getDeltaTime();
+        //Tiempo que pasó entre render.
+        tiempoOsc += Gdx.graphics.getDeltaTime();
 
         borrarPantalla(0, 1, 0);
         batch.setProjectionMatrix(camara.combined);
 
-        batch.begin();
         //Se dibujan los elementos
+        batch.begin();
+
+        //Dibujar elementos del bosque
         bosque.movSeccionesCompletas(velocidad, delta, batch, true);
+
+        //Dibujar vidas
+        vidas.vidasRender(contadorVidas, batch);
+
+        //Dibujar personaje principal
+        lumil.animationRender(batch, tiempoLumil);
+
+        //Dibujar enemigo oscuridad
+        oscuridad.animationRender(batch, tiempoOsc);
+
+        //Dibujar hijos Oscuridad
+        if (hijoOscuridad != null) {
+            hijoOscuridad.animationRender(batch, tiempoOsc);
+        }
 
         //Dibujar los bloques
         for (Bloque bloque : arrBloques) {
             bloque.animationRender(batch, tiempoLumil);
         }
 
-        //Dibujar personaje principal
-        lumil.animationRender(batch, tiempoLumil);
-
-
-        if (hijoOscuridad != null) {
-            hijoOscuridad.animationRender(batch, tiempoOsc);
+        //Dibujar Gemas
+        if (arrGemas != null) {
+            for (Gema gema : arrGemas) {
+                gema.render(batch);
+            }
         }
 
 
-        oscuridad.animationRender(batch, tiempoOsc);
         // Dibuja el marcador
         //texto.mostrarMensaje(batch, "SCORE", ANCHO / 2, ALTO - 25);
-
-        if (TimeUtils.timeSinceNanos(startTime) > 1000000000) {
-            // if time passed since the time you set startTime at is more than 1 second
-
-            //your code here
-            crearGemas();
-            //also you can set the new startTime
-            //so this block will execute every one second
-            startTime = TimeUtils.nanoTime();
-        }
-
-        for (Gema gema : arrGemas) { // Automaticamente visita cada objeto del arreglo
-            gema.render(batch);
-        }
 
         //Botones
         //escenaJuego.draw();
 
-
-        vidas.vidasRender(contadorVidas, batch);
 
         // Dibujar back
         batch.draw(texturaBack,margen-20,ALTO-margen-texturaBack.getHeight()+20);
@@ -301,7 +313,7 @@ public class JuegoGS extends Pantalla {
         batch.end();
 
         distanciaRecorridaControl += velocidad*delta;
-        System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
+        //System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
@@ -365,21 +377,21 @@ public class JuegoGS extends Pantalla {
 
     }
 
-    private void moverOscuridad(float delta, EstadoOscuridad estado){
-        Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
 
-        if(estado == EstadoOscuridad.ADELANTE){
-            oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, delta);
-        }else if(estado == EstadoOscuridad.ATRAS){
-                oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, -delta);
-        }else if(estado == EstadoOscuridad.QUIETO){
-            oscuridad.mover(0,0, delta);
-        }
-    }
 
     private void actuaizar(float delta) {
 
-        actualizarBloques(delta);
+        timerCrearBloque += delta;
+        if(timerCrearBloque>=tiempoParaCrearBloque) {
+            timerCrearBloque = 0;
+            crearBloques();
+        }
+
+        timerCrearGema += delta;
+        if(timerCrearGema>=tiempoParaCrearGema){
+            timerCrearGema = 0;
+            crearGemas();
+        }
 
         //Esta programado para que la oscuridad avance poco a poco, pero según yo esto no va a pasar en el juego de verdad,
         //al menos al inicio, solo que lo puse así para apreciar el funcionamiento.
@@ -396,13 +408,8 @@ public class JuegoGS extends Pantalla {
 
             //Gdx.app.log("TIME", Long.toString(TimeUtils.nanoTime()));
 
-            moverOscuridad(delta, estadoOscuridad);
-
             if (TimeUtils.timeSinceNanos(startTimeOscuridad) > 2000000000 && estadoOscuridad == EstadoOscuridad.QUIETO) {
                 estadoOscuridad = EstadoOscuridad.ADELANTE;
-
-                //hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, oscuridad.sprite.getX() + oscuridad.sprite.getWidth() / 2 - texturaHijoOscuridad.getWidth() / 2, oscuridad.sprite.getY() + oscuridad.sprite.getHeight());
-
                 hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
             }
 
@@ -411,7 +418,7 @@ public class JuegoGS extends Pantalla {
             }
 
             if (oscuridad.sprite.getX() < -780 && estadoOscuridad == EstadoOscuridad.ATRAS) {
-                Gdx.app.log("Distance", "QUIETO");
+                //Gdx.app.log("Distance", "QUIETO");
                 startTimeOscuridad = TimeUtils.nanoTime();
                 estadoOscuridad = EstadoOscuridad.QUIETO;
             }
@@ -421,55 +428,22 @@ public class JuegoGS extends Pantalla {
             }
 
 
+
+            moverLumil(isMooving);
+            moverOscuridad(delta, estadoOscuridad);
             moverGemas();
+            moverBloques(delta);
 
-            if (isMooving){
-                lumil.mover(DELTA_Y,posicionDedo.y);
-            } else {lumil.sprite.setRotation(0);}
+            depurarGemas();
+            depurarGemas();
+
         }
-
-
 
     }
 
-    //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
-    private void actualizarBloques(float delta) {
-        timerCrearBloque += delta;
-        if(timerCrearBloque>=tiempoParaCrearBloque){
-            timerCrearBloque = 0;
-
-            //Crear Enemigo
-            float xBloque = MathUtils.random(valorXMinExt,valorXMaxExt);
-            float yBloque = MathUtils.random(valorYMinMarg,valorYMaxMarg);
-            Bloque bloque = new Bloque(texturaBloque,xBloque,yBloque,3,1,1/8f,1);
-            arrBloques.add(bloque);
-        }
-
-        //Mover los Enemigos
-        for (Bloque bloque:arrBloques) {
-            bloque.mover(delta,velocidadBosque);
-        }
-
-        //Eliminar bloques Fuera
-
-        //for (Bola bola: arrBolas) {
-        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como.
-        for (int  i=arrBloques.size-1; i>=0; i--){
-            Bloque bloque = arrBloques.get(i);
-            //Prueba si la bola debe desaparecer cuando salga de pantalla
-            if(bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
-                //Borrar el objeto
-                arrBloques.removeIndex(i);
-            }
-            }
-
-            }
-
     private void hijoOscuridadColision() {
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
-            //lumil.setEstado(EstadoLumil.PIERDE);
             contadorVidas--;
-            //Gdx.app.log("hit", "hit");
             hijoOscuridad = null;
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
@@ -488,17 +462,30 @@ public class JuegoGS extends Pantalla {
         for(int i=arrGemas.size-1;i>=0;i--){
             Gema gema= arrGemas.get(i);
             if(lumil.sprite.getBoundingRectangle().overlaps(gema.sprite.getBoundingRectangle())){
-                Gdx.app.log("Hit", "Hit Gema");
+                Gdx.app.log("Hit", "collision");
                 arrGemas.removeIndex(i);
+            }
+        }
+    }
+
+    private void depurarBloques(){
+        //Eliminar bloques Fuera del rango de la pantalla
+
+        //for (Bola bola: arrBolas) {
+        //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como.
+        for (int  i=arrBloques.size-1; i>=0; i--){
+            Bloque bloque = arrBloques.get(i);
+            //Prueba si la bola debe desaparecer cuando salga de pantalla
+            if(bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
+                //Borrar el objeto
+                arrBloques.removeIndex(i);
             }
         }
     }
 
     private void oscuridadColision() {
         if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
-            //lumil.setEstado(EstadoLumil.PIERDE);
             contadorVidas--;
-            //Gdx.app.log("hit", "hit");
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
     }
@@ -507,7 +494,33 @@ public class JuegoGS extends Pantalla {
         for(Gema gema: arrGemas){
             gema.moverHorizontal(DX_PASO_GEMA);
         }
-        depurarGemas();
+        //depurarGemas();
+    }
+
+    private void moverBloques(float delta){
+        //Mover los Enemigos
+        for (Bloque bloque:arrBloques) {
+            bloque.mover(delta,velocidadBosque);
+        }
+        //depurarBloques();
+    }
+
+    public void moverLumil(boolean Mooving){
+        if (Mooving){
+            lumil.mover(DELTA_Y,posicionDedo.y);
+        } else {lumil.sprite.setRotation(0);}
+    }
+
+    private void moverOscuridad(float delta, EstadoOscuridad estado){
+        //Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
+
+        if(estado == EstadoOscuridad.ADELANTE){
+            oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, delta);
+        }else if(estado == EstadoOscuridad.ATRAS){
+            oscuridad.mover(velocidad*0.5f,velocidad*.5f + 100, -delta);
+        }else if(estado == EstadoOscuridad.QUIETO){
+            oscuridad.mover(0,0, delta);
+        }
     }
 
 
@@ -524,7 +537,6 @@ public class JuegoGS extends Pantalla {
     @Override
     public void dispose() {
         texturaLumilJugando.dispose();
-        texturaLumilPierde.dispose();
         texturaOscuridad.dispose();
         texturaHijoOscuridad.dispose();
         arrGemas.clear();
