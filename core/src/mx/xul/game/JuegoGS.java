@@ -94,11 +94,13 @@ public class JuegoGS extends Pantalla {
     private  HijoOscuridad hijoOscuridad;
     private Texture texturaHijoOscuridad;
     private float DX_PASO_HIJOOSCURIDAD=150;
+    private float timerCrearHijoOscuridad= 0;//Acumulador
+    private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
 
     //Hijos de la Oscuridad: Del tipo que Bloquean el paso
+    private Array<Bloque> arrBloques;
     private Bloque bloque;
     private Texture texturaBloque;
-    private Array<Bloque> arrBloques;
     private float timerCrearBloque = 0;//Acumulador
     private float tiempoParaCrearBloque =4; //Se espera esos segundos en crear el bloque.
 
@@ -144,9 +146,8 @@ public class JuegoGS extends Pantalla {
         crearPersonajes();
         crearVidas();
         crearTexturaHijoOscuridad();
-        startTime = TimeUtils.nanoTime();
-        startTimeOscuridad = TimeUtils.nanoTime();
         crearGemas();
+        crearBloques();
         crearBarra();
         crearBotonBack();
 
@@ -220,6 +221,7 @@ public class JuegoGS extends Pantalla {
 
         //Para el que bloquea
         texturaBloque = new Texture("Personajes/bloque.png");
+
         arrBloques = new Array<>();
     }
 
@@ -239,6 +241,9 @@ public class JuegoGS extends Pantalla {
         arrBloques.add(bloque);
     }
 
+    private void crearHijosOscuridad(){
+        hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
+    }
 
     private void crearFondo() {
         bosquefondo = new Texture("Escenarios/bosque_fondo.jpg");
@@ -313,7 +318,6 @@ public class JuegoGS extends Pantalla {
         batch.end();
 
         distanciaRecorridaControl += velocidad*delta;
-        //System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
@@ -325,59 +329,10 @@ public class JuegoGS extends Pantalla {
             seccion = EstadoSeccion.BLANCO;
         }
 
-        //Dibujar las barras
-        switch (seccion) {
-            case VERDE:
-                distanciaRecorridaG += velocidad*delta;
-                barraGS.renderAvance(distanciaRecorridaG,camara);
-                break;
-            case ROJO:
-                distanciaRecorridaR +=velocidad*delta;
-                barraGS.renderEstatico(camara);
-                barraRS.renderAvance(distanciaRecorridaR,camara);
-                break;
-            case AZUL:
-                distanciaRecorridaB +=velocidad*delta;
-                barraGS.renderEstatico(camara);
-                barraRS.renderEstatico(camara);
-                barraBS.renderAvance(distanciaRecorridaB,camara);
-                break;
-            case BLANCO:
-                distanciaRecorridaW +=velocidad*delta;
-                barraGS.renderEstatico(camara);
-                barraRS.renderEstatico(camara);
-                barraBS.renderEstatico(camara);
-                if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
-                    barraWS.renderEstatico(camara);
-                    System.out.println("GANASTE!");
-                }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
-                break;
-        }
-        /*
-        distanciaRecorridaControl += velocidad*delta;
-        System.out.println("distancia recorridaCONTROL:"+ distanciaRecorridaControl);
-        //Velocidad
-        if (distanciaRecorridaControl<=velocidad*duracionVerde){
-            distanciaRecorridaG += velocidad*delta;
-            System.out.println("distancia recorridaG:"+ distanciaRecorridaG);
-        }else if (distanciaRecorridaControl>velocidad*duracionVerde && distanciaRecorridaControl <= velocidad*duracionVerde*2){
-            distanciaRecorridaR += velocidad*delta;
-            System.out.println("distancia recorridaR:"+ distanciaRecorridaR);
-        }else if (distanciaRecorridaControl>(velocidad*duracionVerde*2) && distanciaRecorridaControl <= (velocidad*duracionVerde*3){
-            distanciaRecorridaB += velocidad*delta;
-            System.out.println("distancia recorridaR:"+ distanciaRecorridaR);
-        }
-
-        //La barra de avance se debe de renderizar fuera del begin y end de batch para que no genere errores.
-        barraRS.render(distanciaRecorridaR,camara);
-        barraGS.render(distanciaRecorridaG,camara);
-            }
-
-         */
+        //Dibujar barra progreso
+        dibujarBarras(delta);
 
     }
-
-
 
     private void actuaizar(float delta) {
 
@@ -393,8 +348,13 @@ public class JuegoGS extends Pantalla {
             crearGemas();
         }
 
-        //Esta programado para que la oscuridad avance poco a poco, pero según yo esto no va a pasar en el juego de verdad,
-        //al menos al inicio, solo que lo puse así para apreciar el funcionamiento.
+        timerCrearHijoOscuridad += delta;
+        if(timerCrearHijoOscuridad>=tiempoParaCrearHijoOscuridad){
+            timerCrearHijoOscuridad = 0;
+            crearHijosOscuridad();
+        }
+
+
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if(estado == EstadoJuego.JUGANDO){
 
@@ -403,39 +363,16 @@ public class JuegoGS extends Pantalla {
                 hijoOscuridadColision();
             }
 
-
             actuaizarHijoOscuridad(delta);
-
-            //Gdx.app.log("TIME", Long.toString(TimeUtils.nanoTime()));
-
-            if (TimeUtils.timeSinceNanos(startTimeOscuridad) > 2000000000 && estadoOscuridad == EstadoOscuridad.QUIETO) {
-                estadoOscuridad = EstadoOscuridad.ADELANTE;
-                hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
-            }
-
-            if(oscuridad.sprite.getX() > -500){
-                estadoOscuridad = EstadoOscuridad.ATRAS;
-            }
-
-            if (oscuridad.sprite.getX() < -780 && estadoOscuridad == EstadoOscuridad.ATRAS) {
-                //Gdx.app.log("Distance", "QUIETO");
-                startTimeOscuridad = TimeUtils.nanoTime();
-                estadoOscuridad = EstadoOscuridad.QUIETO;
-            }
-
-            if (TimeUtils.timeSinceNanos(startTimeOscuridad) > 1000000000 && estadoOscuridad == EstadoOscuridad.QUIETO) {
-                hijoOscuridad = new HijoOscuridad(texturaHijoOscuridad, 0,ALTO/2,3,1,1/8f,2);
-            }
-
-
 
             moverLumil(isMooving);
             moverOscuridad(delta, estadoOscuridad);
             moverGemas();
             moverBloques(delta);
 
+            //Depurar Elementos
             depurarGemas();
-            depurarGemas();
+            depurarBloques();
 
         }
 
@@ -446,6 +383,17 @@ public class JuegoGS extends Pantalla {
             contadorVidas--;
             hijoOscuridad = null;
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
+        }
+    }
+
+    private void bloqueOscuridadColision() {
+        for(int i=arrBloques.size-1;i>=0;i--){
+            Bloque bloque= arrBloques.get(i);
+            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                Gdx.app.log("Hit", "collision");
+                contadorVidas--;
+                arrGemas.removeIndex(i);
+            }
         }
     }
 
@@ -475,6 +423,11 @@ public class JuegoGS extends Pantalla {
         //Comnetario Personal: Según yo, esto se puede simplifica o hacer mas eficiente y siento que tal vez con lo de arriba, pero no se bien como.
         for (int  i=arrBloques.size-1; i>=0; i--){
             Bloque bloque = arrBloques.get(i);
+            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                Gdx.app.log("Hit", "collision");
+                contadorVidas--;
+                arrBloques.removeIndex(i);
+            }
             //Prueba si la bola debe desaparecer cuando salga de pantalla
             if(bloque.getX()<-(ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 //Borrar el objeto
@@ -522,6 +475,39 @@ public class JuegoGS extends Pantalla {
             oscuridad.mover(0,0, delta);
         }
     }
+
+
+    public void dibujarBarras(float delta){
+        //Dibujar las barras
+        switch (seccion) {
+            case VERDE:
+                distanciaRecorridaG += velocidad*delta;
+                barraGS.renderAvance(distanciaRecorridaG,camara);
+                break;
+            case ROJO:
+                distanciaRecorridaR +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderAvance(distanciaRecorridaR,camara);
+                break;
+            case AZUL:
+                distanciaRecorridaB +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderEstatico(camara);
+                barraBS.renderAvance(distanciaRecorridaB,camara);
+                break;
+            case BLANCO:
+                distanciaRecorridaW +=velocidad*delta;
+                barraGS.renderEstatico(camara);
+                barraRS.renderEstatico(camara);
+                barraBS.renderEstatico(camara);
+                if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
+                    barraWS.renderEstatico(camara);
+                    System.out.println("GANASTE!");
+                }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
+                break;
+        }
+    }
+
 
 
     @Override
