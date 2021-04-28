@@ -38,7 +38,7 @@ public class JuegoGS extends Pantalla {
     private final float velocidadBlanco = 800; //Valor que repreenta la velocidad normal de la sección 4.
 
     //Velocidad normal de la oscuridad según las secciones
-    private final float velocidadOscVerde = velocidadVerde+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
+    private final float velocidadOscVerde = velocidadVerde; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
     private final float velocidadOscRojo = velocidadRojo+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
     private final float velocidadOscAzul = velocidadAzul+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
     private final float velocidadOscBlanco = velocidadBlanco+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
@@ -93,7 +93,7 @@ public class JuegoGS extends Pantalla {
     private float velocidadOsc = velocidadOscVerde;//Velocidad Actual de la oscuridad
     private float velocidadHijosOsc = velocidadHijoOscVerde;//Velocidad Actual de hijos de la oscuridad
     private float positionXStart = -900;
-    private float positionX = -ANCHO/2;
+    private float positionX = (-ANCHO/2)+margen*2;
     private float positionY = ALTO/2;
     private long startTimeOscuridad = 0;
     //private EstadoOscuridad estadoOscuridad = EstadoOscuridad.QUIETO;
@@ -375,6 +375,9 @@ public class JuegoGS extends Pantalla {
             //Mover Lumil
             moverLumil(isMooving);
 
+            //Mover Oscuridad
+            moverOscuridad(delta);
+
             //Mover y Depurar Oscuridad
             if (colisionLumil == false) {
                 moverBloques(delta);
@@ -383,7 +386,7 @@ public class JuegoGS extends Pantalla {
 
             if (colisionLumil) {
                 velocidadBosque = 0;
-                moverOscuridad(delta);
+                //moverOscuridad(delta);
                 oscuridadColision();
             }
 
