@@ -370,12 +370,16 @@ public class JuegoGS extends Pantalla {
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         aparicion += delta;
-        if (aparicion>= 20){
+        System.out.println(aparicion);
+        if (aparicion>= 20 && aparicion<40){
             seccion = EstadoSeccion.ROJO;
-        }else if (aparicion>= 40){
+            System.out.println("Rojo");
+        }else if (aparicion>= 40 && aparicion<60){
             seccion = EstadoSeccion.AZUL;
+            System.out.println("azul");
         } else if(aparicion>= 60) {
             seccion = EstadoSeccion.BLANCO;
+            System.out.println("blanco");
         }
 
 
