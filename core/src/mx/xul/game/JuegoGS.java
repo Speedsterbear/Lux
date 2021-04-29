@@ -113,8 +113,9 @@ public class JuegoGS extends Pantalla {
     private EstadoJuego estado = EstadoJuego.JUGANDO;
 
     //Esgrun
-    private Esgrun esgrun;
+    private Esgrun esgrun, rojel, shiblu;
     private float DX_PASO_ESGRUN=10;
+    float aparicion = 0;
 
     //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
     //private  HijoOscuridad hijoOscuridad;
@@ -165,7 +166,6 @@ public class JuegoGS extends Pantalla {
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
-        //crearEsgrun();
         crearVidas();
         crearTexturaHijoOscuridad();
         crearBloques();
@@ -250,6 +250,16 @@ public class JuegoGS extends Pantalla {
     private void crearEsgrun(){
         Texture texturaEsgrun = new Texture("Personajes/Esgrun.png");
         esgrun = new Esgrun(texturaEsgrun, ANCHO,positionY);
+    }
+
+    private void crearRojel(){
+        Texture texturaRojel = new Texture("Personajes/Rojel.png");
+        esgrun = new Esgrun(texturaRojel, ANCHO,positionY);
+    }
+
+    private void crearShiblu(){
+        Texture texturaShiblu = new Texture("Personajes/Shiblu.png");
+        esgrun = new Esgrun(texturaShiblu, ANCHO,positionY);
     }
 
     //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
@@ -367,7 +377,7 @@ public class JuegoGS extends Pantalla {
             seccion = EstadoSeccion.BLANCO;
         }
 
-        //Gdx.app.log("Distancia", Float.toString(distanciaRecorridaControl));
+
 
         //Dibujar barra progreso
         dibujarBarras(delta);
@@ -378,9 +388,23 @@ public class JuegoGS extends Pantalla {
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
-            if(seccion == EstadoSeccion.ROJO){
+
+            aparicion += delta;
+            if(aparicion>= duracionVerde - 1 && aparicion<=duracionVerde){
                 crearEsgrun();
+            }else if(aparicion>= duracionRojo*2 - 1 && aparicion<=duracionRojo*2){
+                crearRojel();
+            }else if(aparicion>= duracionAzul*3 - 1 && aparicion<=duracionAzul*3){
+                crearShiblu();
             }
+            /*if(seccion == EstadoSeccion.VERDE){
+                crearEsgrun();
+            }else if(seccion == EstadoSeccion.ROJO){
+                crearRojel();
+            }else if(seccion == EstadoSeccion.AZUL){
+                crearShiblu();
+            }*/
+
             boolean colisionLumil = hijoOscuridadColision();
             timerCrearBloque += delta;
             if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil == false) {
@@ -418,6 +442,16 @@ public class JuegoGS extends Pantalla {
             if(esgrun!=null){
                 moverEsgrun();
                 depurarEsgrun();
+            }
+
+            if(rojel!=null){
+                moverRojel();
+                depurarRojel();
+            }
+
+            if(shiblu!=null){
+                moverShiblu();
+                depurarShiblu();
             }
 
             // Código Ricardo
@@ -474,25 +508,23 @@ public class JuegoGS extends Pantalla {
             }
         }
 
-
-        //Código Ricardo
-
-        /*
-        if(estado == EstadoJuego.JUGANDO && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())){
-            contadorVidas--;
-            //hijoOscuridad = null;
-            Gdx.app.log("Vidas", Integer.toString(contadorVidas));
-        }
-        if(hijoOscuridad!=null && hijoOscuridad.sprite.getX() > ANCHO){
-            Gdx.app.log("Hijo", "Aqui me muero");
-            //hijoOscuridad=null;
-        }
-         */
     }
 
     private void depurarEsgrun() {
         if(lumil.sprite.getBoundingRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
-            //Gdx.app.log("Hit", "collision");
+
+        }
+    }
+
+    private void depurarRojel() {
+        if(lumil.sprite.getBoundingRectangle().overlaps(rojel.sprite.getBoundingRectangle())){
+
+        }
+    }
+
+    private void depurarShiblu() {
+        if(lumil.sprite.getBoundingRectangle().overlaps(shiblu.sprite.getBoundingRectangle())){
+
         }
     }
 
@@ -526,6 +558,14 @@ public class JuegoGS extends Pantalla {
         esgrun.moverHorizontal(DX_PASO_ESGRUN);
     }
 
+    private void moverRojel(){
+        rojel.moverHorizontal(DX_PASO_ESGRUN);
+    }
+
+    private void moverShiblu(){
+        shiblu.moverHorizontal(DX_PASO_ESGRUN);
+    }
+
     private void moverBloques(float delta){
         //Mover los Enemigos
         for (Bloque bloque:arrBloques) {
@@ -541,7 +581,6 @@ public class JuegoGS extends Pantalla {
     }
 
     private void moverOscuridad(float delta){
-        //Gdx.app.log("Distance", Float.toString(oscuridad.sprite.getX()));
             oscuridad.mover(velocidadBosque,velocidadOsc, delta);
     }
 
@@ -565,7 +604,6 @@ public class JuegoGS extends Pantalla {
                 distanciaRecorridaR +=velocidadBosque*delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderAvance(distanciaRecorridaR,camara);
-                System.out.println("ROJO");
                 break;
             case AZUL:
                 distanciaRecorridaB +=velocidadBosque*delta;
