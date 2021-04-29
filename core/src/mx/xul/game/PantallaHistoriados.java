@@ -8,16 +8,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-// Clase que implementa la pantalla cuando el jugador gana
+
+
+// Clase que implementa la pantalla de la historia parte 2
 // Autor: Andrea Espinosa Azuela
 
-public class PantallaGana extends Pantalla{
-
+public class PantallaHistoriados extends Pantalla{
     private Lux juego;
     private Texture texturafondo;
-    private Stage escenaGana;
+    private Stage escenaHistoriados;
 
-    public PantallaGana(Lux juego) {
+    public PantallaHistoriados(Lux juego) {
         this.juego=juego;
     }
 
@@ -33,25 +34,25 @@ public class PantallaGana extends Pantalla{
 
     @Override
     public void show() {
-        texturafondo = new Texture("Escenarios/Gana.png");
+        texturafondo = new Texture("Escenarios/Historiados.png");
         crearGana();
     }
 
     private void crearGana() {
-        texturafondo= new Texture("Escenarios/Gana.png");
-        escenaGana = new Stage(vista);
+        texturafondo= new Texture("Escenarios/Historiados.png");
+        escenaHistoriados = new Stage(vista);
 
-        Button btnExit = crearBoton("Botones/btnExit.png","Botones/btnExitClick.png");
-        btnExit.setPosition(ANCHO/2, ALTO/3.5f, Align.center);
-        escenaGana.addActor(btnExit);
-        btnExit.addListener(new ClickListener() {
+        Button btnIniciar = crearBoton("Nosotros/flechaDerOff.png","Nosotros/flechaDerOn.png");
+        btnIniciar.setPosition(ANCHO/2+400, ALTO/5.5f, Align.center);
+        escenaHistoriados.addActor(btnIniciar);
+        btnIniciar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                juego.setScreen(new PantallaMenu(juego));
+                juego.setScreen(new JuegoGS(juego));
             }
         });
 
-        Gdx.input.setInputProcessor(escenaGana);
+        Gdx.input.setInputProcessor(escenaHistoriados);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class PantallaGana extends Pantalla{
         batch.draw(texturafondo,0,0);
         batch.end();
 
-        escenaGana.draw();
+        escenaHistoriados.draw();
     }
 
     @Override
@@ -82,4 +83,5 @@ public class PantallaGana extends Pantalla{
 
     }
 }
+
 

@@ -40,7 +40,7 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
                 //juego.setScreen(new PantallaJuego(juego));
-                juego.setScreen(new JuegoGS(juego));
+                juego.setScreen(new PantallaHistoriauno(juego));
             }
         });
 
