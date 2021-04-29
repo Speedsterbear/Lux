@@ -114,7 +114,7 @@ public class JuegoGS extends Pantalla {
 
     //Esgrun
     private Esgrun esgrun, rojel, shiblu;
-    private float DX_PASO_ESGRUN=10;
+    private float DX_PASO_ESGRUN=2.5f;
     public static float aparicion = 0;
 
     //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
@@ -155,6 +155,10 @@ public class JuegoGS extends Pantalla {
 
     //Botones
     private Texture texturaBack;//Botón de Regreso
+    private Texture texturaGemaRoja;
+    private Texture texturaGemaAzul;
+    private Texture texturaGemaVerde;
+
 
     public JuegoGS (Lux juego) {
         this.juego=juego;
@@ -170,7 +174,7 @@ public class JuegoGS extends Pantalla {
         crearTexturaHijoOscuridad();
         crearBloques();
         crearBarra();
-        crearBotonBack();
+        crearBotones();
 
         //Escena y Botón
         //escenaJuego=new Stage(vista);
@@ -186,18 +190,48 @@ public class JuegoGS extends Pantalla {
             }
         });
 
+        Button btnGemaAzul = crearBoton("BotonesGemas/Gema_Azul_OFF.png", "BotonesGemas/Gema_Azul_ON.png");
+        btnGemaAzul.setPosition(160,ALTO-80, Align.center);
+        btnGemaAzul.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Se activa el poder azul
+                System.out.println("HABILIDAD AZUL");
+            }
+        });
+
+        Button btnGemaRoja = crearBoton("BotonesGemas/Gema_Roja_OFF.png", "BotonesGemas/Gema_Roja_ON.png");
+        btnGemaRoja.setPosition(160,ALTO-80, Align.center);
+        btnGemaRoja.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Se activa el poder rojo
+                System.out.println("HABILIDAD ROJA");
+            }
+        });
+
+        Button btnGemaVerde = crearBoton("BotonesGemas/Gema_Verde_OFF.png", "BotonesGemas/Gema_Verde_ON.png");
+        btnGemaVerde.setPosition(160,ALTO-80, Align.center);
+        btnGemaVerde.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Se activa el poder rojo
+                System.out.println("HABILIDAD ROJA");
+            }
+        });
+
         // escenaJuego.addActor(btnRegresar);
         //Gdx.input.setInputProcessor(escenaJuego);
-
-
 
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
     }
 
-    private void crearBotonBack() {
+    private void crearBotones() {
         texturaBack= new Texture("Menu/buttonback.png");
-
+        texturaGemaAzul= new Texture("BotonesGemas/Gema_Azul_ON.png");
+        texturaGemaRoja= new Texture("BotonesGemas/Gema_Roja_ON.png");
+        texturaGemaVerde= new Texture("BotonesGemas/Gema_Verde_ON.png");
     }
 
     private void crearBarra() {
@@ -361,6 +395,10 @@ public class JuegoGS extends Pantalla {
         // Dibujar back
         batch.draw(texturaBack,margen-20,ALTO-margen-texturaBack.getHeight()+20);
 
+        // Dibujar gemas
+        batch.draw(texturaGemaAzul,texturaGemaAzul.getWidth()+50,20);
+        batch.draw(texturaGemaRoja,texturaGemaRoja.getWidth()-50,20);
+        batch.draw(texturaGemaVerde,texturaGemaVerde.getWidth(),texturaGemaVerde.getHeight());
 
         batch.end();
 
@@ -689,6 +727,24 @@ public class JuegoGS extends Pantalla {
                 float xBack = margen-20;
                 float yBack = ALTO-margen-texturaBack.getHeight()+20;
 
+                // Boton Gema Roja
+                float anchoRoja = texturaGemaRoja.getWidth();
+                float altoRoja = texturaGemaRoja.getHeight();
+                float xRoja = texturaGemaRoja.getWidth()-50;
+                float yRoja = 20;
+
+                // Boton Gema Verde
+                float anchoVerde = texturaGemaVerde.getWidth();
+                float altoVerde = texturaGemaVerde.getHeight();
+                float xVerde = texturaGemaVerde.getWidth();
+                float yVerde = texturaGemaVerde.getHeight();
+
+                // Boton Gema Azul
+                float anchoAzul = texturaGemaAzul.getWidth();
+                float altoAzul = texturaGemaAzul.getHeight();
+                float xAzul = texturaGemaAzul.getWidth()+50;
+                float yAzul =20;
+
                 //margen-20,ALTO-margen-texturaBack.getHeight()+20
 
                 posicionDedo.x=screenX;
@@ -698,6 +754,14 @@ public class JuegoGS extends Pantalla {
                 // Vamos a verificar el botón de back
                 Rectangle rectBack = new Rectangle(xBack, yBack, anchoBack, altoBack);
 
+                // Vamos a verificar el botón de la gema roja
+                Rectangle rectRoja = new Rectangle(xRoja, yRoja, anchoRoja, altoRoja);
+
+                // Vamos a verificar el botón de la gema verde
+                Rectangle rectVerde = new Rectangle(xVerde, yVerde, anchoVerde, altoVerde);
+
+                // Vamos a verificar el botón de la gema azul
+                Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
 
 
                 if (posicionDedo.x>=ANCHO/4){
@@ -705,6 +769,13 @@ public class JuegoGS extends Pantalla {
                  // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
                 }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
                     juego.setScreen(new PantallaPausa(juego));
+                }else if (rectRoja.contains(posicionDedo.x,posicionDedo.y)) {
+                    System.out.println("HABILIDAD ROJA");
+                }else if (rectVerde.contains(posicionDedo.x,posicionDedo.y)) {
+                    System.out.println("HABILIDAD VERDE");
+                }
+                else if (rectAzul.contains(posicionDedo.x,posicionDedo.y)) {
+                    System.out.println("HABILIDAD AZUL");
                 }
             }
 
