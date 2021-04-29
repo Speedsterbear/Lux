@@ -115,7 +115,7 @@ public class JuegoGS extends Pantalla {
     //Esgrun
     private Esgrun esgrun, rojel, shiblu;
     private float DX_PASO_ESGRUN=10;
-    float aparicion = 0;
+    public static float aparicion = 0;
 
     //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
     //private  HijoOscuridad hijoOscuridad;
@@ -369,11 +369,12 @@ public class JuegoGS extends Pantalla {
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
-        if (distanciaRecorridaControl>velocidadBosque*duracionVerde && distanciaRecorridaControl <= velocidadBosque*duracionVerde*2){
+        aparicion += delta;
+        if (aparicion>= 20){
             seccion = EstadoSeccion.ROJO;
-        }else if (distanciaRecorridaControl>(velocidadBosque*duracionVerde*2) && distanciaRecorridaControl <= (velocidadBosque*duracionVerde*3)){
+        }else if (aparicion>= 40){
             seccion = EstadoSeccion.AZUL;
-        } else if(distanciaRecorridaControl>(velocidadBosque*duracionVerde*3)) {
+        } else if(aparicion>= 60) {
             seccion = EstadoSeccion.BLANCO;
         }
 
@@ -389,7 +390,6 @@ public class JuegoGS extends Pantalla {
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
 
-            aparicion += delta;
             if(aparicion>= duracionVerde - 1 && aparicion<=duracionVerde){
                 crearEsgrun();
             }else if(aparicion>= duracionRojo*2 - 1 && aparicion<=duracionRojo*2){
@@ -477,6 +477,7 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.PIERDE) {
             velocidadBosque = 0;
             velocidadOsc = 0;
+            aparicion = 0;
             juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
