@@ -30,11 +30,11 @@ public class PantallaBienvenida extends Pantalla {
 
     public PantallaBienvenida(Lux lux) {
         this.juego=lux;
-        texturaLogo= new Texture(Gdx.files.internal("PantallaBienvenida/logoBienvenida.jpeg"));
-        texturaLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        texturaLogo= new Texture(Gdx.files.internal("PantallaBienvenida/logo_Lux.jpg"));
+        //texturaLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Image image = new Image(texturaLogo);
         image.setFillParent(true);
-        image.setScaling(Scaling.fillY);
+        //image.setScaling(Scaling.fillY);
         stageLogo=new Stage();
         stageLogo.addActor(image);
 
