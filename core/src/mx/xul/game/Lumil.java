@@ -5,6 +5,7 @@ Autor: Carlos Arroyo
  */
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Lumil extends ObjetoAnimado
 {
@@ -38,5 +39,15 @@ public class Lumil extends ObjetoAnimado
         }
 
     }
+
+    //Regresa el rectángulo ajustado de Lumil, es decir, recorrido para no tomar en cuanta los bazos
+    public Rectangle getRectangle() {
+        Rectangle rectangle = sprite.getBoundingRectangle();
+        float margen = 50;
+        rectangle.setX(rectangle.getX()+margen);
+        rectangle.setWidth(rectangle.getWidth()-margen);
+        return rectangle;
+    }
+
 
 }

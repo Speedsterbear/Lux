@@ -8,6 +8,7 @@ Autor: Carlos Arroyo
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
-import com.badlogic.gdx.utils.TimeUtils;
+import mx.xul.game.pantallaBienvenida.ColoresLumil;
 //import com.sun.org.apache.xpath.internal.objects.XBoolean;
 
 
@@ -40,16 +41,19 @@ public class JuegoGS extends Pantalla {
 
     //Velocidad normal de la oscuridad según las secciones
     private final float velocidadOscVerde = velocidadVerde; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
-    private final float velocidadOscRojo = velocidadRojo+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
-    private final float velocidadOscAzul = velocidadAzul+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
-    private final float velocidadOscBlanco = velocidadBlanco+15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
+    private final float velocidadOscRojo = velocidadRojo + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
+    private final float velocidadOscAzul = velocidadAzul + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
+    private final float velocidadOscBlanco = velocidadBlanco + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
-    private final float velocidadHijoOscVerde = velocidadVerde+200; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
-    private final float velocidadHijoOscRojo = velocidadRojo+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
-    private final float velocidadHijoOscAzul = velocidadAzul+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
-    private final float velocidadHijoOscBlanco = velocidadBlanco+35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
+    private final float velocidadHijoOscVerde = velocidadVerde + 200; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscRojo = velocidadRojo + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
+    private final float velocidadHijoOscAzul = velocidadAzul + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
+    private final float velocidadHijoOscBlanco = velocidadBlanco + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
 
+    //Velocidades generales
+    private float velocidadInicial = velocidadVerde;
+    private float velocidad = velocidadVerde;
 
     //Escena para Botones
     //private Stage escenaJuego;
@@ -60,7 +64,7 @@ public class JuegoGS extends Pantalla {
     //Valor mínimo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
     private float valorXMinExt = ANCHO + 200;
     //Valor máximo X fuera de la pantalla para que aparezcan los objetos que se mueven de derecha a izq.
-    private float valorXMaxExt = ANCHO *1.5f;
+    private float valorXMaxExt = ANCHO * 1.5f;
     //Valor mínimo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
     private float valorYMinMarg = 0;
     //Valor máximo Y del margen para aparecer los objetos que se mueven de derecha a izquierda.
@@ -71,29 +75,42 @@ public class JuegoGS extends Pantalla {
     private Texture bosqueatras;
     private Texture bosquemedio;
     private Texture bosquefrente;
-    private final float velocidadInicialBosque = 300;
-    private float velocidadBosque = 300;
     private FondoEnMovimiento bosque;
 
     // Texto
     //Muestra los valores en la pantalla
     private Texto texto;
 
-    //Personaje principal Lumil
+    //Personaje principal: Lumil
     private Lumil lumil;
     private Texture texturaLumilJugando;
-    float tiempoLumil =0f; //Acumulador
-    private static float DELTA_Y = 10; //Avance vertical de lumil
+    float tiempoLumil = 0f; //Acumulador
+    private float DELTA_Y = 10; //Avance vertical de lumil
+    private final float duracionFrameLumil = 1/10f; //Duración en segundos  inicial de los frames de la animación d Lumil
+    private final float incrementoVelocidadVerde = 1.5f; //Numero de veces en las que se incrementará la velocidad al usar la habilidad de la gema verde
     private Vector3 posicionDedo;
     private boolean isMooving = false; //indica si el perosnaje principal debe moverse hacia arriba o abajo
+    private ColoresLumil colorLumil = ColoresLumil.BLANCO; // Representa el color que tiene el personaje principal en el momento.
+    private Texture texturaBrillo;
+    private BrilloLumil brilloLumil;
+
+    private Lumil lumilG;
+    private Texture texturaLumilG;
+
+    private Lumil lumilR;
+    private Texture texturaLumilR;
+
+    private Lumil lumilB;
+    private Texture texturaLumilB;
+
 
     //Enemigo principal: La Oscuridad
     private Oscuridad oscuridad;
     private Texture texturaOscuridad;
     float tiempoOsc =0f; //Acumulador
-    private float velocidadOsc = velocidadOscVerde;//Velocidad Actual de la oscuridad
-    private float velocidadHijosOsc = velocidadHijoOscVerde;//Velocidad Actual de hijos de la oscuridad
-    private float positionXStart = -900;
+    private float velocidadOscuridad = velocidadOscVerde;//Velocidad Actual de la oscuridad
+    private float velocidadHijosOscuridad = velocidadHijoOscVerde;//Velocidad Actual de hijos de la oscuridad
+    //private float positionXStart = -900;
     private float positionX = (-ANCHO/2)+margen*2;
     private float positionY = ALTO/2;
     private long startTimeOscuridad = 0;
@@ -116,13 +133,6 @@ public class JuegoGS extends Pantalla {
     private Esgrun esgrun, rojel, shiblu;
     private float DX_PASO_ESGRUN=2.5f;
     public static float aparicion = 0;
-
-    //Hijo de Oscuridad: Del tipo que quita vidas (esto no se esta usando por el momento)
-    //private  HijoOscuridad hijoOscuridad;
-    //private Texture texturaHijoOscuridad;
-    //private float DX_PASO_HIJOOSCURIDAD=150;
-    //private float timerCrearHijoOscuridad= 0;//Acumulador
-    //private float tiempoParaCrearHijoOscuridad = 2; //Se espera esos segundos en crear el bloque.
 
     //Hijos de la Oscuridad: Del tipo que Bloquean el paso
     private Array<Bloque> arrBloques;
@@ -152,6 +162,7 @@ public class JuegoGS extends Pantalla {
 
     //Secciones
     private EstadoSeccion seccion = EstadoSeccion.VERDE;
+    private EstadoSeccion seccionAnterior = EstadoSeccion.VERDE;
 
     //Botones
     private Texture texturaBack;//Botón de Regreso
@@ -170,6 +181,7 @@ public class JuegoGS extends Pantalla {
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
         crearFondo();
         crearPersonajes();
+        crearBrillo();
         crearVidas();
         crearTexturaHijoOscuridad();
         crearBloques();
@@ -227,6 +239,13 @@ public class JuegoGS extends Pantalla {
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
     }
 
+    private void crearBrillo() {
+
+        texturaBrillo = new Texture("Utileria/brilloLumil.png");
+        brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/2+(texturaBrillo.getWidth()/6),ALTO/2);
+
+    }
+
     private void crearBotones() {
         texturaBack= new Texture("Menu/buttonback.png");
         texturaGemaAzul= new Texture("BotonesGemas/Gema_Azul_ON.png");
@@ -259,9 +278,21 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearPersonajes() {
-        //Personaje principal: Lumil
+        //Personaje principal: Lumil (Blanco)
         texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
-        lumil = new Lumil(texturaLumilJugando,ANCHO/2, ALTO/2,4,1,1/10f,1);
+        lumil = new Lumil(texturaLumilJugando,ANCHO/2, ALTO/2,4,1,duracionFrameLumil,1);
+
+        //Personaje principal: Lumil (Verde)
+        texturaLumilG = new Texture ("Personajes/lumilG.png");
+        lumilG = new Lumil(texturaLumilG,ANCHO/2, ALTO/2,4,1,duracionFrameLumil *  (1/incrementoVelocidadVerde),1);
+
+        //Personaje principal: Lumil (Rojo)
+        texturaLumilR = new Texture ("Personajes/lumilR.png");
+        lumilR = new Lumil(texturaLumilR,ANCHO/2, ALTO/2,4,1,duracionFrameLumil,1);
+
+        //Personaje principal: Lumil (Azul)
+        texturaLumilB = new Texture ("Personajes/lumilB.png");
+        lumilB = new Lumil(texturaLumilB,ANCHO/2, ALTO/2,4,1,duracionFrameLumil,1);
 
         //Enemigo principal: Oscuridad
         texturaOscuridad = new Texture("Personajes/oscuridad.png");
@@ -350,13 +381,14 @@ public class JuegoGS extends Pantalla {
         batch.begin();
 
         //Dibujar elementos del bosque
-        bosque.movSeccionesCompletas(velocidadBosque, delta, batch, true);
+        bosque.movSeccionesCompletas(velocidad, delta, batch, true);
 
-        //Dibujar vidas
-        vidas.vidasRender(contadorVidas, batch);
+        //Dibujar brillo del personaje principal
+        brilloLumil.render(batch);
 
         //Dibujar personaje principal
-        lumil.animationRender(batch, tiempoLumil);
+        dibujarLumil(batch);
+
 
         /*
 
@@ -400,9 +432,12 @@ public class JuegoGS extends Pantalla {
         batch.draw(texturaGemaRoja,texturaGemaRoja.getWidth()-50,20);
         batch.draw(texturaGemaVerde,texturaGemaVerde.getWidth(),texturaGemaVerde.getHeight());
 
+        //Dibujar vidas
+        vidas.vidasRender(contadorVidas, batch);
+
         batch.end();
 
-        distanciaRecorridaControl += velocidadBosque*delta;
+        distanciaRecorridaControl += velocidad *delta;
 
         //Velocidad
         //Eso divide la pantalla en las secciones de cada color.
@@ -427,10 +462,35 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    private void dibujarLumil(SpriteBatch batch) {
+
+        switch (colorLumil) {
+            case VERDE:
+                lumilG.animationRender(batch, tiempoLumil);
+                break;
+            case ROJO:
+                lumilR.animationRender(batch, tiempoLumil);
+                break;
+            case AZUL:
+                lumilB.animationRender(batch, tiempoLumil);
+                break;
+            case BLANCO:
+                lumil.animationRender(batch, tiempoLumil);
+                break;
+        }
+
+    }
+
     private void actuaizar(float delta) {
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
+
+            //Detecta el cambio de sección
+            if (seccion!=seccionAnterior){
+                //Se ejecuta una sola vez cada que se cambia de sección
+                cambioSeccion();
+            }
 
             if(aparicion>= duracionVerde - 1 && aparicion<=duracionVerde){
                 crearEsgrun();
@@ -460,6 +520,9 @@ public class JuegoGS extends Pantalla {
                 crearHijosOscuridad();
             }
 
+            //Actualizar el Brillo (Posición y forma)
+            actualizarBrillo();
+
             //Mover Lumil
             moverLumil(isMooving);
 
@@ -472,11 +535,12 @@ public class JuegoGS extends Pantalla {
             //Mover y Depurar Oscuridad
             if (colisionLumil == false) {
                 moverBloques(delta);
+                //Aqui creo que se debería optimizar esto para que no se esté asignando constantemente la velocidad
                 returnVelocidadBosque();
             }
 
             if (colisionLumil) {
-                velocidadBosque = 0;
+                velocidad = 0;
                 //moverOscuridad(delta);
                 oscuridadColision();
             }
@@ -517,24 +581,71 @@ public class JuegoGS extends Pantalla {
 
         } //----------------------------------------------------------------------------------------
         if (estado == EstadoJuego.PIERDE) {
-            velocidadBosque = 0;
-            velocidadOsc = 0;
+            velocidad = 0;
+            velocidadOscuridad = 0;
             aparicion = 0;
+            //Aqui se debe agregar la animación antes de cambiar de pantlla
             juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
         if (estado == EstadoJuego.GANA) {
-            velocidadBosque = 0;
-            velocidadOsc = 0;
+            velocidad = 0;
+            velocidadOscuridad = 0;
             juego.setScreen(new PantallaGana(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
     }
 
+    private void cambioSeccion() {
+        //Actualizan las velocidaddades de los frames en las animacioens de Lumil
+        //El número 1 en Tipo, representa que es un Loop infinito el tipo de animación de los frames.
+        lumil.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
+        lumilR.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
+        lumilG.animationUpdate((duracionFrameLumil/incrementoVelocidadVerde)*(velocidadVerde/ velocidad),1);
+        lumilB.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
+
+        //Aqui se colocan las modificaciones de queden ocurrir al inicio de una sección en específico
+        //la sección verde no se incluye porque los valores para ésta son los iniciales.
+        switch (seccion){
+            case ROJO:
+                //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                break;
+            case AZUL:
+                //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                break;
+            case BLANCO:
+                //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                break;
+        }
+        seccionAnterior = seccion;
+    }
+
+    private void actualizarBrillo() {
+        //Mover Brillo
+        brilloLumil.mover(lumil.sprite.getY() + (lumil.sprite.getHeight() / 2));
+
+        //Asignar Color de brillo y simular la acción del brillo
+        switch (colorLumil) {
+            case VERDE:
+                brilloLumil.actualizar(0,1,0);
+                break;
+            case ROJO:
+                brilloLumil.actualizar(1,0,0);
+                break;
+            case AZUL:
+                brilloLumil.actualizar(0,0,1);
+                break;
+            case BLANCO:
+                brilloLumil.actualizar(1,1,1);
+                break;
+        }
+
+    }
+
     private void returnVelocidadBosque(){
-        velocidadBosque = velocidadInicialBosque;
+        velocidad = velocidadInicial;
     }
 
     private void depurarHijosOscuridad() {
@@ -591,10 +702,20 @@ public class JuegoGS extends Pantalla {
     }
 
     private void oscuridadColision() {
+        //Si la posición en X (izquierda) de Lumil es mayor que la posición en X (derecha) de la oscuridad - 100 px, quiere decir que ya lo tocó
+        //El 100 es un número arbitrario elegido de acuerdo al Sprite de Lumil
+        if(lumil.sprite.getX()<=(oscuridad.sprite.getX()+oscuridad.sprite.getWidth()-120)) {
+            contadorVidas=0;//Muere =(
+        }
+
+
+        /* Código Anterior (Antes del 5 de Mayo)
         if(lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
             contadorVidas=0;//Muere =(
             Gdx.app.log("Vidas", Integer.toString(contadorVidas));
         }
+
+         */
     }
 
     private void moverEsgrun(){
@@ -612,7 +733,7 @@ public class JuegoGS extends Pantalla {
     private void moverBloques(float delta){
         //Mover los Enemigos
         for (Bloque bloque:arrBloques) {
-            bloque.mover(delta,velocidadBosque);
+            bloque.mover(delta, velocidad);
         }
         //depurarBloques();
     }
@@ -621,15 +742,32 @@ public class JuegoGS extends Pantalla {
         if (Mooving){
             lumil.mover(DELTA_Y,posicionDedo.y);
         } else {lumil.sprite.setRotation(0);}
+
+        //Realmente el que realiza la función de moverse y girar es Lumil (blanco), cuando se cambia de color, éstos toman la posición y la rotación de Lumil blanco.
+        switch (colorLumil){
+            case VERDE:
+                lumilG.sprite.setY(lumil.sprite.getY());
+                lumilG.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+            case ROJO:
+                lumilR.sprite.setY(lumil.sprite.getY());
+                lumilR.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+            case AZUL:
+                lumilB.sprite.setY(lumil.sprite.getY());
+                lumilB.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+        }
+
     }
 
     private void moverOscuridad(float delta){
-            oscuridad.mover(velocidadBosque,velocidadOsc, delta);
+            oscuridad.mover(velocidad, velocidadOscuridad, delta);
     }
 
     private void moverHijoOscuridad(float delta){
         for (HijoOscuridad hijoOscuridad:arrHijosOscuridad) {
-            hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc,delta);
+            hijoOscuridad.mover(velocidad, velocidadHijosOscuridad,delta);
         }
 
         //hijoOscuridad.mover(velocidadBosque,velocidadHijosOsc, delta);
@@ -640,22 +778,22 @@ public class JuegoGS extends Pantalla {
         //Dibujar las barras
         switch (seccion) {
             case VERDE:
-                distanciaRecorridaG += velocidadBosque*delta;
+                distanciaRecorridaG += velocidad *delta;
                 barraGS.renderAvance(distanciaRecorridaG,camara);
                 break;
             case ROJO:
-                distanciaRecorridaR +=velocidadBosque*delta;
+                distanciaRecorridaR += velocidad *delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderAvance(distanciaRecorridaR,camara);
                 break;
             case AZUL:
-                distanciaRecorridaB +=velocidadBosque*delta;
+                distanciaRecorridaB += velocidad *delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderEstatico(camara);
                 barraBS.renderAvance(distanciaRecorridaB,camara);
                 break;
             case BLANCO:
-                distanciaRecorridaW +=velocidadBosque*delta;
+                distanciaRecorridaW += velocidad *delta;
                 barraGS.renderEstatico(camara);
                 barraRS.renderEstatico(camara);
                 barraBS.renderEstatico(camara);
@@ -714,8 +852,8 @@ public class JuegoGS extends Pantalla {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
             if(estado==EstadoJuego.PIERDE){
-                velocidadBosque=0;
-                velocidadOsc=0;
+                velocidad =0;
+                velocidadOscuridad =0;
                 //Creo que esto puede sacarse del touch Down y estar junto a los otros estados.
 
                 //Codigo Ricardo
