@@ -653,7 +653,7 @@ public class JuegoGS extends Pantalla {
         //Eliminar bloques Fuera del rango de la pantalla
         for (int  i=arrHijosOscuridad.size-1; i>=0; i--){
             HijoOscuridad hijoOscuridad = arrHijosOscuridad.get(i);
-            if(arrHijosOscuridad!= null && lumil.sprite.getBoundingRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
+            if(arrHijosOscuridad!= null && lumil.getRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
                 arrHijosOscuridad.removeIndex(i);
                 contadorVidas --;
             }
@@ -665,19 +665,19 @@ public class JuegoGS extends Pantalla {
     }
 
     private void depurarEsgrun() {
-        if(lumil.sprite.getBoundingRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
+        if(lumil.getRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
 
         }
     }
 
     private void depurarRojel() {
-        if(lumil.sprite.getBoundingRectangle().overlaps(rojel.sprite.getBoundingRectangle())){
+        if(lumil.getRectangle().overlaps(rojel.sprite.getBoundingRectangle())){
 
         }
     }
 
     private void depurarShiblu() {
-        if(lumil.sprite.getBoundingRectangle().overlaps(shiblu.sprite.getBoundingRectangle())){
+        if(lumil.getRectangle().overlaps(shiblu.sprite.getBoundingRectangle())){
 
         }
     }
@@ -694,7 +694,7 @@ public class JuegoGS extends Pantalla {
 
     private boolean hijoOscuridadColision(){
         for(Bloque bloque: arrBloques){
-            if(lumil.sprite.getBoundingRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+            if(lumil.getRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
                 return true;
             }
         }
