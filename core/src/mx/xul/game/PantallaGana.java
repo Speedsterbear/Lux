@@ -138,10 +138,7 @@ public class PantallaGana extends Pantalla{
 
         escenaGana.draw();
 
-        //renderFadeInicial(tiempoLumil);
-
         //Hacer el efecto de Fade de entrada
-
         if (tiempoLumil<=2.5f){
             renderFadeInicial(tiempoLumil);
         }
