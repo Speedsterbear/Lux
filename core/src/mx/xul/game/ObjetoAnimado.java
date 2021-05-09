@@ -90,11 +90,14 @@ public class ObjetoAnimado {
         float Deg = sprite.getRotation();
         float X = sprite.getX();
         float Y = sprite.getY();
+        float scaleX = sprite.getScaleX();
+        float scaleY = sprite.getScaleY();
 
         frameActual = (TextureRegion) animation.getKeyFrame(tiempo);
         sprite = new Sprite(frameActual);
         sprite.setPosition(X,Y);
         sprite.setRotation(Deg);
+        sprite.setScale(scaleX,scaleY);
         sprite.draw(batch);
 
     }

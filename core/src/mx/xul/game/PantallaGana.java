@@ -39,7 +39,7 @@ public class PantallaGana extends Pantalla{
 
     private Stage escenaGana;
 
-    //Fade en Blanco
+    //Fade a Blanco
     private ShapeRenderer rectangulo;
     private float alfaRectangulo = 1;
 

@@ -7,8 +7,10 @@ Autor: Carlos Arroyo
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -180,6 +182,11 @@ public class JuegoGS extends Pantalla {
     private Texture texturaGemaVerdeOn;
 
 
+    //Fade a Negro
+    private ShapeRenderer rectNegro;
+    private float alfaRectanguloNegro = 0;
+
+
     public JuegoGS (Lux juego) {
         this.juego=juego;
     }
@@ -196,6 +203,7 @@ public class JuegoGS extends Pantalla {
         crearBloques();
         crearBarra();
         crearBotones();
+        crearRectangulo();
 
         //Escena y Botón
         //escenaJuego=new Stage(vista);
@@ -253,6 +261,11 @@ public class JuegoGS extends Pantalla {
 
 
 
+    }
+
+    private void crearRectangulo() {
+        //Rectangulo usado para hacer Fade a negro
+        rectNegro = new ShapeRenderer();
     }
 
     private void crearBrillo() {
@@ -495,6 +508,27 @@ public class JuegoGS extends Pantalla {
         //Dibujar barra progreso
         dibujarBarras(delta);
 
+        if (oscuridad.getYaMordio()){
+            fadePerder();
+        }
+
+    }
+
+    private void fadePerder() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        rectNegro.setProjectionMatrix(camara.combined);
+        rectNegro.setColor(0, 0, 0, alfaRectanguloNegro);
+        rectNegro.begin(ShapeRenderer.ShapeType.Filled);
+        rectNegro.box(0,0,0,ANCHO,ALTO,0);
+        alfaRectanguloNegro += (Gdx.graphics.getDeltaTime()*1.5f);
+        rectNegro.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        if (alfaRectanguloNegro >= 1){
+            juego.setScreen(new PantallaPerdida(juego));
+        }
+
     }
 
     private void dibujarLumil(SpriteBatch batch) {
@@ -620,7 +654,10 @@ public class JuegoGS extends Pantalla {
             velocidadOscuridad = 0;
             aparicion = 0;
             //Aqui se debe agregar la animación antes de cambiar de pantlla
-            juego.setScreen(new PantallaPerdida(juego));
+            oscuridad.granMordida();
+
+
+            //juego.setScreen(new PantallaPerdida(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
