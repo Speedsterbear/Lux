@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -96,7 +95,7 @@ public class JuegoGS extends Pantalla {
     private final float duracionFrameLumil = 1/10f; //Duración en segundos  inicial de los frames de la animación d Lumil
     private final float incrementoVelocidadVerde = 1.5f; //Numero de veces en las que se incrementará la velocidad al usar la habilidad de la gema verde
     private Vector3 posicionDedo;
-    private boolean isMooving = false; //indica si el perosnaje principal debe moverse hacia arriba o abajo
+    private boolean isMoving = false; //indica si el perosnaje principal debe moverse hacia arriba o abajo
     private ColoresLumil colorLumil = ColoresLumil.BLANCO; // Representa el color que tiene el personaje principal en el momento.
     private Texture texturaBrillo;
     private BrilloLumil brilloLumil;
@@ -166,20 +165,29 @@ public class JuegoGS extends Pantalla {
     private float distanciaRecorridaB = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
     private float distanciaRecorridaW = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
     private float distanciaRecorridaControl = 0; //Usar si vamos a medir dstancia para saber si ya se logró el objetivo.
+    private Texture fondoBarra; //Representa el Fondo para la barra de avance
 
     //Secciones
     private EstadoSeccion seccion = EstadoSeccion.VERDE;
     private EstadoSeccion seccionAnterior = EstadoSeccion.VERDE;
 
     //Botones
-    private Texture texturaBack;//Botón de Regreso
-    private Texture texturaBackOn;
-    private Texture texturaGemaRoja;
-    private Texture texturaGemaAzul;
-    private Texture texturaGemaVerde;
-    private Texture texturaGemaRojaOn;
-    private Texture texturaGemaAzulOn;
-    private Texture texturaGemaVerdeOn;
+
+    private Boton gemaVerde; //Gema verde  para activar el poder
+    private Texture texturaGemaVerdeOFF;
+    private Texture texturaGemaVerdeON;
+
+    private Boton gemaRoja; //Gema roja para activar el poder
+    private Texture texturaGemaRojaOFF;
+    private Texture texturaGemaRojaON;
+
+    private Boton gemaAzul; //Gema Azul para activar el poder
+    private Texture texturaGemaAzulON;
+    private Texture texturaGemaAzulOFF;
+
+    private Boton botonPausa; //Boton para activar la pausa
+    private Texture texturaPausaON;//Botón de Regreso
+    private Texture texturaPausaOFF;
 
 
     //Fade a Negro
@@ -276,22 +284,35 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearBotones() {
-        texturaBack= new Texture("Menu/buttonback.png");
-        texturaBackOn= new Texture("Menu/clickback.png");
-        texturaGemaAzul= new Texture("BotonesGemas/Gema_Azul_ON.png");
-        texturaGemaRoja= new Texture("BotonesGemas/Gema_Roja_ON.png");
-        texturaGemaVerde= new Texture("BotonesGemas/Gema_Verde_ON.png");
-        texturaGemaAzulOn = new Texture("BotonesGemas/Gema_Azul_OFF.png");
-        texturaGemaRojaOn = new Texture("BotonesGemas/Gema_Roja_OFF.png");
-        texturaGemaVerdeOn = new Texture("BotonesGemas/Gema_Verde_OFF.png");
+
+        //Gema Verde
+        texturaGemaVerdeON= new Texture("BotonesGemas/gemaVerde_ON.png");
+        texturaGemaVerdeOFF = new Texture("BotonesGemas/gemaVerde_OFF.png");
+        gemaVerde = new Boton(texturaGemaVerdeOFF,texturaGemaVerdeON,margen+(texturaGemaVerdeOFF.getWidth()/2),margen+(texturaGemaVerdeOFF.getHeight()/2));
+
+        //Gema Roja
+        texturaGemaRojaON = new Texture("BotonesGemas/gemaRoja_ON.png");
+        texturaGemaRojaOFF = new Texture("BotonesGemas/gemaRoja_OFF.png");
+        gemaRoja = new Boton(texturaGemaRojaOFF, texturaGemaRojaON,margen+(3*texturaGemaRojaOFF.getWidth()/2),margen+(texturaGemaRojaOFF.getHeight()/2));
+
+        //Gema Azul
+        texturaGemaAzulON = new Texture("BotonesGemas/gemaAzul_ON.png");
+        texturaGemaAzulOFF = new Texture("BotonesGemas/gemaAzul_OFF.png");
+        gemaAzul = new Boton(texturaGemaAzulOFF, texturaGemaAzulON,margen+(texturaGemaVerdeOFF.getWidth()),(3*texturaGemaVerdeOFF.getHeight()/2)-10);
+
+        //Boton Pausa
+        texturaPausaON = new Texture("Botones/pausa_ON.png");
+        texturaPausaOFF = new Texture("Botones/pausa_OFF.png");
+        botonPausa = new Boton(texturaPausaOFF,texturaPausaON,margen+(texturaGemaVerdeOFF.getWidth()),ALTO-(margen/2) -(texturaPausaOFF.getHeight()/2));
     }
 
     private void crearBarra() {
         //Los parametros de ancho final y distancia son para escalar el avance.
-        barraGS = new BarraAvance(0,1,0,1,(ANCHO/4)+70, ALTO-margen*3,12,ANCHO/8,velocidadVerde*duracionVerde);//27000 es 1 minuto y medio
-        barraRS = new BarraAvance(1,0,0,1,(ANCHO/4)+(ANCHO/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadRojo*duracionRojo);//54000 es para 3 minutos
-        barraBS = new BarraAvance(0,0,1,1,(ANCHO/4)+(ANCHO*2/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadAzul*duracionAzul);//54000 es para 3 minutos
-        barraWS = new BarraAvance(1,1,1,1,(ANCHO/4)+(ANCHO*3/8)+70, ALTO-margen*3,12,ANCHO/8,velocidadBlanco*duracionBlanco);//54000 es para 3 minutos
+        fondoBarra = new Texture("Utileria/atrasBarraAvance.png");
+        barraGS = new BarraAvance(0,1,0,1,(ANCHO/4), ALTO-margen*3,12,ANCHO/8,velocidadVerde*duracionVerde);//27000 es 1 minuto y medio
+        barraRS = new BarraAvance(1,0,0,1,(ANCHO/4)+(ANCHO/8), ALTO-margen*3,12,ANCHO/8,velocidadRojo*duracionRojo);//54000 es para 3 minutos
+        barraBS = new BarraAvance(0,0,1,1,(ANCHO/4)+(ANCHO*2/8), ALTO-margen*3,12,ANCHO/8,velocidadAzul*duracionAzul);//54000 es para 3 minutos
+        barraWS = new BarraAvance(1,1,1,1,(ANCHO/4)+(ANCHO*3/8), ALTO-margen*3,12,ANCHO/8,velocidadBlanco*duracionBlanco);//54000 es para 3 minutos
     }
 
     private void crearVidas() {
@@ -456,32 +477,50 @@ public class JuegoGS extends Pantalla {
         //Botones
         //escenaJuego.draw();
 
+        /* Cidogo Antiguo
 
         // Dibujar back
         if (boolBack == true){
-            batch.draw(texturaBackOn,margen-20,ALTO-margen-texturaBackOn.getHeight()+20);
+            batch.draw(texturaPausaOFF,margen-20,ALTO-margen- texturaPausaOFF.getHeight()+20);
         }else {
-            batch.draw(texturaBack,margen-20,ALTO-margen-texturaBack.getHeight()+20);
+            batch.draw(texturaPausaON,margen-20,ALTO-margen- texturaPausaON.getHeight()+20);
         }
+
+         */
+
         // Dibujar gemas
+
+        gemaVerde.render(batch);
+        gemaRoja.render(batch);
+        gemaAzul.render(batch);
+
+        botonPausa.render(batch);
+
+        /* Codigo Antiguo de Gemas
+
         if (boolAzul ==true) {
-            batch.draw(texturaGemaAzul, texturaGemaAzul.getWidth() + 50, 20);
+            batch.draw(texturaGemaAzul, margen+(texturaGemaAzul.getWidth()/2), texturaGemaVerdeOFF.getHeight());
         }else{
-            batch.draw(texturaGemaAzulOn, texturaGemaAzulOn.getWidth() + 50, 20);
+            batch.draw(texturaGemaAzulOn, margen+(texturaGemaAzul.getWidth()/2), texturaGemaVerdeOFF.getHeight());
         }
        if (boolRojo == true) {
-           batch.draw(texturaGemaRoja, texturaGemaRoja.getWidth() - 50, 20);
+           batch.draw(texturaGemaRoja, texturaGemaRoja.getWidth()+margen, margen);
        }else{
-           batch.draw(texturaGemaRojaOn, texturaGemaRojaOn.getWidth() - 50, 20);
+           batch.draw(texturaGemaRojaOn, texturaGemaRojaOn.getWidth()+margen, margen);
        }
        if (boolVerde == true){
-           batch.draw(texturaGemaVerde,texturaGemaVerde.getWidth(),texturaGemaVerde.getHeight());
+           batch.draw(texturaGemaVerdeON,margen,margen);
        }else{
-           batch.draw(texturaGemaVerdeOn,texturaGemaVerdeOn.getWidth(),texturaGemaVerdeOn.getHeight());
+           batch.draw(texturaGemaVerdeOFF,margen,margen);
        }
+
+         */
 
         //Dibujar vidas
         vidas.vidasRender(contadorVidas, batch);
+
+       //Dibujar lo de atras de la barra de avance
+        batch.draw(fondoBarra,(ANCHO/4)-4,ALTO-fondoBarra.getHeight());
 
         batch.end();
 
@@ -491,16 +530,16 @@ public class JuegoGS extends Pantalla {
         //Eso divide la pantalla en las secciones de cada color.
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         aparicion += delta;
-        System.out.println(aparicion);
+        //System.out.println(aparicion);
         if (aparicion>= 20 && aparicion<40){
             seccion = EstadoSeccion.ROJO;
-            System.out.println("Rojo");
+            //System.out.println("Rojo");
         }else if (aparicion>= 40 && aparicion<60){
             seccion = EstadoSeccion.AZUL;
-            System.out.println("azul");
+            //System.out.println("azul");
         } else if(aparicion>= 60) {
             seccion = EstadoSeccion.BLANCO;
-            System.out.println("blanco");
+            //System.out.println("blanco");
         }
 
 
@@ -593,7 +632,8 @@ public class JuegoGS extends Pantalla {
             actualizarBrillo();
 
             //Mover Lumil
-            moverLumil(isMooving);
+            moverLumil(isMoving);
+            System.out.println(isMoving);
 
             //Mover Oscuridad
             moverOscuridad(delta);
@@ -810,8 +850,8 @@ public class JuegoGS extends Pantalla {
         //depurarBloques();
     }
 
-    public void moverLumil(boolean Mooving){
-        if (Mooving){
+    public void moverLumil(boolean Moving){
+        if (Moving){
             lumil.mover(DELTA_Y,posicionDedo.y);
         } else {lumil.sprite.setRotation(0);}
 
@@ -936,27 +976,50 @@ public class JuegoGS extends Pantalla {
                  */
 
             }else {
-                float anchoBack = texturaBack.getWidth();
-                float altoBack = texturaBack.getHeight();
+
+                posicionDedo.x=screenX;
+                posicionDedo.y=screenY;
+                camara.unproject(posicionDedo);
+
+                if (posicionDedo.x>=ANCHO/4) {
+                    isMoving = true;
+                    System.out.println(posicionDedo);
+
+
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaVerde.active();
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaRoja.active();
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaAzul.active();
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
+                    botonPausa.active();
+                }
+
+
+                /*Codigo Antiguo
+
+                float anchoBack = texturaPausaON.getWidth();
+                float altoBack = texturaPausaON.getHeight();
                 float xBack = margen-20;
-                float yBack = ALTO-margen-texturaBack.getHeight()+20;
+                float yBack = ALTO-margen- texturaPausaON.getHeight()+20;
 
                 // Boton Gema Roja
-                float anchoRoja = texturaGemaRoja.getWidth();
-                float altoRoja = texturaGemaRoja.getHeight();
-                float xRoja = texturaGemaRoja.getWidth()-50;
+                float anchoRoja = texturaGemaRojaOFF.getWidth();
+                float altoRoja = texturaGemaRojaOFF.getHeight();
+                float xRoja = texturaGemaRojaOFF.getWidth()-50;
                 float yRoja = 20;
 
                 // Boton Gema Verde
-                float anchoVerde = texturaGemaVerde.getWidth();
-                float altoVerde = texturaGemaVerde.getHeight();
-                float xVerde = texturaGemaVerde.getWidth();
-                float yVerde = texturaGemaVerde.getHeight();
+                float anchoVerde = texturaGemaVerdeON.getWidth();
+                float altoVerde = texturaGemaVerdeON.getHeight();
+                float xVerde = texturaGemaVerdeON.getWidth();
+                float yVerde = texturaGemaVerdeON.getHeight();
 
                 // Boton Gema Azul
-                float anchoAzul = texturaGemaAzul.getWidth();
-                float altoAzul = texturaGemaAzul.getHeight();
-                float xAzul = texturaGemaAzul.getWidth()+50;
+                float anchoAzul = texturaGemaAzulON.getWidth();
+                float altoAzul = texturaGemaAzulON.getHeight();
+                float xAzul = texturaGemaAzulON.getWidth()+50;
                 float yAzul =20;
 
                 //margen-20,ALTO-margen-texturaBack.getHeight()+20
@@ -977,11 +1040,10 @@ public class JuegoGS extends Pantalla {
                 // Vamos a verificar el botón de la gema azul
                 Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
 
+                /*
 
+                    /*Antiguo de Gemas
 
-
-                if (posicionDedo.x>=ANCHO/4){
-                    isMooving = true;
                  // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
                 }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
                     boolBack = true;
@@ -997,6 +1059,8 @@ public class JuegoGS extends Pantalla {
                     boolAzul = true;
                     //System.out.println("HABILIDAD AZUL");
                 }
+
+                     */
             }
 
             return true; //Porque el juego ya procesó el evento (si si hacemos algo hay que regresar TRUE)
@@ -1018,27 +1082,50 @@ public class JuegoGS extends Pantalla {
                  */
 
             }else {
-                float anchoBack = texturaBack.getWidth();
-                float altoBack = texturaBack.getHeight();
+
+
+                posicionDedo.x=screenX;
+                posicionDedo.y=screenY;
+                camara.unproject(posicionDedo);
+
+                if (posicionDedo.x>=ANCHO/4) {
+                    //isMoving = true;
+
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    //gemaVerde.active();
+                    System.out.println("Poder Verde");
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    //gemaRoja.active();
+                    System.out.println("Poder Rojo");
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    //gemaAzul.active();
+                    System.out.println("Poder Azul");
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
+                    juego.setScreen(new PantallaPausa(juego));
+                }
+
+                /*
+                float anchoBack = texturaPausaON.getWidth();
+                float altoBack = texturaPausaON.getHeight();
                 float xBack = margen-20;
-                float yBack = ALTO-margen-texturaBack.getHeight()+20;
+                float yBack = ALTO-margen- texturaPausaON.getHeight()+20;
 
                 // Boton Gema Roja
-                float anchoRoja = texturaGemaRoja.getWidth();
-                float altoRoja = texturaGemaRoja.getHeight();
-                float xRoja = texturaGemaRoja.getWidth()-50;
+                float anchoRoja = texturaGemaRojaOFF.getWidth();
+                float altoRoja = texturaGemaRojaOFF.getHeight();
+                float xRoja = texturaGemaRojaOFF.getWidth()-50;
                 float yRoja = 20;
 
                 // Boton Gema Verde
-                float anchoVerde = texturaGemaVerde.getWidth();
-                float altoVerde = texturaGemaVerde.getHeight();
-                float xVerde = texturaGemaVerde.getWidth();
-                float yVerde = texturaGemaVerde.getHeight();
+                float anchoVerde = texturaGemaVerdeON.getWidth();
+                float altoVerde = texturaGemaVerdeON.getHeight();
+                float xVerde = texturaGemaVerdeON.getWidth();
+                float yVerde = texturaGemaVerdeON.getHeight();
 
                 // Boton Gema Azul
-                float anchoAzul = texturaGemaAzul.getWidth();
-                float altoAzul = texturaGemaAzul.getHeight();
-                float xAzul = texturaGemaAzul.getWidth()+50;
+                float anchoAzul = texturaGemaAzulON.getWidth();
+                float altoAzul = texturaGemaAzulON.getHeight();
+                float xAzul = texturaGemaAzulON.getWidth()+50;
                 float yAzul =20;
 
                 //margen-20,ALTO-margen-texturaBack.getHeight()+20
@@ -1059,11 +1146,9 @@ public class JuegoGS extends Pantalla {
                 // Vamos a verificar el botón de la gema azul
                 Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
 
+                */
 
-
-
-                if (posicionDedo.x>=ANCHO/4){
-                    isMooving = true;
+                    /* Codigo Antiguo
                     // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
                 }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
                     boolBack = true;
@@ -1079,9 +1164,11 @@ public class JuegoGS extends Pantalla {
                     boolAzul = true;
                     System.out.println("HABILIDAD AZUL");
                 }
+
+                     */
             }
 
-            isMooving = false;
+            isMoving = false;
 
             return true;
 
@@ -1104,27 +1191,50 @@ public class JuegoGS extends Pantalla {
                  */
 
             }else {
-                float anchoBack = texturaBack.getWidth();
-                float altoBack = texturaBack.getHeight();
+
+                posicionDedo.x=screenX;
+                posicionDedo.y=screenY;
+                camara.unproject(posicionDedo);
+
+                if (posicionDedo.x>=ANCHO/4) {
+                    isMoving = true;
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaVerde.active();
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaRoja.active();
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    gemaAzul.active();
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
+                    botonPausa.active();
+                } else {
+                    gemaVerde.inactive();
+                    gemaRoja.inactive();
+                    gemaAzul.inactive();
+                    botonPausa.inactive();
+                }
+
+                /* Codigo Antiguo
+                float anchoBack = texturaPausaON.getWidth();
+                float altoBack = texturaPausaON.getHeight();
                 float xBack = margen-20;
-                float yBack = ALTO-margen-texturaBack.getHeight()+20;
+                float yBack = ALTO-margen- texturaPausaON.getHeight()+20;
 
                 // Boton Gema Roja
-                float anchoRoja = texturaGemaRoja.getWidth();
-                float altoRoja = texturaGemaRoja.getHeight();
-                float xRoja = texturaGemaRoja.getWidth()-50;
+                float anchoRoja = texturaGemaRojaOFF.getWidth();
+                float altoRoja = texturaGemaRojaOFF.getHeight();
+                float xRoja = texturaGemaRojaOFF.getWidth()-50;
                 float yRoja = 20;
 
                 // Boton Gema Verde
-                float anchoVerde = texturaGemaVerde.getWidth();
-                float altoVerde = texturaGemaVerde.getHeight();
-                float xVerde = texturaGemaVerde.getWidth();
-                float yVerde = texturaGemaVerde.getHeight();
+                float anchoVerde = texturaGemaVerdeON.getWidth();
+                float altoVerde = texturaGemaVerdeON.getHeight();
+                float xVerde = texturaGemaVerdeON.getWidth();
+                float yVerde = texturaGemaVerdeON.getHeight();
 
                 // Boton Gema Azul
-                float anchoAzul = texturaGemaAzul.getWidth();
-                float altoAzul = texturaGemaAzul.getHeight();
-                float xAzul = texturaGemaAzul.getWidth()+50;
+                float anchoAzul = texturaGemaAzulON.getWidth();
+                float altoAzul = texturaGemaAzulON.getHeight();
+                float xAzul = texturaGemaAzulON.getWidth()+50;
                 float yAzul =20;
 
                 //margen-20,ALTO-margen-texturaBack.getHeight()+20
@@ -1145,11 +1255,9 @@ public class JuegoGS extends Pantalla {
                 // Vamos a verificar el botón de la gema azul
                 Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
 
+                 */
 
-
-
-                if (posicionDedo.x>=ANCHO/4){
-                    isMooving = true;
+                    /* Codigo Antiguo
                     // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
                 }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
                     boolBack = true;
@@ -1170,13 +1278,8 @@ public class JuegoGS extends Pantalla {
                     boolVerde = false;
                     boolAzul = false;
                 }
-            }
 
-            posicionDedo.x=screenX;
-            posicionDedo.y=screenY;
-            camara.unproject(posicionDedo);
-            if (posicionDedo.x>=ANCHO/4){
-                isMooving = true;
+                     */
             }
 
             return true;
