@@ -3,6 +3,7 @@ package mx.xul.game.pantallaBienvenida;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -56,6 +57,7 @@ public class PantallaBienvenida extends Pantalla {
 
     }
 
+
     @Override
     public void render(float delta) {
         // Borrar pantalla
@@ -88,6 +90,9 @@ public class PantallaBienvenida extends Pantalla {
 
     @Override
     public void dispose() {
+        // Los assets se liberan a través del assetManager
+        AssetManager assetManager = juego.getAssetManager();
+        assetManager.unload("PantallaBienvenida/logo_Lux.jpg");
         texturaLogo.dispose();
         stageLogo.dispose();
     }

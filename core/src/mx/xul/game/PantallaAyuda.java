@@ -3,6 +3,7 @@ package mx.xul.game;
 // Autor: Eduardo Alejandro García García A01338772
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,10 +18,11 @@ public class PantallaAyuda extends Pantalla {
     private Texture texturafondo;
     // private Sprite help;
     private Stage escenaMenu;
+    private AssetManager manager;
 
     public PantallaAyuda(Lux juego) {
-
         this.juego=juego;
+        manager = juego.getAssetManager();
     }
 
     /*
@@ -46,13 +48,22 @@ public class PantallaAyuda extends Pantalla {
     }
      */
 
+    // Carga los recursos a través del administrador de assets
+    //private void cargarRecursos() {
+        // Cargar las texturas/mapas
+       // AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+
+
+        // Se bloquea hasta que cargue todos los recursos
+        //assetManager.finishLoading();
+   // }
 
     private Button crearBoton(String archivo, String archivoclick) {
         // Texture texturaBoton = new Texture("Personajes/Lumil.png");
-        Texture texturaBoton=new Texture(archivo);
+        Texture texturaBoton=manager.get(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
-        Texture texturaClick=new Texture(archivoclick);
+        Texture texturaClick= manager.get(archivoclick);
         TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
 
         return new Button(trdBtnRunner,trdBtnClick);
@@ -60,12 +71,13 @@ public class PantallaAyuda extends Pantalla {
 
     @Override
     public void show() {
-        texturafondo = new Texture("Menu/fondo.jpg");
+        //texturafondo = manager.get("Menu/fondo.jpg");
         crearAyuda();
+        //cargarRecursos();
     }
 
     private void crearAyuda(){
-        texturafondo= new Texture("Menu/Fondo_Montana.jpg");
+        texturafondo= manager.get("Menu/Fondo_Montana.jpg");
         escenaMenu = new Stage(vista);
 
         Button btnLumil = crearBoton("Botones/LumilB.png");
@@ -129,7 +141,7 @@ public class PantallaAyuda extends Pantalla {
     }
 
     private Button crearBoton(String archivo) {
-        Texture texturaBoton = new Texture(archivo);
+        Texture texturaBoton = manager.get(archivo);
         TextureRegionDrawable trdBtnLumil = new TextureRegionDrawable(texturaBoton);
         return new Button(trdBtnLumil);
     }
@@ -160,7 +172,14 @@ public class PantallaAyuda extends Pantalla {
 
     @Override
     public void dispose() {
-
+        // Los assets se liberan a través del assetManager
+        manager.unload("Menu/Fondo_Montana.jpg");
+        manager.unload("Botones/LumilB.png");
+        manager.unload("Botones/OscuridaB.png");
+        manager.unload("Botones/btnhijos.png");
+        manager.unload("Botones/PrimariosB.png");
+        manager.unload("Menu/buttonback.png");
+        manager.unload("Menu/clickback.png");
     }
 }
 

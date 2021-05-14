@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,7 +22,6 @@ public class PantallaMenu extends Pantalla {
 
     @Override
     public void show() {
-
         crearMenu();
     }
 
@@ -40,7 +40,7 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
                 //juego.setScreen(new PantallaJuego(juego));
-                juego.setScreen(new PantallaHistoriauno(juego));
+                juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
             }
         });
 
@@ -51,8 +51,7 @@ public class PantallaMenu extends Pantalla {
         btnNosotros.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Space Invaders
-                juego.setScreen(new PantallaNosotros(juego));
+                juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLANOSOTROS));
             }
         });
 
@@ -61,8 +60,7 @@ public class PantallaMenu extends Pantalla {
         btnAyuda.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Space Invaders
-                juego.setScreen(new PantallaAyuda(juego));
+                juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
             }
         });
 
@@ -75,6 +73,7 @@ public class PantallaMenu extends Pantalla {
         // Escena se encarga de atender los eventos de entrada
         Gdx.input.setInputProcessor(escenaMenu);
     }
+
 
     private Button crearBoton(String archivo, String archivoclick) {
         Texture texturaBoton=new Texture(archivo);

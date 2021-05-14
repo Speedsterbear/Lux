@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,6 +25,9 @@ public class PantallaNosotros extends Pantalla {
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
     private float avancePantalla = 20;
+
+    // AssetManager
+    private AssetManager manager;
 
     //Cristales de colores en los fondos
     private int cristalColor = 0;
@@ -53,12 +57,17 @@ public class PantallaNosotros extends Pantalla {
     private float Tiempo = 0f;
 
     public PantallaNosotros(Lux juego) {
-
         this.juego=juego;
+        manager = juego.getAssetManager();
     }
     private void crearNosotros(){
-        androidImage= new Texture("Nosotros/Androidst.png");
-        texturafondo= new Texture("Nosotros/fondoAbout.jpg");
+
+        androidImage= manager.get("Nosotros/Androidst.png");
+        //androidImage= new Texture("Nosotros/Androidst.png");
+
+        texturafondo= manager.get("Nosotros/fondoAbout.jpg");
+       // texturafondo= new Texture("Nosotros/fondoAbout.jpg");
+
         //texturaUs = new   Texture("");
         escenaMenu=new Stage(vista);
         //aboutus= new Sprite(new Texture("Menu/clicknosotros.png"));
@@ -132,35 +141,52 @@ public class PantallaNosotros extends Pantalla {
     public void show() {
         crearNosotros();
         crearCristales();
+        //cargarRecursos();
     }
 
+    //private void cargarRecursos() {
+        // Cargar las texturas/mapas
+        //AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+
+        // Se bloquea hasta que cargue todos los recursos
+        //assetManager.finishLoading();
+    //}
+
     private void crearCristales() {
-        texturaCristalW = new Texture("Nosotros/Cristales-W.png");
+
+        texturaCristalW = manager.get("Nosotros/Cristales-W.png");
         cristalW = new Cristal(texturaCristalW,texturafondo.getWidth()/2,texturaCristalW.getHeight()/2,7,1,1/4f,1);
-        texturaCristalG = new Texture("Nosotros/Cristales-G.png");
+
+        texturaCristalG = manager.get("Nosotros/Cristales-G.png");
         cristalG = new Cristal(texturaCristalG,texturafondo.getWidth()/2,texturaCristalG.getHeight()/2,7,1,1/4f,1);
-        texturaCristalR = new Texture("Nosotros/Cristales-R.png");
+
+        texturaCristalR = manager.get("Nosotros/Cristales-R.png");
         cristalR = new Cristal(texturaCristalR,texturafondo.getWidth()/2,texturaCristalR.getHeight()/2,7,1,1/4f,1);
-        texturaCristalB = new Texture("Nosotros/Cristales-B.png");
+
+        texturaCristalB = manager.get("Nosotros/Cristales-B.png");
         cristalB = new Cristal(texturaCristalB,texturafondo.getWidth()/2,texturaCristalB.getHeight()/2,7,1,1/4f,1);
-        texturaCristalY = new Texture("Nosotros/Cristales-Y.png");
+
+        texturaCristalY =manager.get("Nosotros/Cristales-Y.png");
         cristalY = new Cristal(texturaCristalY,texturafondo.getWidth()/2,texturaCristalY.getHeight()/2,7,1,1/4f,1);
-        texturaCristalC = new Texture("Nosotros/Cristales-C.png");
+
+        texturaCristalC = manager.get("Nosotros/Cristales-C.png");
         cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1,1/4f,1);
-        texturaAndrea = new Texture("Nosotros/andrea.png");
-        texturaCarlos = new Texture("Nosotros/carlos.png");
-        texturaDavid = new Texture("Nosotros/david.png");
-        texturaEduardo = new Texture("Nosotros/eduardo.png");
-        texturaRicardo = new Texture("Nosotros/ricardo.png");
-        texturaInicial = new Texture("Nosotros/CasoInicial.png");
+
+        texturaAndrea = manager.get("Nosotros/andrea.png");
+        texturaCarlos = manager.get("Nosotros/carlos.png");
+        texturaDavid = manager.get("Nosotros/david.png");
+        texturaEduardo = manager.get("Nosotros/eduardo.png");
+        texturaRicardo = manager.get("Nosotros/ricardo.png");
+        texturaInicial = manager.get("Nosotros/CasoInicial.png");
 
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
-        Texture texturaBoton=new Texture(archivo);
+       // Texture texturaBoton=new Texture(archivo);
+        Texture texturaBoton= manager.get(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
-        Texture texturaClick=new Texture(archivoclick);
+        Texture texturaClick= manager.get(archivoclick);
         TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
 
         return new Button(trdBtnRunner,trdBtnClick);
@@ -253,6 +279,29 @@ public class PantallaNosotros extends Pantalla {
 
     @Override
     public void dispose() {
+        // Los assets se liberan a través del assetManager
+        manager.unload("Nosotros/Androidst.png");
+        manager.unload("Nosotros/fondoAbout.jpg");
+        manager.unload("Menu/buttonback.png");
+        manager.unload("Menu/clickback.png");
+        manager.unload("Nosotros/flechaDerOff.png");
+        manager.unload("Nosotros/flechaDerOn.png");
+        manager.unload("Nosotros/flechaIzqOff.png");
+        manager.unload("Nosotros/flechaIzqOn.png");
+        manager.unload("Nosotros/flechaArrOff.png");
+        manager.unload("Nosotros/flechaArrOn.png");
+        manager.unload("Nosotros/Cristales-W.png");
+        manager.unload("Nosotros/Cristales-G.png");
+        manager.unload("Nosotros/Cristales-R.png");
+        manager.unload("Nosotros/Cristales-B.png");
+        manager.unload("Nosotros/Cristales-Y.png");
+        manager.unload("Nosotros/Cristales-C.png");
+        manager.unload("Nosotros/andrea.png");
+        manager.unload("Nosotros/carlos.png");
+        manager.unload("Nosotros/david.png");
+        manager.unload("Nosotros/eduardo.png");
+        manager.unload("Nosotros/ricardo.png");
+        manager.unload("Nosotros/CasoInicial.png");
 
     }
 }

@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,15 +47,19 @@ public class PantallaGana extends Pantalla{
     //Mensaje Victoria
     private Texture mensajeGanar; //Textura que muestra el mensaje de que se ganó el juego
 
+    // AssetManager
+    private AssetManager manager;
+
     public PantallaGana(Lux juego) {
         this.juego=juego;
+        manager = juego.getAssetManager();
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
-        Texture texturaBoton=new Texture(archivo);
+        Texture texturaBoton=manager.get(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
-        Texture texturaClick=new Texture(archivoclick);
+        Texture texturaClick= manager.get(archivoclick);
         TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
 
         return new Button(trdBtnRunner,trdBtnClick);
@@ -71,7 +76,7 @@ public class PantallaGana extends Pantalla{
     }
 
     private void crearMensaje() {
-        mensajeGanar = new Texture("PantallaGanar/mensajeGanar.png");
+        mensajeGanar =manager.get("PantallaGanar/mensajeGanar.png");
     }
 
     private void crearRectangulo() {
@@ -81,22 +86,21 @@ public class PantallaGana extends Pantalla{
 
     //Aqui se crea el fondo similar a la pantalla de juego
     private void crearFondoDia() {
-        bosqueFondoDia = new Texture("Escenarios/fondo_dia.jpg");
-        bosqueAtrasDia = new Texture("Escenarios/dia_atras.png");
-        bosqueMedioDia = new Texture("Escenarios/dia_medio.png");
-        bosqueFrenteDia = new Texture("Escenarios/dia_frente.png");
+        bosqueFondoDia = manager.get("Escenarios/fondo_dia.jpg");
+        bosqueAtrasDia = manager.get("Escenarios/dia_atras.png");
+        bosqueMedioDia = manager.get("Escenarios/dia_medio.png");
+        bosqueFrenteDia =manager.get("Escenarios/dia_frente.png");
         bosqueDia = new FondoEnMovimiento(bosqueFondoDia,bosqueAtrasDia,bosqueMedioDia,bosqueFrenteDia);
     }
 
     private void crearPersonaje() {
         //Personaje principal: Lumil (Blanco)
-        texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
+        texturaLumilJugando =manager.get ("Personajes/Lumil_Sprites.png");
         lumil = new Lumil(texturaLumilJugando,ANCHO/4, ALTO/2,4,1,duracionFrameLumil,1);
     }
 
     private void crearBrillo() {
-
-        texturaBrillo = new Texture("Utileria/brilloLumil.png");
+        texturaBrillo = manager.get("Utileria/brilloLumil.png");
         brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/4+(texturaBrillo.getWidth()/6),ALTO/2);
 
     }
@@ -199,7 +203,15 @@ public class PantallaGana extends Pantalla{
 
     @Override
     public void dispose() {
-
+        manager.unload("PantallaGanar/mensajeGanar.png");
+        manager.unload("Escenarios/fondo_dia.jpg");
+        manager.unload("Escenarios/dia_atras.png");
+        manager.unload("Escenarios/dia_medio.png");
+        manager.unload("Escenarios/dia_frente.png");
+        manager.unload("Personajes/Lumil_Sprites.png");
+        manager.unload("Utileria/brilloLumil.png");
+        manager.unload("Botones/btnHome_OFF.png");
+        manager.unload("Botones/btnHome_ON.png");
     }
 }
 

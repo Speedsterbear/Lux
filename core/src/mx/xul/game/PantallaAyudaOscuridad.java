@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Align;
 
 public class PantallaAyudaOscuridad extends Pantalla {
     private Lux juego;
-    private Texture texturaFonfo;
+    private Texture texturaFondo;
     private Stage escenaMenu;
 
     public PantallaAyudaOscuridad(Lux juego) {
@@ -21,12 +21,12 @@ public class PantallaAyudaOscuridad extends Pantalla {
 
     @Override
     public void show() {
-        texturaFonfo = new Texture("Ayuda/oscuridadAyuda.jpeg");
+        //texturaFonfo = new Texture("Ayuda/oscuridadAyuda.jpeg");
         crearAyudaOscuridad();
     }
 
     private void crearAyudaOscuridad() {
-        texturaFonfo = new Texture("Ayuda/oscuridadAyuda.jpeg");
+        texturaFondo = new Texture("Ayuda/oscuridadAyuda.jpeg");
         escenaMenu = new Stage(vista);
 
         Button btnBack = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
@@ -55,7 +55,7 @@ public class PantallaAyudaOscuridad extends Pantalla {
         borrarPantalla(0, 0, 1);
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
-        batch.draw(texturaFonfo, 0, 0);
+        batch.draw(texturaFondo, 0, 0);
         batch.end();
         escenaMenu.draw();
     }

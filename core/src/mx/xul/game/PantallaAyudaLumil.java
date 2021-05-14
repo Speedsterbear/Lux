@@ -24,7 +24,7 @@ public class PantallaAyudaLumil extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("Ayuda/FondoL.jpeg");
+        //texturaFondo = new Texture("Ayuda/FondoL.jpeg");
         crearAyudaLumil();
     }
 

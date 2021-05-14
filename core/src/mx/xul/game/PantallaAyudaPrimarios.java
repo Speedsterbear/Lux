@@ -22,7 +22,7 @@ public class PantallaAyudaPrimarios extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("Ayuda/ayudaPrimarios.jpeg");
+        //texturaFondo = new Texture("Ayuda/ayudaPrimarios.jpeg");
         crearAyudaPrimarios();
     }
 

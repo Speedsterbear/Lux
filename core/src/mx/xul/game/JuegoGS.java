@@ -7,7 +7,10 @@ Autor: Carlos Arroyo
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+//import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -32,6 +35,9 @@ public class JuegoGS extends Pantalla {
     boolean boolRojo = false;
     boolean boolAzul = false;
     boolean boolVerde = false;
+
+    // AssetManager
+    private AssetManager manager;
 
     //Duración de las secciones
     private float duracionVerde = 20; //Valor que representa los segundos de duración aproximados de la sección 1.
@@ -194,9 +200,13 @@ public class JuegoGS extends Pantalla {
     private ShapeRenderer rectNegro;
     private float alfaRectanguloNegro = 0;
 
+    //Sonidos y musica
+    private Sound sonidohijoOscuridad;
+
 
     public JuegoGS (Lux juego) {
         this.juego=juego;
+        manager = juego.getAssetManager();
     }
 
 
@@ -212,50 +222,14 @@ public class JuegoGS extends Pantalla {
         crearBarra();
         crearBotones();
         crearRectangulo();
+        crearSonidos();
+
+        //cargarRecursos();
+        crearObjetos();
 
         //Escena y Botón
         //escenaJuego=new Stage(vista);
 
-
-        Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
-        btnRegresar.setPosition(160,ALTO-80, Align.center);
-        btnRegresar.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Juego
-                juego.setScreen(new PantallaPausa(juego));
-            }
-        });
-
-        Button btnGemaAzul = crearBoton("BotonesGemas/Gema_Azul_OFF.png", "BotonesGemas/Gema_Azul_ON.png");
-        btnGemaAzul.setPosition(160,ALTO-80, Align.center);
-        btnGemaAzul.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Se activa el poder azul
-                System.out.println("HABILIDAD AZUL");
-            }
-        });
-
-        Button btnGemaRoja = crearBoton("BotonesGemas/Gema_Roja_OFF.png", "BotonesGemas/Gema_Roja_ON.png");
-        btnGemaRoja.setPosition(160,ALTO-80, Align.center);
-        btnGemaRoja.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Se activa el poder rojo
-                System.out.println("HABILIDAD ROJA");
-            }
-        });
-
-        Button btnGemaVerde = crearBoton("BotonesGemas/Gema_Verde_OFF.png", "BotonesGemas/Gema_Verde_ON.png");
-        btnGemaVerde.setPosition(160,ALTO-80, Align.center);
-        btnGemaVerde.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Se activa el poder rojo
-                System.out.println("HABILIDAD ROJA");
-            }
-        });
 
         // escenaJuego.addActor(btnRegresar);
         //Gdx.input.setInputProcessor(escenaJuego);
@@ -263,12 +237,13 @@ public class JuegoGS extends Pantalla {
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
 
+    }
 
+    private void crearObjetos() {
+    }
 
-
-
-
-
+    private void crearSonidos() {
+        sonidohijoOscuridad = manager.get("Sonidos/coin.wav");
     }
 
     private void crearRectangulo() {
@@ -277,8 +252,7 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearBrillo() {
-
-        texturaBrillo = new Texture("Utileria/brilloLumil.png");
+        texturaBrillo = manager.get("Utileria/brilloLumil.png");
         brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/2+(texturaBrillo.getWidth()/6),ALTO/2);
 
     }
@@ -286,29 +260,29 @@ public class JuegoGS extends Pantalla {
     private void crearBotones() {
 
         //Gema Verde
-        texturaGemaVerdeON= new Texture("BotonesGemas/gemaVerde_ON.png");
-        texturaGemaVerdeOFF = new Texture("BotonesGemas/gemaVerde_OFF.png");
+        texturaGemaVerdeON= manager.get("BotonesGemas/gemaVerde_ON.png");
+        texturaGemaVerdeOFF = manager.get("BotonesGemas/gemaVerde_OFF.png");
         gemaVerde = new Boton(texturaGemaVerdeOFF,texturaGemaVerdeON,margen+(texturaGemaVerdeOFF.getWidth()/2),margen+(texturaGemaVerdeOFF.getHeight()/2));
 
         //Gema Roja
-        texturaGemaRojaON = new Texture("BotonesGemas/gemaRoja_ON.png");
-        texturaGemaRojaOFF = new Texture("BotonesGemas/gemaRoja_OFF.png");
+        texturaGemaRojaON = manager.get("BotonesGemas/gemaRoja_ON.png");
+        texturaGemaRojaOFF = manager.get("BotonesGemas/gemaRoja_OFF.png");
         gemaRoja = new Boton(texturaGemaRojaOFF, texturaGemaRojaON,margen+(3*texturaGemaRojaOFF.getWidth()/2),margen+(texturaGemaRojaOFF.getHeight()/2));
 
         //Gema Azul
-        texturaGemaAzulON = new Texture("BotonesGemas/gemaAzul_ON.png");
-        texturaGemaAzulOFF = new Texture("BotonesGemas/gemaAzul_OFF.png");
+        texturaGemaAzulON =manager.get("BotonesGemas/gemaAzul_ON.png");
+        texturaGemaAzulOFF = manager.get("BotonesGemas/gemaAzul_OFF.png");
         gemaAzul = new Boton(texturaGemaAzulOFF, texturaGemaAzulON,margen+(texturaGemaVerdeOFF.getWidth()),(3*texturaGemaVerdeOFF.getHeight()/2)-10);
 
         //Boton Pausa
-        texturaPausaON = new Texture("Botones/pausa_ON.png");
-        texturaPausaOFF = new Texture("Botones/pausa_OFF.png");
+        texturaPausaON = manager.get("Botones/pausa_ON.png");
+        texturaPausaOFF = manager.get("Botones/pausa_OFF.png");
         botonPausa = new Boton(texturaPausaOFF,texturaPausaON,margen+(texturaGemaVerdeOFF.getWidth()),ALTO-(margen/2) -(texturaPausaOFF.getHeight()/2));
     }
 
     private void crearBarra() {
         //Los parametros de ancho final y distancia son para escalar el avance.
-        fondoBarra = new Texture("Utileria/atrasBarraAvance.png");
+        fondoBarra = manager.get("Utileria/atrasBarraAvance.png");
         barraGS = new BarraAvance(0,1,0,1,(ANCHO/4), ALTO-margen*3,12,ANCHO/8,velocidadVerde*duracionVerde);//27000 es 1 minuto y medio
         barraRS = new BarraAvance(1,0,0,1,(ANCHO/4)+(ANCHO/8), ALTO-margen*3,12,ANCHO/8,velocidadRojo*duracionRojo);//54000 es para 3 minutos
         barraBS = new BarraAvance(0,0,1,1,(ANCHO/4)+(ANCHO*2/8), ALTO-margen*3,12,ANCHO/8,velocidadAzul*duracionAzul);//54000 es para 3 minutos
@@ -316,16 +290,16 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearVidas() {
-        texturaVida = new Texture("Utileria/vida.png");
+        texturaVida = manager.get("Utileria/vida.png");
         //Se usa getHeight en ambas (x y) para que quede el mismo margen tanto arriba como a la derecha
         vidas = new Vidas(texturaVida,ANCHO-margen-(texturaVida.getHeight()/2),margen+(texturaVida.getHeight()/2));
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
-        Texture texturaBoton=new Texture(archivo);
+        Texture texturaBoton=manager.get(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
-        Texture texturaClick=new Texture(archivoclick);
+        Texture texturaClick=manager.get(archivoclick);
         TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
 
         return new Button(trdBtnRunner,trdBtnClick);
@@ -421,6 +395,7 @@ public class JuegoGS extends Pantalla {
         //Estado del juego
         if (contadorVidas == 0) {
             estado = EstadoJuego.PIERDE;
+            sonidohijoOscuridad.play();
         }
 
         //Tiempo que pasó entre render.
@@ -633,7 +608,7 @@ public class JuegoGS extends Pantalla {
 
             //Mover Lumil
             moverLumil(isMoving);
-            System.out.println(isMoving);
+            //System.out.println(isMoving);
 
             //Mover Oscuridad
             moverOscuridad(delta);
@@ -704,7 +679,7 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.GANA) {
             velocidad = 0;
             velocidadOscuridad = 0;
-            juego.setScreen(new PantallaGana(juego));
+            juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAGANA));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
@@ -912,7 +887,7 @@ public class JuegoGS extends Pantalla {
                 if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
                     barraWS.renderEstatico(camara);
                     estado = EstadoJuego.GANA;
-                    System.out.println("GANASTE!");
+                    //System.out.println("GANASTE!");
                 }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
                 break;
         }
@@ -932,6 +907,35 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void dispose() {
+        // Los assets se liberan a través del assetManager
+       // AssetManager assetManager = juego.getAssetManager();
+        manager.unload("Escenarios/bosque_fondo.jpg");
+        manager.unload("Escenarios/bosque_atras.png");
+        manager.unload("Escenarios/bosque_medio.png");
+        manager.unload("Escenarios/bosque_frente.png");
+        manager.unload("BotonesGemas/gemaVerde_ON.png");
+        manager.unload("BotonesGemas/gemaVerde_OFF.png");
+        manager.unload("BotonesGemas/gemaRoja_ON.png");
+        manager.unload("BotonesGemas/gemaRoja_OFF.png");
+        manager.unload("BotonesGemas/gemaAzul_ON.png");
+        manager.unload("BotonesGemas/gemaAzul_OFF.png");
+        manager.unload("Botones/pausa_ON.png");
+        manager.unload("Botones/pausa_OFF.png");
+        manager.unload("Utileria/atrasBarraAvance.png");
+        manager.unload("Utileria/brilloLumil.png");
+        manager.unload("Utileria/vida.png");
+        manager.unload("Personajes/Lumil_Sprites.png");
+        manager.unload("Personajes/lumilG.png");
+        manager.unload("Personajes/lumilR.png");
+        manager.unload("Personajes/lumilB.png");
+        manager.unload("Personajes/oscuridad.png");
+        manager.unload("Personajes/HijoOsc_sprite.png");
+        manager.unload("Personajes/bloque.png");
+        manager.unload("Personajes/Esgrun.png");
+        manager.unload("Personajes/Rojel.png");
+        manager.unload("Personajes/Shiblu.png");
+        manager.unload("Sonidos/coin.wav");
+
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
         texturaHijoOscuridad.dispose();
@@ -983,7 +987,7 @@ public class JuegoGS extends Pantalla {
 
                 if (posicionDedo.x>=ANCHO/4) {
                     isMoving = true;
-                    System.out.println(posicionDedo);
+                    //System.out.println(posicionDedo);
 
 
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
@@ -1093,13 +1097,13 @@ public class JuegoGS extends Pantalla {
 
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     //gemaVerde.active();
-                    System.out.println("Poder Verde");
+                    //System.out.println("Poder Verde");
                 } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     //gemaRoja.active();
-                    System.out.println("Poder Rojo");
+                    //System.out.println("Poder Rojo");
                 } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     //gemaAzul.active();
-                    System.out.println("Poder Azul");
+                    //System.out.println("Poder Azul");
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     juego.setScreen(new PantallaPausa(juego));
                 }
