@@ -395,7 +395,6 @@ public class JuegoGS extends Pantalla {
         //Estado del juego
         if (contadorVidas == 0) {
             estado = EstadoJuego.PIERDE;
-            sonidohijoOscuridad.play();
         }
 
         //Tiempo que pasó entre render.
@@ -743,6 +742,7 @@ public class JuegoGS extends Pantalla {
             if(arrHijosOscuridad!= null && lumil.getRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
                 arrHijosOscuridad.removeIndex(i);
                 contadorVidas --;
+                sonidohijoOscuridad.play();
             }
             if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 arrHijosOscuridad.removeIndex(i);
