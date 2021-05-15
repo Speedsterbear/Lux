@@ -22,6 +22,9 @@ public class PantallaNosotros extends Pantalla {
 
     private Texture androidImage;
 
+    private  Texture tecImage;
+
+    private  Texture mailImage;
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
     private float avancePantalla = 20;
@@ -63,10 +66,12 @@ public class PantallaNosotros extends Pantalla {
     private void crearNosotros(){
 
         androidImage= manager.get("Nosotros/Androidst.png");
-        //androidImage= new Texture("Nosotros/Androidst.png");
+
+        tecImage = manager.get("Nosotros/tecst.png");
 
         texturafondo= manager.get("Nosotros/fondoAbout.jpg");
-       // texturafondo= new Texture("Nosotros/fondoAbout.jpg");
+
+        mailImage = manager.get("Nosotros/mailst.png");
 
         //texturaUs = new   Texture("");
         escenaMenu=new Stage(vista);
@@ -203,7 +208,9 @@ public class PantallaNosotros extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
-        batch.draw(androidImage,150,150);
+        batch.draw(androidImage,75,350);
+        batch.draw(tecImage, 25,100);
+        batch.draw(mailImage, 75,0);
         //aboutus.draw(batch);
         dibujarCristales();
         batch.end();

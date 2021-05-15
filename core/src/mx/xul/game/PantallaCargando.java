@@ -132,6 +132,8 @@ public class PantallaCargando extends Pantalla {
     }
 
     private void cargarRecursosNosotros() {
+        manager.load("Nosotros/mailst.png",Texture.class);
+        manager.load("Nosotros/tecst.png",Texture.class);
         manager.load("Nosotros/Androidst.png", Texture.class);
         manager.load("Nosotros/fondoAbout.jpg", Texture.class);
         manager.load("Menu/buttonback.png", Texture.class);
