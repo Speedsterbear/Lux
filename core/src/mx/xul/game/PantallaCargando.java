@@ -168,7 +168,6 @@ public class PantallaCargando extends Pantalla {
         manager.load("Utileria/brilloLumil.png", Texture.class);
         manager.load("Botones/btnHome_OFF.png", Texture.class);
         manager.load("Botones/btnHome_ON.png", Texture.class);
-
     }
 
     private void cargarRecursosAyuda() {
@@ -209,7 +208,10 @@ public class PantallaCargando extends Pantalla {
         manager.load("Personajes/Esgrun.png", Texture.class);
         manager.load("Personajes/Rojel.png", Texture.class);
         manager.load("Personajes/Shiblu.png", Texture.class);
-        manager.load("Sonidos/coin.wav", Sound.class);
+        manager.load("Sonidos/sonidoComeOscuridad.wav", Sound.class);
+        manager.load("Sonidos/sonidoPoderActivado.wav", Sound.class);
+        manager.load("Sonidos/sonidoquitavidas.wav", Sound.class);
+        manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
     }
 
     @Override

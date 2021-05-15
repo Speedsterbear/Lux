@@ -201,7 +201,11 @@ public class JuegoGS extends Pantalla {
     private float alfaRectanguloNegro = 0;
 
     //Sonidos y musica
-    private Sound sonidohijoOscuridad;
+    private Sound sonidocomeOscuridad;
+    private Sound sonidoPoderActivado;
+    private Sound sonidoquitavidas;
+    private Sound sonidoTocaLuzBlanca;
+    //private Sound sonidoTocaPrimario;
 
 
     public JuegoGS (Lux juego) {
@@ -244,7 +248,10 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearSonidos() {
-        sonidohijoOscuridad = manager.get("Sonidos/coin.wav");
+        sonidocomeOscuridad = manager.get("Sonidos/sonidoComeOscuridad.wav");
+        sonidoPoderActivado = manager.get("Sonidos/sonidoPoderActivado.wav");
+        sonidoquitavidas = manager.get("Sonidos/sonidoquitavidas.wav");
+        sonidoTocaLuzBlanca = manager.get("Sonidos/sonidoTocaLuzBlanca.wav");
     }
 
     private void crearRectangulo() {
@@ -679,6 +686,7 @@ public class JuegoGS extends Pantalla {
             velocidad = 0;
             velocidadOscuridad = 0;
             juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAGANA));
+            sonidoTocaLuzBlanca.play();
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
@@ -742,7 +750,7 @@ public class JuegoGS extends Pantalla {
             if(arrHijosOscuridad!= null && lumil.getRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
                 arrHijosOscuridad.removeIndex(i);
                 contadorVidas --;
-                sonidohijoOscuridad.play();
+                sonidoquitavidas.play();
             }
             if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 arrHijosOscuridad.removeIndex(i);
@@ -793,6 +801,7 @@ public class JuegoGS extends Pantalla {
         //El 100 es un número arbitrario elegido de acuerdo al Sprite de Lumil
         if(lumil.sprite.getX()<=(oscuridad.sprite.getX()+oscuridad.sprite.getWidth()-120)) {
             contadorVidas=0;//Muere =(
+            sonidocomeOscuridad.play();
         }
 
 
@@ -934,7 +943,10 @@ public class JuegoGS extends Pantalla {
         manager.unload("Personajes/Esgrun.png");
         manager.unload("Personajes/Rojel.png");
         manager.unload("Personajes/Shiblu.png");
-        manager.unload("Sonidos/coin.wav");
+        manager.unload("Sonidos/sonidoComeOscuridad.wav");
+        manager.unload("Sonidos/sonidoPoderActivado.wav");
+        manager.unload("Sonidos/sonidoquitavidas.wav");
+        manager.unload("Sonidos/sonidoTocaLuzBlanca.wav");
 
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
@@ -992,12 +1004,16 @@ public class JuegoGS extends Pantalla {
 
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaVerde.active();
+                    sonidoPoderActivado.play();
                 } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaRoja.active();
+                    sonidoPoderActivado.play();
                 } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaAzul.active();
+                    sonidoPoderActivado.play();
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
+                    sonidoPoderActivado.play();
                 }
 
 
