@@ -4,7 +4,7 @@ package mx.xul.game;
 Esta clase se usa para crear el efecto de desvanecer a blanco o a negro.
 Puede usarse para cualquier color.
 Esta pantalla crea un rectangulo para no importar una imagen y la sobre pone a la pantalla para dar el efecto de Fade.
-Autor: Carlos Uriel Arroyo Herrera.
+Autor: Carlos Uriel Arroyo Herrera
  */
 
 import com.badlogic.gdx.Gdx;
