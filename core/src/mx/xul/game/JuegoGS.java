@@ -20,11 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
+
 import com.badlogic.gdx.utils.Array;
 
 import mx.xul.game.pantallaBienvenida.ColoresLumil;
-//import com.sun.org.apache.xpath.internal.objects.XBoolean;
+
 
 
 public class JuegoGS extends Pantalla {
@@ -227,6 +227,7 @@ public class JuegoGS extends Pantalla {
         //cargarRecursos();
         crearObjetos();
 
+
         //Escena y Botón
         //escenaJuego=new Stage(vista);
 
@@ -254,7 +255,6 @@ public class JuegoGS extends Pantalla {
     private void crearBrillo() {
         texturaBrillo = manager.get("Utileria/brilloLumil.png");
         brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/2+(texturaBrillo.getWidth()/6),ALTO/2);
-
     }
 
     private void crearBotones() {
@@ -715,16 +715,16 @@ public class JuegoGS extends Pantalla {
         //Asignar Color de brillo y simular la acción del brillo
         switch (colorLumil) {
             case VERDE:
-                brilloLumil.actualizar(0,1,0);
+                brilloLumil.actualizar(0,1,0,0.9f);
                 break;
             case ROJO:
-                brilloLumil.actualizar(1,0,0);
+                brilloLumil.actualizar(1,0,0,0.9f);
                 break;
             case AZUL:
-                brilloLumil.actualizar(0,0,1);
+                brilloLumil.actualizar(0,0,1,0.9f);
                 break;
             case BLANCO:
-                brilloLumil.actualizar(1,1,1);
+                brilloLumil.actualizar(1,1,1,0.9f);
                 break;
         }
 

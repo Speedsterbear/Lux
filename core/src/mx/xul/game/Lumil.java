@@ -49,5 +49,56 @@ public class Lumil extends ObjetoAnimado
         return rectangle;
     }
 
+    //Regresa un rectangulo ubicado en la parte superior del sprite
+    public Rectangle getUpperRectangle() {
+        float margenizq = 50;
+        float margender = 10;
+        float margensup = 0;
+        float alto = 10;
+
+        float xrect = sprite.getX()+margenizq;
+        float yrect = sprite.getY()+sprite.getHeight()-margensup-alto;
+        float anchorect = sprite.getWidth()-margenizq-margender;
+        float altorect = alto;
+
+        Rectangle rectBoton = new Rectangle(xrect,yrect,anchorect,altorect);
+        return rectBoton;
+
+    }
+
+    //Regresa un rectangulo ubicado en la parte inferior del sprite
+    public Rectangle getLowerRectangle() {
+        float margenizq = 50;
+        float margender = 10;
+        float margeninf = 0;
+        float alto = 10;
+
+        float xrect = sprite.getX()+margenizq;
+        float yrect = sprite.getY()+margeninf;
+        float anchorect = sprite.getWidth()-margenizq-margender;
+        float altorect = alto;
+
+        Rectangle rectBoton = new Rectangle(xrect,yrect,anchorect,altorect);
+        return rectBoton;
+
+    }
+
+    //Regresa un rectangulo ubicado en la parte derecha (frontal) del sprite
+    public Rectangle getFrontRectangle() {
+        float margeninf = 0;
+        float margender = 10;
+        float margensup = 0;
+        float grosor = 10;
+
+        float xrect = sprite.getX()+sprite.getWidth()-margender-grosor;
+        float yrect = sprite.getY()+margensup;
+        float anchorect = grosor;
+        float altorect = sprite.getHeight()-margensup-margeninf;
+
+        Rectangle rectBoton = new Rectangle(xrect,yrect,anchorect,altorect);
+        return rectBoton;
+
+    }
+
 
 }

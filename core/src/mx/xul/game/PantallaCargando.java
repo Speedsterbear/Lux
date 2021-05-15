@@ -30,8 +30,12 @@ public class PantallaCargando extends Pantalla {
     private SpriteBatch batch;
 
     // Imagen cargando
-    private Texture texturaCargando;
-    private Sprite spriteCargando;
+    //private Texture texturaCargando;
+    private Texture texturaCarga;
+    //private Sprite spriteCargando;
+    private BarraAvance barraAvance;
+    private float margen=80; // Margen de las barras
+
     private Pantallasenum siguientePantalla;
     private int avance; // % de carga
 
@@ -57,18 +61,52 @@ public class PantallaCargando extends Pantalla {
         vista = new StretchViewport(ANCHO, ALTO, camara);
         // El objeto que administra los trazos gráficos
         batch = new SpriteBatch();
+        crearBarra();
 
         // Cargar recursos
+        /*
         texturaCargando = new Texture(Gdx.files.internal("cargando.png"));
         spriteCargando = new Sprite(texturaCargando);
         spriteCargando.setPosition(ANCHO / 2 - spriteCargando.getWidth() / 2,
                 ALTO / 2 - spriteCargando.getHeight() / 2);
 
+         */
+
+        cargarRecursosSigPantalla();
+
+        /*
         cargarRecursosJuego();
         cargarRecursosAyuda();
         cargarRecursosGana();
         cargarRecursosNosotros();
         cargarRecursosSigPantalla();
+        cargarRecursosHistoria();
+
+         */
+
+    }
+
+    private void crearBarra() {
+        barraAvance = new BarraAvance(1,1,1,0.5f,margen,ALTO/2,15,ANCHO-(2*margen),120);
+        texturaCarga = new Texture("PantallaCargando/SiluetaBarra.png");
+    }
+
+    private void cargarRecursosHistoria() {
+        manager.load("PantallaHistoria/mensaje_inicial.png", Texture.class);
+        manager.load("PantallaHistoria/Humo.png", Texture.class);
+        manager.load("PantallaHistoria/fondo_humo.jpg", Texture.class);
+        manager.load("PantallaHistoria/Letras_1.png", Texture.class);
+        manager.load("PantallaHistoria/Letras_2.png", Texture.class);
+        manager.load("PantallaHistoria/Letras_3.png", Texture.class);
+        manager.load("PantallaHistoria/Letras_4.png", Texture.class);
+        manager.load("PantallaHistoria/Letras_5.png", Texture.class);
+        manager.load("PantallaHistoria/Letras_6.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No1.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No2.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No3.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No4.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No5.png", Texture.class);
+        manager.load("PantallaHistoria/Vitral_No6.png", Texture.class);
     }
 
     private void cargarRecursosSigPantalla() {
@@ -86,6 +124,9 @@ public class PantallaCargando extends Pantalla {
                 break;
             case PANTALLANOSOTROS:
                 cargarRecursosNosotros();
+                break;
+            case PANTALLAHISTORIA:
+                cargarRecursosHistoria();
                 break;
         }
     }
@@ -177,13 +218,17 @@ public class PantallaCargando extends Pantalla {
 
         // Dibujar
         borrarPantalla();
-        spriteCargando.setRotation(spriteCargando.getRotation() + 15);
+        //spriteCargando.setRotation(spriteCargando.getRotation() + 15);
+
+        //Dibujar Barra
+        barraAvance.renderAvanceCarga(avance*1.2f,camara);
 
         batch.setProjectionMatrix(camara.combined);
 
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
-        spriteCargando.draw(batch);
+        batch.draw(texturaCarga,(margen+(avance*1.2f*(ANCHO-(margen*2))/120))-(texturaCarga.getWidth()/2)-20,(ALTO/2)-(texturaCarga.getHeight()/2));
+        //spriteCargando.draw(batch);
         batch.end();
 
         actualizarCargaRecursos();
@@ -204,6 +249,9 @@ public class PantallaCargando extends Pantalla {
                 case PANTALLANOSOTROS:
                     juego.setScreen(new PantallaNosotros(juego));
                     break;
+                case PANTALLAHISTORIA:
+                    juego.setScreen(new PantallaHistoria(juego));
+                    break;
             }
         }
         avance = (int) (manager.getProgress() * 100);
@@ -217,14 +265,23 @@ public class PantallaCargando extends Pantalla {
     //}
 
     private void actualizar() {
+
+        if (manager.update()==false) {
+            // Aún no termina la carga de assets, leer el avance
+            float avance = manager.getProgress()*100;
+            Gdx.app.log("Cargando",avance+"%");
+        }
+
+        /*
         if (manager.update()) {
             // Terminó la carga, cambiar de pantalla
-            juego.setScreen(new JuegoGS(juego));
+            //juego.setScreen(new JuegoGS(juego));
         } else {
             // Aún no termina la carga de assets, leer el avance
             float avance = manager.getProgress()*100;
             Gdx.app.log("Cargando",avance+"%");
         }
+        */
     }
 
 
@@ -250,7 +307,8 @@ public class PantallaCargando extends Pantalla {
 
     @Override
     public void dispose() {
-        texturaCargando.dispose();
+        //texturaCargando.dispose();
+        texturaCarga.dispose();
         // Los assets de PantallaJuego se liberan en el método dispose de PantallaJuego
     }
 }

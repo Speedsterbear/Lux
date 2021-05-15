@@ -37,7 +37,8 @@ public class PantallaAyudaLumil extends Pantalla {
         btnBack.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                juego.setScreen(new PantallaAyuda(juego));
+                //juego.setScreen(new PantallaAyuda(juego));
+                juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
             }
         });
 

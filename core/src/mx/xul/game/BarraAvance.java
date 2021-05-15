@@ -5,6 +5,8 @@ Sirve para representar la barra de avance que lleva el personaje principal.
 Autor: Carlos Arroyo
  */
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
@@ -52,6 +54,17 @@ public class BarraAvance {
         rectangulo.begin(ShapeRenderer.ShapeType.Filled);
         rectangulo.box(px,py,0,w,h,0);
         rectangulo.end();
+    }
+
+    public void renderAvanceCarga (float distancia, OrthographicCamera camara){
+        recorrido = distancia*w/d;
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        rectangulo.setProjectionMatrix(camara.combined);
+        rectangulo.begin(ShapeRenderer.ShapeType.Filled);
+        rectangulo.box(px,py,0,recorrido,h,0);
+        rectangulo.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
 }

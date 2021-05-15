@@ -21,8 +21,10 @@ import com.badlogic.gdx.utils.Scaling;
 import mx.xul.game.JuegoGS;
 import mx.xul.game.Lux;
 import mx.xul.game.Pantalla;
+import mx.xul.game.PantallaCargando;
 import mx.xul.game.PantallaGana;
 import mx.xul.game.PantallaMenu;
+import mx.xul.game.Pantallasenum;
 
 public class PantallaBienvenida extends Pantalla {
 
@@ -45,6 +47,7 @@ public class PantallaBienvenida extends Pantalla {
                     @Override
                     public void run() {
                         ((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaMenu(juego));
+                        //((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaCargando(juego, Pantallasenum.PANTALLAHISTORIA));
                     }
                 })
         ));

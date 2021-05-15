@@ -36,14 +36,14 @@ public class BrilloLumil {
 
 
     //Sirve para hacer la ilusión de brillo
-    public void actualizar (float r, float g, float b){
+    public void actualizar (float r, float g, float b,float scaleBase){
         angulo ++;
         brilloAtras.rotate(0.3f);
-        brilloAtras.setScale(0.9f + (MathUtils.sinDeg(angulo)*0.1f));
+        brilloAtras.setScale(scaleBase + (MathUtils.sinDeg(angulo)*0.1f));
         brilloAtras.setColor(r,g,b,0.5f + (MathUtils.sinDeg(angulo)*0.3f));
 
         brilloFrente.rotate(-0.3f);
-        brilloFrente.setScale(0.65f + (MathUtils.sinDeg(angulo)*0.1f));
+        brilloFrente.setScale(scaleBase-0.25f + (MathUtils.sinDeg(angulo)*0.1f));
         brilloAtras.setAlpha(0.6f + (MathUtils.sinDeg(angulo)*0.1f));
 
     }

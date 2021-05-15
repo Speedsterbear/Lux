@@ -2,8 +2,6 @@ package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -43,6 +41,7 @@ public class PantallaGana extends Pantalla{
     //Fade a Blanco
     private ShapeRenderer rectangulo;
     private float alfaRectangulo = 1;
+    private Transicion transicionBlanca;
 
     //Mensaje Victoria
     private Texture mensajeGanar; //Textura que muestra el mensaje de que se ganó el juego
@@ -82,6 +81,7 @@ public class PantallaGana extends Pantalla{
     private void crearRectangulo() {
         rectangulo = new ShapeRenderer();
         //rectangulo.setColor(1,1,1,1);
+        transicionBlanca = new Transicion(1,1,1,1,ALTO,ANCHO);
     }
 
     //Aqui se crea el fondo similar a la pantalla de juego
@@ -141,13 +141,24 @@ public class PantallaGana extends Pantalla{
         batch.end();
 
         escenaGana.draw();
+        if (tiempoLumil<=2.5f) {
+            if (tiempoLumil>=1){
+                transicionBlanca.fadeIn(delta,1);
+            }
+            transicionBlanca.render(camara);
+        }
 
+
+        /*
         //Hacer el efecto de Fade de entrada
         if (tiempoLumil<=2.5f){
             renderFadeInicial(tiempoLumil);
         }
+        */
 
     }
+
+    /* Codigo Antiguo
 
     private void renderFadeInicial(float tiempoLumil) {
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -169,11 +180,12 @@ public class PantallaGana extends Pantalla{
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
     }
+    */
 
     private void actualizar(float delta) {
         //Tiempo que pasó entre render.
         tiempoLumil += Gdx.graphics.getDeltaTime();
-        brilloLumil.actualizar(1,1,1);
+        brilloLumil.actualizar(1,1,1,0.9f);
         moverPersonaje(delta);
 
     }

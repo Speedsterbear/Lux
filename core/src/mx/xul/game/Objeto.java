@@ -15,7 +15,7 @@ public class Objeto
 {
     //protected es para quelas clases que heredan puedan acceder a la variable
     protected Sprite sprite; // Imagen, posición
-    protected float alfaSprite; // Representa el canal alfa del Sprite
+    protected float alfaSprite=0; // Representa el canal alfa del Sprite
 
     //Constructor. Inicializa el objeto con la imagen y la posición
     public Objeto(Texture textura, float x, float y) {
@@ -31,12 +31,21 @@ public class Objeto
     public void fadeIn (float delta, float fadeDuration) {
         if (alfaSprite<=1){
             alfaSprite += delta/fadeDuration;
+            if (alfaSprite>=1){
+                alfaSprite =1;
+            }
+            sprite.setAlpha(alfaSprite);
+
         }
     }
 
     public void fadeOut (float delta, float fadeDuration) {
-        if (alfaSprite>=0){
+        if (alfaSprite>0){
             alfaSprite -= delta/fadeDuration;
+            if (alfaSprite<=0){
+                alfaSprite =0;
+            }
+            sprite.setAlpha(alfaSprite);
         }
     }
 
