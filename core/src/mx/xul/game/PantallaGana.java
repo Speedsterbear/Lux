@@ -2,6 +2,7 @@ package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +23,7 @@ public class PantallaGana extends Pantalla{
     private Texture bosqueAtrasDia;
     private Texture bosqueMedioDia;
     private Texture bosqueFrenteDia;
+   // private Texture musicaPantallasSecundarias;
     private FondoEnMovimiento bosqueDia;
 
     //Personaje principal: Lumil
@@ -47,18 +49,18 @@ public class PantallaGana extends Pantalla{
     private Texture mensajeGanar; //Textura que muestra el mensaje de que se ganó el juego
 
     // AssetManager
-    private AssetManager manager;
+   // private AssetManager manager;
 
     public PantallaGana(Lux juego) {
         this.juego=juego;
-        manager = juego.getAssetManager();
+     //   manager = juego.getAssetManager();
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
-        Texture texturaBoton=manager.get(archivo);
+        Texture texturaBoton=new Texture(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
-        Texture texturaClick= manager.get(archivoclick);
+        Texture texturaClick= new Texture(archivoclick);
         TextureRegionDrawable trdBtnClick=new TextureRegionDrawable(texturaClick);
 
         return new Button(trdBtnRunner,trdBtnClick);
@@ -75,36 +77,42 @@ public class PantallaGana extends Pantalla{
     }
 
     private void crearMensaje() {
-        mensajeGanar =manager.get("PantallaGanar/mensajeGanar.png");
+        mensajeGanar = new Texture("PantallaGanar/mensajeGanar.png");
     }
 
     private void crearRectangulo() {
         rectangulo = new ShapeRenderer();
         //rectangulo.setColor(1,1,1,1);
-        transicionBlanca = new Transicion(1,1,1,1,ALTO,ANCHO);
+        transicionBlanca = new Transicion(1,1,1,1.2f,ALTO,ANCHO);
     }
 
     //Aqui se crea el fondo similar a la pantalla de juego
     private void crearFondoDia() {
-        bosqueFondoDia = manager.get("Escenarios/fondo_dia.jpg");
-        bosqueAtrasDia = manager.get("Escenarios/dia_atras.png");
-        bosqueMedioDia = manager.get("Escenarios/dia_medio.png");
-        bosqueFrenteDia =manager.get("Escenarios/dia_frente.png");
+        bosqueFondoDia = new Texture("Escenarios/fondo_dia.jpg");
+        bosqueAtrasDia = new Texture("Escenarios/dia_atras.png");
+        bosqueMedioDia = new Texture("Escenarios/dia_medio.png");
+        bosqueFrenteDia =new Texture("Escenarios/dia_frente.png");
         bosqueDia = new FondoEnMovimiento(bosqueFondoDia,bosqueAtrasDia,bosqueMedioDia,bosqueFrenteDia);
     }
 
     private void crearPersonaje() {
         //Personaje principal: Lumil (Blanco)
-        texturaLumilJugando =manager.get ("Personajes/Lumil_Sprites.png");
+        texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
         lumil = new Lumil(texturaLumilJugando,ANCHO/4, ALTO/2,4,1,duracionFrameLumil,1);
     }
 
     private void crearBrillo() {
-        texturaBrillo = manager.get("Utileria/brilloLumil.png");
+        texturaBrillo = new Texture("Utileria/brilloLumil.png");
         brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/4+(texturaBrillo.getWidth()/6),ALTO/2);
 
     }
     private void crearGana() {
+        final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
+
+        musicaPantallasSecundarias.setLooping(true);
+        musicaPantallasSecundarias.setVolume(0.2f);
+        musicaPantallasSecundarias.play();
+
         escenaGana = new Stage(vista);
 
         Button btnExit = crearBoton("Botones/btnHome_OFF.png","Botones/btnHome_ON.png");
@@ -113,6 +121,7 @@ public class PantallaGana extends Pantalla{
         btnExit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                musicaPantallasSecundarias.stop();
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -215,15 +224,15 @@ public class PantallaGana extends Pantalla{
 
     @Override
     public void dispose() {
-        manager.unload("PantallaGanar/mensajeGanar.png");
-        manager.unload("Escenarios/fondo_dia.jpg");
-        manager.unload("Escenarios/dia_atras.png");
-        manager.unload("Escenarios/dia_medio.png");
-        manager.unload("Escenarios/dia_frente.png");
-        manager.unload("Personajes/Lumil_Sprites.png");
-        manager.unload("Utileria/brilloLumil.png");
-        manager.unload("Botones/btnHome_OFF.png");
-        manager.unload("Botones/btnHome_ON.png");
+       // manager.unload("PantallaGanar/mensajeGanar.png");
+       // manager.unload("Escenarios/fondo_dia.jpg");
+       // manager.unload("Escenarios/dia_atras.png");
+       // manager.unload("Escenarios/dia_medio.png");
+       // manager.unload("Escenarios/dia_frente.png");
+       // manager.unload("Personajes/Lumil_Sprites.png");
+        //manager.unload("Utileria/brilloLumil.png");
+        //manager.unload("Botones/btnHome_OFF.png");
+        //manager.unload("Botones/btnHome_ON.png");
     }
 }
 

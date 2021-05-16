@@ -1,7 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +15,8 @@ public class PantallaMenu extends Pantalla {
     private Texture texturafondo;
     private Stage escenaMenu;
 
+   // private Music musicaPantallasSecundarias;
+
     public PantallaMenu(Lux juego) {
         this.juego=juego;
        // Gdx.app.log("Juego:", String.valueOf(juego));
@@ -26,11 +28,16 @@ public class PantallaMenu extends Pantalla {
     }
 
     private void crearMenu() {
+
         //Fondo
         texturafondo= new Texture("Menu/fondo.jpg");
 
         // Escena
         escenaMenu=new Stage(vista);
+        final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
+        musicaPantallasSecundarias.setLooping(true);
+        musicaPantallasSecundarias.setVolume(0.2f);
+        musicaPantallasSecundarias.play();
 
         // Actores (botones)
         Button btnJuego = crearBoton("Menu/buttonjuego.png", "Menu/clickjuego.png");
@@ -40,6 +47,7 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
                 //juego.setScreen(new PantallaJuego(juego));
+                musicaPantallasSecundarias.stop();
                 juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
             }
         });

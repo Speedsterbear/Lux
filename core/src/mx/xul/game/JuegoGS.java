@@ -8,6 +8,7 @@ Autor: Carlos Arroyo
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 //import com.badlogic.gdx.assets.AssetManager;
@@ -206,6 +207,7 @@ public class JuegoGS extends Pantalla {
     private Sound sonidoquitavidas;
     private Sound sonidoTocaLuzBlanca;
     //private Sound sonidoTocaPrimario;
+    private Music musicaFondo;
 
 
     public JuegoGS (Lux juego) {
@@ -250,8 +252,14 @@ public class JuegoGS extends Pantalla {
     private void crearSonidos() {
         sonidocomeOscuridad = manager.get("Sonidos/sonidoComeOscuridad.wav");
         sonidoPoderActivado = manager.get("Sonidos/sonidoPoderActivado.wav");
+        //sonidoPoderActivado.setVolume(0.5f,0.2f);
         sonidoquitavidas = manager.get("Sonidos/sonidoquitavidas.wav");
         sonidoTocaLuzBlanca = manager.get("Sonidos/sonidoTocaLuzBlanca.wav");
+        musicaFondo = manager.get("Sonidos/musicaJuego.mp3");
+
+        musicaFondo.setLooping(true);
+        musicaFondo.setVolume(0.2f);
+        musicaFondo.play();
     }
 
     private void crearRectangulo() {
@@ -685,8 +693,8 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.GANA) {
             velocidad = 0;
             velocidadOscuridad = 0;
-            juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAGANA));
             sonidoTocaLuzBlanca.play();
+            juego.setScreen(new PantallaGana(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
 
@@ -947,6 +955,7 @@ public class JuegoGS extends Pantalla {
         manager.unload("Sonidos/sonidoPoderActivado.wav");
         manager.unload("Sonidos/sonidoquitavidas.wav");
         manager.unload("Sonidos/sonidoTocaLuzBlanca.wav");
+        manager.unload("Sonidos/musicaJuego.mp3");
 
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
@@ -1004,16 +1013,16 @@ public class JuegoGS extends Pantalla {
 
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaVerde.active();
-                    sonidoPoderActivado.play();
+                    sonidoPoderActivado.play(0.2f);
                 } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaRoja.active();
-                    sonidoPoderActivado.play();
+                    sonidoPoderActivado.play(0.2f);
                 } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaAzul.active();
-                    sonidoPoderActivado.play();
+                    sonidoPoderActivado.play(0.2f);
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
-                    sonidoPoderActivado.play();
+                    //sonidoPoderActivado.play();
                 }
 
 

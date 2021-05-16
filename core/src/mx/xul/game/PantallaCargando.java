@@ -3,6 +3,7 @@ package mx.xul.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -119,9 +120,6 @@ public class PantallaCargando extends Pantalla {
             case PANTALLAAYUDA:
                 cargarRecursosAyuda();
                 break;
-            case PANTALLAGANA:
-                cargarRecursosGana();
-                break;
             case PANTALLANOSOTROS:
                 cargarRecursosNosotros();
                 break;
@@ -158,17 +156,17 @@ public class PantallaCargando extends Pantalla {
         manager.load("Nosotros/CasoInicial.png", Texture.class);
     }
 
-    private void cargarRecursosGana() {
-        manager.load("PantallaGanar/mensajeGanar.png", Texture.class);
-        manager.load("Escenarios/fondo_dia.jpg", Texture.class);
-        manager.load("Escenarios/dia_atras.png", Texture.class);
-        manager.load("Escenarios/dia_medio.png", Texture.class);
-        manager.load("Escenarios/dia_frente.png", Texture.class);
-        manager.load("Personajes/Lumil_Sprites.png", Texture.class);
-        manager.load("Utileria/brilloLumil.png", Texture.class);
-        manager.load("Botones/btnHome_OFF.png", Texture.class);
-        manager.load("Botones/btnHome_ON.png", Texture.class);
-    }
+   // private void cargarRecursosGana() {
+     //   manager.load("PantallaGanar/mensajeGanar.png", Texture.class);
+       // manager.load("Escenarios/fondo_dia.jpg", Texture.class);
+       // manager.load("Escenarios/dia_atras.png", Texture.class);
+       // manager.load("Escenarios/dia_medio.png", Texture.class);
+       // manager.load("Escenarios/dia_frente.png", Texture.class);
+       // manager.load("Personajes/Lumil_Sprites.png", Texture.class);
+       // manager.load("Utileria/brilloLumil.png", Texture.class);
+       // manager.load("Botones/btnHome_OFF.png", Texture.class);
+        //manager.load("Botones/btnHome_ON.png", Texture.class);
+    //}
 
     private void cargarRecursosAyuda() {
         manager.load("Menu/Fondo_Montana.jpg", Texture.class);    // Cargar imagen ded fondo
@@ -212,6 +210,7 @@ public class PantallaCargando extends Pantalla {
         manager.load("Sonidos/sonidoPoderActivado.wav", Sound.class);
         manager.load("Sonidos/sonidoquitavidas.wav", Sound.class);
         manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
+        manager.load("Sonidos/musicaJuego.mp3", Music.class);
     }
 
     @Override
