@@ -2,7 +2,7 @@ package mx.xul.game;
 
 /*
 Esta clase representa la sección verde (Green Section) del juego, por eso se llama GS
-Autor: Carlos Arroyo
+Autor: Carlos Arroyo.
  */
 
 import com.badlogic.gdx.Gdx;
