@@ -16,6 +16,9 @@ public class PantallaMenu extends Pantalla {
     private Stage escenaMenu;
 
    // private Music musicaPantallasSecundarias;
+    //private final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
+
+    private Music musicaPantallasSecundarias;
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
@@ -34,10 +37,12 @@ public class PantallaMenu extends Pantalla {
 
         // Escena
         escenaMenu=new Stage(vista);
-        final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
+        musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
         musicaPantallasSecundarias.setLooping(true);
-        musicaPantallasSecundarias.setVolume(0.2f);
-        musicaPantallasSecundarias.play();
+        musicaPantallasSecundarias.setVolume(0.8f);
+        System.out.println("Musica en Show");
+        //musicaPantallasSecundarias.setLooping(false);
+
 
         // Actores (botones)
         Button btnJuego = crearBoton("Menu/buttonjuego.png", "Menu/clickjuego.png");
@@ -107,6 +112,15 @@ public class PantallaMenu extends Pantalla {
 
         // Escena despues del fondo
         escenaMenu.draw();
+        controlSonido();
+    }
+
+    private void controlSonido() {
+        System.out.println(musicaPantallasSecundarias.isPlaying());
+        if(musicaPantallasSecundarias.isPlaying()==false){
+            System.out.println("Musica");
+            musicaPantallasSecundarias.play();
+        }
     }
 
     @Override
