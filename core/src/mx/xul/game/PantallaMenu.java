@@ -18,10 +18,13 @@ public class PantallaMenu extends Pantalla {
    // private Music musicaPantallasSecundarias;
     //private final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
 
+    //Musica
     private Music musicaPantallasSecundarias;
+    private Music musicaPantallasSecundariasIntro;
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
+
        // Gdx.app.log("Juego:", String.valueOf(juego));
     }
 
@@ -37,9 +40,15 @@ public class PantallaMenu extends Pantalla {
 
         // Escena
         escenaMenu=new Stage(vista);
+
         musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
         musicaPantallasSecundarias.setLooping(true);
-        musicaPantallasSecundarias.setVolume(0.8f);
+        musicaPantallasSecundarias.setVolume(0.7f);
+
+        musicaPantallasSecundariasIntro = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundariasIntro.ogg"));
+        musicaPantallasSecundariasIntro.setVolume(0.7f);
+        musicaPantallasSecundariasIntro.play();
+
         System.out.println("Musica en Show");
         //musicaPantallasSecundarias.setLooping(false);
 
@@ -53,6 +62,7 @@ public class PantallaMenu extends Pantalla {
                 // Cambiar de pantalla a Juego
                 //juego.setScreen(new PantallaJuego(juego));
                 musicaPantallasSecundarias.stop();
+                musicaPantallasSecundariasIntro.stop();
                 juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
             }
         });
@@ -116,11 +126,21 @@ public class PantallaMenu extends Pantalla {
     }
 
     private void controlSonido() {
+        musicaPantallasSecundariasIntro.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                musicaPantallasSecundarias.play();
+            }
+        });
+
+        /*
         System.out.println(musicaPantallasSecundarias.isPlaying());
         if(musicaPantallasSecundarias.isPlaying()==false){
             System.out.println("Musica");
             musicaPantallasSecundarias.play();
         }
+
+         */
     }
 
     @Override
@@ -135,6 +155,7 @@ public class PantallaMenu extends Pantalla {
 
     @Override
     public void dispose() {
+
 
     }
 }

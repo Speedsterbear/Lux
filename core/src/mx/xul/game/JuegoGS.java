@@ -17,9 +17,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import com.badlogic.gdx.utils.Array;
@@ -147,6 +145,10 @@ public class JuegoGS extends Pantalla {
     private float DX_PASO_ESGRUN=2.5f;
     public static float aparicion = 0;
 
+    //Luz Final
+    private PersonajeSecundario luzFinal;//Para la luz final que es el ultimo personaje con el que Lumil debe reunirse para derrotar a la oscuridad.
+    private Texture texturaLuz;
+
     //Hijos de la Oscuridad: Del tipo que Bloquean el paso
     private Array<Bloque> arrBloques;
     private Bloque bloque;
@@ -207,7 +209,22 @@ public class JuegoGS extends Pantalla {
     private Sound sonidoquitavidas;
     private Sound sonidoTocaLuzBlanca;
     //private Sound sonidoTocaPrimario;
+
+    //Musica de Fondo
     private Music musicaFondo;
+    private Sound sonidoJuego;
+    private long idSonidoJuego;
+    private float valorPitch = 1;//Valor del pitch del sonido principal
+    private float volumenSonidoPrincipal = 0;
+    private boolean isPitchChanging = false;
+    private boolean isSonidoJuegoFadingIn = false;
+    private boolean isSonidoJuegoFadingOut = false;
+    private final float VALOR_MAXIMO_PITCH=1.09f;
+    private final float VOLUMEN_MAXIMO_SONIDOJUEGO = 0.5f;
+    private final float TIEMPO_FADE_SONIDOJUEGO = 10; //Tiempo que tarda en realizar los fade in y out.
+
+    //private float valPitch =1;
+    //private boolean bolPitch=false;
 
 
     public JuegoGS (Lux juego) {
@@ -256,10 +273,16 @@ public class JuegoGS extends Pantalla {
         sonidoquitavidas = manager.get("Sonidos/sonidoquitavidas.wav");
         sonidoTocaLuzBlanca = manager.get("Sonidos/sonidoTocaLuzBlanca.wav");
         musicaFondo = manager.get("Sonidos/musicaJuego.mp3");
+        sonidoJuego = manager.get("Sonidos/musicaJugar.ogg");
 
         musicaFondo.setLooping(true);
         musicaFondo.setVolume(0.2f);
-        musicaFondo.play();
+        //musicaFondo.play();
+        idSonidoJuego= sonidoJuego.play();
+        sonidoJuego.setVolume(idSonidoJuego,0);
+        sonidoJuego.setLooping(idSonidoJuego,true);
+        isSonidoJuegoFadingIn=true; //Se inicializa la entrada
+
     }
 
     private void crearRectangulo() {
@@ -342,6 +365,11 @@ public class JuegoGS extends Pantalla {
         oscuridad = new Oscuridad(texturaOscuridad,positionX,positionY,4,1,1/8f,2);
 
         texto=new Texto();
+
+        //Luz Final
+        texturaLuz = new Texture ("Personajes/luzPersonaje.png");
+
+        luzFinal = new PersonajeSecundario(texturaLuz,3*ANCHO/2,ANCHO/2,5,1,1/10f,2);
     }
 
     private void crearTexturaHijoOscuridad(){
@@ -404,6 +432,8 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void render(float delta) {
+
+        controlSonidoPrincipal(delta);
 
         actuaizar(delta);
 
@@ -542,6 +572,80 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    private void controlSonidoPrincipal(float delta) {
+
+        sonidoPrincipalFadeIn(delta);
+        sonidoPricipalFadeOut(delta);
+        sonidoPrincipalCambioPitch(delta);
+
+
+    }
+
+    private void sonidoPrincipalCambioPitch(float delta) {
+
+        //Control para el cambio del Pitch del sonido principal
+        if (isPitchChanging){
+            float valorPitchDeseado = 1;
+            switch (seccion) {
+                case VERDE:
+                    valorPitchDeseado = 1;
+                    break;
+                case ROJO:
+                    valorPitchDeseado = 1+((VALOR_MAXIMO_PITCH-1)/3);
+                    break;
+                case AZUL:
+                    valorPitchDeseado = 1+(2*(VALOR_MAXIMO_PITCH-1)/3);
+                    break;
+                case BLANCO:
+                    valorPitchDeseado = VALOR_MAXIMO_PITCH;
+                    break;
+            }
+            valorPitch +=0.005f;
+            if (valorPitch>=valorPitchDeseado){
+                valorPitch = valorPitchDeseado;
+                isPitchChanging = false;
+            }
+
+            sonidoJuego.setPitch(idSonidoJuego,valorPitch); //asignar el nuevo valor del pitch
+
+
+
+        }
+
+
+    }
+
+    private void sonidoPricipalFadeOut(float delta) {
+
+
+        //Control para el Fade out
+        if (isSonidoJuegoFadingOut){
+            volumenSonidoPrincipal-=(5*delta/TIEMPO_FADE_SONIDOJUEGO);
+            if(volumenSonidoPrincipal<=0){
+                volumenSonidoPrincipal = 0;
+                isSonidoJuegoFadingOut=false;
+            }
+            sonidoJuego.setVolume(idSonidoJuego,volumenSonidoPrincipal);//Asignar el nuevo valor de volumen.
+
+        }
+
+    }
+
+    private void sonidoPrincipalFadeIn(float delta) {
+
+        //Control para el Fade in
+        if (isSonidoJuegoFadingIn){
+            volumenSonidoPrincipal+=(delta/TIEMPO_FADE_SONIDOJUEGO);
+            if(volumenSonidoPrincipal>=VOLUMEN_MAXIMO_SONIDOJUEGO){
+                volumenSonidoPrincipal = VOLUMEN_MAXIMO_SONIDOJUEGO;
+                isSonidoJuegoFadingIn=false;
+            }
+            sonidoJuego.setVolume(idSonidoJuego,volumenSonidoPrincipal);//Asignar el nuevo valor de volumen.
+
+        }
+
+    }
+
     private void fadePerder() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -554,6 +658,7 @@ public class JuegoGS extends Pantalla {
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         if (alfaRectanguloNegro >= 1){
+            sonidoJuego.stop();//Detener por completo el sonido del juego principal de fondo
             juego.setScreen(new PantallaPerdida(juego));
         }
 
@@ -683,6 +788,7 @@ public class JuegoGS extends Pantalla {
             velocidadOscuridad = 0;
             aparicion = 0;
             //Aqui se debe agregar la animación antes de cambiar de pantlla
+            isSonidoJuegoFadingOut=true; //comenzar a desaparecer el sonido
             oscuridad.granMordida();
 
 
@@ -693,7 +799,9 @@ public class JuegoGS extends Pantalla {
         if (estado == EstadoJuego.GANA) {
             velocidad = 0;
             velocidadOscuridad = 0;
-            sonidoTocaLuzBlanca.play();
+            sonidoTocaLuzBlanca.play(); //Este sonido debe de estar en la colisión
+            //falta la transición a Blanco, en esta poner isPitchChanging = true;
+            sonidoJuego.stop();
             juego.setScreen(new PantallaGana(juego));
             //Aqui se llama la secuencia de final (o sea la pantalla de andrea)
         }
@@ -707,6 +815,9 @@ public class JuegoGS extends Pantalla {
         lumilR.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
         lumilG.animationUpdate((duracionFrameLumil/incrementoVelocidadVerde)*(velocidadVerde/ velocidad),1);
         lumilB.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
+
+        //Cambiar el pitch porque cambió la sección
+        isPitchChanging=true;
 
         //Aqui se colocan las modificaciones de queden ocurrir al inicio de una sección en específico
         //la sección verde no se incluye porque los valores para ésta son los iniciales.
@@ -810,6 +921,7 @@ public class JuegoGS extends Pantalla {
         if(lumil.sprite.getX()<=(oscuridad.sprite.getX()+oscuridad.sprite.getWidth()-120)) {
             contadorVidas=0;//Muere =(
             sonidocomeOscuridad.play();
+            isSonidoJuegoFadingOut=true; //Comenzar el fade de la musica principal del juego
         }
 
 
@@ -951,11 +1063,13 @@ public class JuegoGS extends Pantalla {
         manager.unload("Personajes/Esgrun.png");
         manager.unload("Personajes/Rojel.png");
         manager.unload("Personajes/Shiblu.png");
+        manager.unload("Personajes/luzPersonaje.png");
         manager.unload("Sonidos/sonidoComeOscuridad.wav");
         manager.unload("Sonidos/sonidoPoderActivado.wav");
         manager.unload("Sonidos/sonidoquitavidas.wav");
         manager.unload("Sonidos/sonidoTocaLuzBlanca.wav");
         manager.unload("Sonidos/musicaJuego.mp3");
+        manager.unload("Sonidos/musicaJugar.ogg");
 
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();
@@ -1014,6 +1128,7 @@ public class JuegoGS extends Pantalla {
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaVerde.active();
                     sonidoPoderActivado.play(0.2f);
+
                 } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
                     gemaRoja.active();
                     sonidoPoderActivado.play(0.2f);

@@ -200,11 +200,13 @@ public class PantallaCargando extends Pantalla {
         manager.load("Personajes/Esgrun.png", Texture.class);
         manager.load("Personajes/Rojel.png", Texture.class);
         manager.load("Personajes/Shiblu.png", Texture.class);
+        manager.load("Personajes/luzPersonaje.png",Texture.class);
         manager.load("Sonidos/sonidoComeOscuridad.wav", Sound.class);
         manager.load("Sonidos/sonidoPoderActivado.wav", Sound.class);
         manager.load("Sonidos/sonidoquitavidas.wav", Sound.class);
         manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
         manager.load("Sonidos/musicaJuego.mp3", Music.class);
+        manager.load("Sonidos/musicaJugar.ogg",Sound.class);
     }
 
     @Override

@@ -59,6 +59,7 @@ public class PantallaNosotros extends Pantalla {
     private Cristal cristalC;
     private float Tiempo = 0f;
 
+
     public PantallaNosotros(Lux juego) {
         this.juego=juego;
         manager = juego.getAssetManager();

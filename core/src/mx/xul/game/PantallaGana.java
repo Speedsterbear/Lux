@@ -107,7 +107,7 @@ public class PantallaGana extends Pantalla{
 
     }
     private void crearGana() {
-        final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
+        final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
 
         musicaPantallasSecundarias.setLooping(true);
         musicaPantallasSecundarias.setVolume(0.2f);

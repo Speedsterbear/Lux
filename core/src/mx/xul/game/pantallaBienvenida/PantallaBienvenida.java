@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -32,6 +33,10 @@ public class PantallaBienvenida extends Pantalla {
     private Stage stageLogo;
     public static Texture texturaLogo;
 
+    //Musica Inicial
+    //private Music musicaPantallasSecundarias;
+    //private Music musicaIntroPantallasSecundarias;
+
     public PantallaBienvenida(Lux lux) {
         this.juego=lux;
         texturaLogo= new Texture(Gdx.files.internal("PantallaBienvenida/logo_Lux.jpg"));
@@ -41,6 +46,12 @@ public class PantallaBienvenida extends Pantalla {
         //image.setScaling(Scaling.fillY);
         stageLogo=new Stage();
         stageLogo.addActor(image);
+
+        //Musica
+        //musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
+        //musicaPantallasSecundarias.play();
+
+
 
         image.addAction(Actions.sequence(Actions.alpha(0)
                 , Actions.fadeIn(5.0f),Actions.fadeOut(2),Actions.run(new Runnable() {
