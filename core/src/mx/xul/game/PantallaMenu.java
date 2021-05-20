@@ -15,12 +15,22 @@ public class PantallaMenu extends Pantalla {
     private Texture texturafondo;
     private Stage escenaMenu;
 
+    //Para el Fade
+    private Transicion fadeNegro;
+    private float tiempoFadeIn = 0; //Acumulador para controlar el fade in
+    private boolean isTransicionFadingOut = false; //Al volverse true, se activa el fade out
+
+    //Para pasar a la siguiente pantalla
+    private PantallaSiguienteMenu pantallaSiguienteMenu = PantallaSiguienteMenu.PLAY;
+
    // private Music musicaPantallasSecundarias;
     //private final Music musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.mp3"));
-
+/*
     //Musica
     private Music musicaPantallasSecundarias;
     private Music musicaPantallasSecundariasIntro;
+
+ */
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
@@ -31,6 +41,9 @@ public class PantallaMenu extends Pantalla {
     @Override
     public void show() {
         crearMenu();
+
+        //Fade
+        fadeNegro = new Transicion(0,0,0,1,ALTO,ANCHO);
     }
 
     private void crearMenu() {
@@ -41,6 +54,10 @@ public class PantallaMenu extends Pantalla {
         // Escena
         escenaMenu=new Stage(vista);
 
+        //Musica
+        juego.playMusica();
+        /*
+
         musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
         musicaPantallasSecundarias.setLooping(true);
         musicaPantallasSecundarias.setVolume(0.7f);
@@ -49,7 +66,8 @@ public class PantallaMenu extends Pantalla {
         musicaPantallasSecundariasIntro.setVolume(0.7f);
         musicaPantallasSecundariasIntro.play();
 
-        System.out.println("Musica en Show");
+         */
+
         //musicaPantallasSecundarias.setLooping(false);
 
 
@@ -61,9 +79,14 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar de pantalla a Juego
                 //juego.setScreen(new PantallaJuego(juego));
+                /*
                 musicaPantallasSecundarias.stop();
                 musicaPantallasSecundariasIntro.stop();
-                juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
+                 */
+                //juego.stopMusica();
+                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
+                isTransicionFadingOut = true;
+                pantallaSiguienteMenu = PantallaSiguienteMenu.PLAY;
             }
         });
 
@@ -74,7 +97,9 @@ public class PantallaMenu extends Pantalla {
         btnNosotros.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLANOSOTROS));
+                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLANOSOTROS));
+                isTransicionFadingOut = true;
+                pantallaSiguienteMenu = PantallaSiguienteMenu.ABOUT_US;
             }
         });
 
@@ -83,7 +108,9 @@ public class PantallaMenu extends Pantalla {
         btnAyuda.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+                isTransicionFadingOut = true;
+                pantallaSiguienteMenu = PantallaSiguienteMenu.HELP;
             }
         });
 
@@ -112,6 +139,13 @@ public class PantallaMenu extends Pantalla {
     // delta es el tiempo que ha transcurrido el frame
     @Override
     public void render(float delta) {
+
+        //Fade in
+        if (tiempoFadeIn<=0.3f){
+            tiempoFadeIn+=delta;
+            fadeNegro.fadeIn(delta,0.3f);
+        }
+
         borrarPantalla(0,50,125);
 
         batch.setProjectionMatrix(camara.combined);
@@ -122,26 +156,33 @@ public class PantallaMenu extends Pantalla {
 
         // Escena despues del fondo
         escenaMenu.draw();
-        controlSonido();
-    }
 
-    private void controlSonido() {
-        musicaPantallasSecundariasIntro.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music music) {
-                musicaPantallasSecundarias.play();
+        if (isTransicionFadingOut){
+            fadeNegro.fadeOut(delta,0.5f);
+            if (pantallaSiguienteMenu==PantallaSiguienteMenu.PLAY){
+                juego.fadeOutMusica();
             }
-        });
-
-        /*
-        System.out.println(musicaPantallasSecundarias.isPlaying());
-        if(musicaPantallasSecundarias.isPlaying()==false){
-            System.out.println("Musica");
-            musicaPantallasSecundarias.play();
         }
 
-         */
+        fadeNegro.render(camara);
+        if (fadeNegro.isFadeOutFinished){
+            switch (pantallaSiguienteMenu){
+                case PLAY:
+                    juego.stopMusica();
+                    juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
+                    break;
+                case ABOUT_US:
+                    juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLANOSOTROS));
+                    break;
+                case HELP:
+                    juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+                    break;
+            }
+        }
+
     }
+
+
 
     @Override
     public void pause() {
@@ -158,6 +199,14 @@ public class PantallaMenu extends Pantalla {
 
 
     }
+
+    private enum PantallaSiguienteMenu
+    {
+        PLAY,
+        ABOUT_US,
+        HELP
+    }
+
 }
 
 

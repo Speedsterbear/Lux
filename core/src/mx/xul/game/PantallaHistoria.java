@@ -145,6 +145,7 @@ public class PantallaHistoria extends Pantalla {
 
         texturaHumo = manager.get("PantallaHistoria/Humo.png");
         humo = new ObjetoAnimado(texturaHumo,ANCHO/2,ALTO/2,5,1,1/6f,2);
+        //humo.sprite.setColor(1,1,1,1);
 
         texturaMensaje = manager.get("PantallaHistoria/mensaje_inicial.png");
         mensaje = new Objeto(texturaMensaje,ANCHO/2,ALTO/2);
@@ -405,6 +406,22 @@ public class PantallaHistoria extends Pantalla {
 
     @Override
     public void dispose() {
+
+        manager.unload("PantallaHistoria/mensaje_inicial.png");
+        manager.unload("PantallaHistoria/Humo.png");
+        manager.unload("PantallaHistoria/fondo_humo.jpg");
+        manager.unload("PantallaHistoria/Letras_1.png");
+        manager.unload("PantallaHistoria/Letras_2.png");
+        manager.unload("PantallaHistoria/Letras_3.png");
+        manager.unload("PantallaHistoria/Letras_4.png");
+        manager.unload("PantallaHistoria/Letras_5.png");
+        manager.unload("PantallaHistoria/Letras_6.png");
+        manager.unload("PantallaHistoria/Vitral_No1.png");
+        manager.unload("PantallaHistoria/Vitral_No2.png");
+        manager.unload("PantallaHistoria/Vitral_No3.png");
+        manager.unload("PantallaHistoria/Vitral_No4.png");
+        manager.unload("PantallaHistoria/Vitral_No5.png");
+        manager.unload("PantallaHistoria/Vitral_No6.png");
 
     }
 

@@ -204,6 +204,7 @@ public class JuegoGS extends Pantalla {
     private boolean activarPowerUpGemaVerde = false;
     private float timerPowerUpGemaVerde = 0;
     private float tiempoParaPowerUpGemaVerde = 0.5f;
+    private float contadorFadeInGemaVerde = 0f; //Acumulador para el fade in de cuando aparece la gema.
 
     private Boton gemaRoja; //Gema roja para activar el poder
     private Texture texturaGemaRojaOFF;
@@ -212,6 +213,7 @@ public class JuegoGS extends Pantalla {
     private boolean activarPowerUpGemaRoja = false;
     private float timerPowerUpGemaRoja = 0;
     private float tiempoParaPowerUpGemaRoja = 3f;
+    private float contadorFadeInGemaRoja = 0f; //Acumulador para el fade in de cuando aparece la gema.
 
     private Boton gemaAzul; //Gema Azul para activar el poder
     private Texture texturaGemaAzulON;
@@ -221,6 +223,7 @@ public class JuegoGS extends Pantalla {
     private boolean activarPowerUpGemaAzul = false;
     private float timerPowerUpGemaAzul = 0;
     private float tiempoParaPowerUpGemaAzul = 3f;
+    private float contadorFadeInGemaAzul = 0f; //Acumulador para el fade in de cuando aparece la gema.
 
     boolean colisionLumilFront = false;
     boolean colisionLumilUp = false;
@@ -334,21 +337,25 @@ public class JuegoGS extends Pantalla {
         texturaGemaVerdeON= manager.get("BotonesGemas/gemaVerde_ON.png");
         texturaGemaVerdeOFF = manager.get("BotonesGemas/gemaVerde_OFF.png");
         gemaVerde = new Boton(texturaGemaVerdeOFF,texturaGemaVerdeON,margen+(texturaGemaVerdeOFF.getWidth()/2),margen+(texturaGemaVerdeOFF.getHeight()/2));
+        gemaVerde.boton.sprite.setAlpha(0);
 
         //Gema Roja
         texturaGemaRojaON = manager.get("BotonesGemas/gemaRoja_ON.png");
         texturaGemaRojaOFF = manager.get("BotonesGemas/gemaRoja_OFF.png");
         gemaRoja = new Boton(texturaGemaRojaOFF, texturaGemaRojaON,margen+(3*texturaGemaRojaOFF.getWidth()/2),margen+(texturaGemaRojaOFF.getHeight()/2));
+        gemaRoja.boton.sprite.setAlpha(0);
 
         //Gema Azul
         texturaGemaAzulON =manager.get("BotonesGemas/gemaAzul_ON.png");
         texturaGemaAzulOFF = manager.get("BotonesGemas/gemaAzul_OFF.png");
         gemaAzul = new Boton(texturaGemaAzulOFF, texturaGemaAzulON,margen+(texturaGemaVerdeOFF.getWidth()),(3*texturaGemaVerdeOFF.getHeight()/2)-10);
+        gemaAzul.boton.sprite.setAlpha(0);
 
         //Boton Pausa
         texturaPausaON = manager.get("Botones/pausa_ON.png");
         texturaPausaOFF = manager.get("Botones/pausa_OFF.png");
         botonPausa = new Boton(texturaPausaOFF,texturaPausaON,margen+(texturaGemaVerdeOFF.getWidth()),ALTO-(margen/2) -(texturaPausaOFF.getHeight()/2));
+
     }
 
     private void crearBarra() {
@@ -640,7 +647,7 @@ public class JuegoGS extends Pantalla {
                     valorPitchDeseado = VALOR_MAXIMO_PITCH;
                     break;
             }
-            valorPitch +=0.005f;
+            valorPitch +=0.005f;//incrementa poco a poco
             if (valorPitch>=valorPitchDeseado){
                 valorPitch = valorPitchDeseado;
                 isPitchChanging = false;
@@ -728,6 +735,8 @@ public class JuegoGS extends Pantalla {
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
 
+            actualizarGemas(delta);
+
             //Detecta el cambio de sección
             if (seccion!=seccionAnterior){
                 //Se ejecuta una sola vez cada que se cambia de sección
@@ -756,6 +765,8 @@ public class JuegoGS extends Pantalla {
                 colisionLumilDown = hijoOscuridadColisionDown();
             }
 
+            //Esto es lo de CORREGIRBLOQUES
+
             timerCrearBloque += delta;
             if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumilFront == false && colisionLumilUp == false && colisionLumilDown == false ) {
                 timerCrearBloque = 0;
@@ -783,13 +794,15 @@ public class JuegoGS extends Pantalla {
             moverHijoOscuridad(delta);
 
             //Mover y Depurar Oscuridad
+            moverBloques(delta);
+
             if (colisionLumilFront == false && colisionLumilUp == false && colisionLumilDown == false) {
                 moverLumil(isMoving, DELTA_Y);
-                moverBloques(delta);
                 //Aqui creo que se debería optimizar esto para que no se esté asignando constantemente la velocidad
                 returnVelocidadBosque();
             }
 
+            //Mover y Depurar Oscuridad
             if (colisionLumilFront) {
                 moverLumil(isMoving, DELTA_Y);
                 velocidad = 0;
@@ -897,9 +910,41 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    private void actualizarGemas(float delta) {
+        //Aparecer las Gemas
+        if (activarPowerUpGemaVerde){
+            if (contadorFadeInGemaVerde<=2){
+                contadorFadeInGemaVerde+=delta;
+                gemaVerde.boton.fadeIn(delta,2); //Se tarda 2 segundos en aparecer
+            }else if (powerups){
+                gemaVerde.abled();
+            } else {gemaVerde.disabled();}
+        }
+
+        if (activarPowerUpGemaAzul){
+            if (contadorFadeInGemaAzul<=2){
+                contadorFadeInGemaAzul+=delta;
+                gemaAzul.boton.fadeIn(delta,2); //Se tarda 2 segundos en aparecer
+            }else if (powerups){
+                gemaAzul.abled();
+            } else {gemaAzul.disabled();}
+        }
+
+        if (activarPowerUpGemaRoja){
+            if (contadorFadeInGemaRoja<=2){
+                contadorFadeInGemaRoja +=2;
+                gemaRoja.boton.fadeIn(delta,2); //Se tarda 2 segundos en aparecer
+            }else if (powerups){
+                gemaRoja.abled();
+            } else {gemaRoja.disabled();}
+        }
+
+
+    }
 
 
     private void cambioSeccion() {
+        // Activar la Múscia del poder
         //Actualizan las velocidaddades de los frames en las animacioens de Lumil
         //El número 1 en Tipo, representa que es un Loop infinito el tipo de animación de los frames.
         lumil.animationUpdate((duracionFrameLumil)*(velocidadVerde/ velocidad),1);
@@ -1071,11 +1116,9 @@ public class JuegoGS extends Pantalla {
     }
 
     public void moverLumil(boolean Moving, float DELTAY){
-        if (Moving){
-            lumil.mover(DELTAY,posicionDedo.y);
-        } else {lumil.sprite.setRotation(0);}
 
         //Realmente el que realiza la función de moverse y girar es Lumil (blanco), cuando se cambia de color, éstos toman la posición y la rotación de Lumil blanco.
+
         switch (colorLumil){
             case VERDE:
                 lumilG.sprite.setY(lumil.sprite.getY());
@@ -1090,6 +1133,15 @@ public class JuegoGS extends Pantalla {
                 lumilB.sprite.setRotation(lumil.sprite.getRotation());
                 break;
         }
+
+
+        //Aqui se genera realmente el movimiento
+        if (Moving){
+            lumil.mover(DELTAY,posicionDedo.y);
+        } else {lumil.sprite.setRotation(0);}
+
+        //lumilG.sprite.setY(lumil.sprite.getY());
+        //lumilG.sprite.setRotation(lumil.sprite.getRotation());
 
     }
 
@@ -1125,9 +1177,11 @@ public class JuegoGS extends Pantalla {
     }
 
     private void powerUpGemaVerde(){
-        velocidadOscuridad = 0;
+        //Ricardo, comenté esto, porque yo creo que va a ayudar en los demás con la velocidad
+        //velocidadOscuridad = 0;
         velocidad = velocidad*2f;
         timerPowerUpGemaVerde += Gdx.graphics.getDeltaTime();
+        //colorLumil = ColoresLumil.VERDE;
         if(timerPowerUpGemaVerde >= tiempoParaPowerUpGemaVerde){
             //Power Up
             velocidadOscuridad = velocidadOscVerde;
@@ -1137,6 +1191,7 @@ public class JuegoGS extends Pantalla {
             powerupActive = true;
             boolPowerUpGemaVerde = false;
             gemaVerde.inactive();
+            colorLumil = ColoresLumil.BLANCO;
             timerGemas = 0;
             powerups = false;
             timerPowerUpGemaVerde = 0;
@@ -1146,6 +1201,7 @@ public class JuegoGS extends Pantalla {
     private void powerUpGemaRoja(){
 
         timerPowerUpGemaRoja += Gdx.graphics.getDeltaTime();
+        //colorLumil = ColoresLumil.ROJO;
         if(timerPowerUpGemaRoja >= tiempoParaPowerUpGemaRoja){
 
             //TODO: Red Power Up Stuff
@@ -1153,6 +1209,7 @@ public class JuegoGS extends Pantalla {
             powerupActive = true;
             boolPowerUpGemaRoja = false;
             gemaRoja.inactive();
+            colorLumil = ColoresLumil.BLANCO;
             timerGemas = 0;
             powerups = false;
             timerPowerUpGemaRoja = 0;
@@ -1166,13 +1223,15 @@ public class JuegoGS extends Pantalla {
         colisionLumilDown = false;
 
         timerPowerUpGemaAzul+= Gdx.graphics.getDeltaTime();
+        //colorLumil = ColoresLumil.AZUL;
         if(timerPowerUpGemaAzul >= tiempoParaPowerUpGemaAzul){
 
             //TODO: Blue Power Up Stuff
 
             powerupActive = true;
             boolPowerUpGemaAzul = false;
-            gemaRoja.inactive();
+            gemaAzul.inactive();
+            colorLumil = ColoresLumil.BLANCO;
             timerGemas = 0;
             powerups = false;
             timerPowerUpGemaAzul = 0;
@@ -1329,21 +1388,30 @@ public class JuegoGS extends Pantalla {
 
                 } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaVerde &&  powerups && powerupActive ){
                     gemaVerde.active();
-                    sonidoPoderActivado.play(0.2f);
+                    /*
+                    //sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaVerde = true;
                     powerupActive = false;
 
+                     */
+
                 } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaRoja && powerups && powerupActive) {
                     gemaRoja.active();
-                    sonidoPoderActivado.play(0.2f);
+                    /*
+                    //sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaRoja = true;
                     powerupActive = false;
 
+                     */
+
                 } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaAzul &&  powerups && powerupActive) {
                     gemaAzul.active();
-                    sonidoPoderActivado.play(0.2f);
+                    /*
+                    //sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaAzul = true;
                     powerupActive = false;
+
+                     */
 
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
@@ -1435,7 +1503,43 @@ public class JuegoGS extends Pantalla {
                 estado=EstadoJuego.JUGANDO;
                  */
 
-            } /*else {
+            } else {
+
+
+                posicionDedo.x = screenX;
+                posicionDedo.y = screenY;
+                camara.unproject(posicionDedo);
+
+                if (posicionDedo.x >= ANCHO / 4) {
+                    isMoving = true;
+
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x, posicionDedo.y)&& activarPowerUpGemaVerde &&  powerups && powerupActive) {
+                    //gemaVerde.active();
+                    //System.out.println("Poder Verde");
+                    sonidoPoderActivado.play(0.2f);
+                    boolPowerUpGemaVerde = true;
+                    colorLumil=ColoresLumil.VERDE; //Cambia de color a Lumil
+                    powerupActive = false;
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x, posicionDedo.y) && activarPowerUpGemaRoja && powerups && powerupActive) {
+                    //gemaRoja.active();
+                    //System.out.println("Poder Rojo");
+                    sonidoPoderActivado.play(0.2f);
+                    boolPowerUpGemaRoja = true;
+                    colorLumil=ColoresLumil.ROJO; //Cambia de color a Lumil
+                    powerupActive = false;
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x, posicionDedo.y)&& activarPowerUpGemaAzul &&  powerups && powerupActive) {
+                    //gemaAzul.active();
+                    //System.out.println("Poder Azul");
+                    sonidoPoderActivado.play(0.2f);
+                    boolPowerUpGemaAzul = true;
+                    colorLumil=ColoresLumil.AZUL; //Cambia de color a Lumil
+                    powerupActive = false;
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)) {
+                    juego.setScreen(new PantallaPausa(juego));
+                }
+            }
+
+            /*else {
 
 
                 posicionDedo.x=screenX;
@@ -1544,7 +1648,31 @@ public class JuegoGS extends Pantalla {
                 estado=EstadoJuego.JUGANDO;
                  */
 
-            }/*else {
+            }else {
+
+                posicionDedo.x = screenX;
+                posicionDedo.y = screenY;
+                camara.unproject(posicionDedo);
+
+                if (posicionDedo.x >= ANCHO / 4) {
+                    isMoving = true;
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x, posicionDedo.y)&& activarPowerUpGemaVerde &&  powerups && powerupActive) {
+                    gemaVerde.active();
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x, posicionDedo.y) && activarPowerUpGemaRoja && powerups && powerupActive) {
+                    gemaRoja.active();
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x, posicionDedo.y)&& activarPowerUpGemaAzul &&  powerups && powerupActive) {
+                    gemaAzul.active();
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)) {
+                    botonPausa.active();
+                } else {
+                    gemaVerde.inactive();
+                    gemaRoja.inactive();
+                    gemaAzul.inactive();
+                    botonPausa.inactive();
+                }
+            }
+
+            /*else {
 
                 posicionDedo.x=screenX;
                 posicionDedo.y=screenY;

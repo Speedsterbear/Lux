@@ -39,11 +39,11 @@ public class BrilloLumil {
     public void actualizar (float r, float g, float b,float scaleBase){
         angulo ++;
         brilloAtras.rotate(0.3f);
-        brilloAtras.setScale(scaleBase + (MathUtils.sinDeg(angulo)*0.1f));
+        brilloAtras.setScale(scaleBase + (MathUtils.sinDeg(angulo)*(scaleBase/9f)));
         brilloAtras.setColor(r,g,b,0.5f + (MathUtils.sinDeg(angulo)*0.3f));
 
         brilloFrente.rotate(-0.3f);
-        brilloFrente.setScale(scaleBase-0.25f + (MathUtils.sinDeg(angulo)*0.1f));
+        brilloFrente.setScale(scaleBase*0.7f + (MathUtils.sinDeg(angulo)*(scaleBase/9f)));
         brilloAtras.setAlpha(0.6f + (MathUtils.sinDeg(angulo)*0.1f));
 
     }

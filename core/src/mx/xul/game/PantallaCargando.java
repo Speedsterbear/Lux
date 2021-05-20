@@ -163,7 +163,39 @@ public class PantallaCargando extends Pantalla {
     //}
 
     private void cargarRecursosAyuda() {
-        manager.load("Menu/Fondo_Montana.jpg", Texture.class);    // Cargar imagen ded fondo
+        manager.load("PantallaAyuda/fondoAyuda.jpg", Texture.class);    // Cargar imagen ded fondo
+        manager.load("PantallaAyuda/ayudaHijosOscuridad.png", Texture.class);
+        manager.load("PantallaAyuda/ayudaHistoria.png", Texture.class);
+        manager.load("PantallaAyuda/ayudaLineas.png", Texture.class);
+        manager.load("PantallaAyuda/ayudaLumil.png", Texture.class);
+        manager.load("PantallaAyuda/ayudaOscuridad.png", Texture.class);
+        manager.load("PantallaAyuda/ayudaPrimarios.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHistoriaOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHistoriaON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHijosOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHijosON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaLumilOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaLumilON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaOscuridadOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaOscuridadON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaPrimariosOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaPrimariosON.png", Texture.class);
+        manager.load("Menu/buttonback.png", Texture.class);
+        manager.load("Menu/clickback.png", Texture.class);
+        manager.load("Utileria/brilloLumil.png",Texture.class);
+
+        /*
+        manager.load("PantallaAyuda/btnAyudaHistoriaOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHistoriaON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHijosOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaHijosON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaLumilOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaLumilON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaOscuridadOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaOscuridadON.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaPrimariosOFF.png", Texture.class);
+        manager.load("PantallaAyuda/btnAyudaPrimariosON.png", Texture.class);
+
         manager.load("Botones/LumilB.png", Texture.class);
         manager.load("Botones/OscuridaB.png", Texture.class);
         manager.load("Botones/btnhijos.png", Texture.class);
@@ -171,6 +203,8 @@ public class PantallaCargando extends Pantalla {
         manager.load("Menu/buttonback.png", Texture.class);
         manager.load("Menu/clickback.png", Texture.class);
         manager.load("Menu/fondo.jpg", Texture.class);
+
+         */
     }
 
     // Carga los recursos a través del administrador de assets (siguiente pantalla)

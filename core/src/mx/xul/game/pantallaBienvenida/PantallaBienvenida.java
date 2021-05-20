@@ -47,7 +47,7 @@ public class PantallaBienvenida extends Pantalla {
         stageLogo=new Stage();
         stageLogo.addActor(image);
 
-        //Musica
+
         //musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
         //musicaPantallasSecundarias.play();
 
@@ -68,7 +68,6 @@ public class PantallaBienvenida extends Pantalla {
 
     @Override
     public void show() {
-
     }
 
 
