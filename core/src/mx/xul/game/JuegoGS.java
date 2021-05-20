@@ -194,6 +194,8 @@ public class JuegoGS extends Pantalla {
     private float timerGemas = 0;//Acumulador
     private float tiempoParaGemas = 3f; //Se espera esos segundos en crear el bloque.
     private boolean powerups = true;
+    private boolean powerupActive = true;
+    //TODO Poder Activado
 
     private Boton gemaVerde; //Gema verde  para activar el poder
     private Texture texturaGemaVerdeOFF;
@@ -209,15 +211,20 @@ public class JuegoGS extends Pantalla {
     private boolean boolPowerUpGemaRoja = false;
     private boolean activarPowerUpGemaRoja = false;
     private float timerPowerUpGemaRoja = 0;
-    private float tiempoParaPowerUpGemaRoja = 0.5f;
+    private float tiempoParaPowerUpGemaRoja = 3f;
 
     private Boton gemaAzul; //Gema Azul para activar el poder
     private Texture texturaGemaAzulON;
     private Texture texturaGemaAzulOFF;
     private boolean boolPowerUpGemaAzul = false;
+    private boolean colisionPowerUpGemaAzul = false;
     private boolean activarPowerUpGemaAzul = false;
     private float timerPowerUpGemaAzul = 0;
-    private float tiempoParaPowerUpGemaAzul = 0.5f;
+    private float tiempoParaPowerUpGemaAzul = 3f;
+
+    boolean colisionLumilFront = false;
+    boolean colisionLumilUp = false;
+    boolean colisionLumilDown = false;
 
     private Boton botonPausa; //Boton para activar la pausa
     private Texture texturaPausaON;//Botón de Regreso
@@ -742,9 +749,12 @@ public class JuegoGS extends Pantalla {
                 crearShiblu();
             }*/
 
-            boolean colisionLumilFront = hijoOscuridadColisionFront();
-            boolean colisionLumilUp = hijoOscuridadColisionUp();
-            boolean colisionLumilDown = hijoOscuridadColisionDown();
+
+            if(!boolPowerUpGemaAzul){
+                colisionLumilFront = hijoOscuridadColisionFront();
+                colisionLumilUp = hijoOscuridadColisionUp();
+                colisionLumilDown = hijoOscuridadColisionDown();
+            }
 
             timerCrearBloque += delta;
             if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumilFront == false && colisionLumilUp == false && colisionLumilDown == false ) {
@@ -784,7 +794,6 @@ public class JuegoGS extends Pantalla {
                 moverLumil(isMoving, DELTA_Y);
                 velocidad = 0;
                 velocidadOscuridad = velocidadOscVerde;
-
                 oscuridadColision();
             }
 
@@ -792,7 +801,6 @@ public class JuegoGS extends Pantalla {
                 moverLumilxy(isMoving, 0, DELTA_Y);
                 velocidad = 0;
                 velocidadOscuridad = velocidadOscVerde;
-
                 oscuridadColision();
             }
 
@@ -800,21 +808,16 @@ public class JuegoGS extends Pantalla {
                 moverLumilxy(isMoving, DELTA_Y, 0);
                 velocidad = 0;
                 velocidadOscuridad = velocidadOscVerde;
-
                 oscuridadColision();
             }
 
             if (colisionLumilDown){
                 moverLumilxy(isMoving, DELTA_Y, 0);
-
-
                 oscuridadColision();
             }
 
             if (colisionLumilUp){
                 moverLumilxy(isMoving,0 ,DELTA_Y);
-
-
                 oscuridadColision();
             }
 
@@ -956,7 +959,8 @@ public class JuegoGS extends Pantalla {
             HijoOscuridad hijoOscuridad = arrHijosOscuridad.get(i);
             if(arrHijosOscuridad!= null && lumil.getRectangle().overlaps(hijoOscuridad.sprite.getBoundingRectangle())) {
                 arrHijosOscuridad.removeIndex(i);
-                contadorVidas --;
+                if(!boolPowerUpGemaRoja)
+                    contadorVidas --;
                 sonidoquitavidas.play();
             }
             if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
@@ -1130,6 +1134,7 @@ public class JuegoGS extends Pantalla {
             velocidad = velocidadVerde;
 
             //Set original values
+            powerupActive = true;
             boolPowerUpGemaVerde = false;
             gemaVerde.inactive();
             timerGemas = 0;
@@ -1145,6 +1150,7 @@ public class JuegoGS extends Pantalla {
 
             //TODO: Red Power Up Stuff
 
+            powerupActive = true;
             boolPowerUpGemaRoja = false;
             gemaRoja.inactive();
             timerGemas = 0;
@@ -1155,11 +1161,16 @@ public class JuegoGS extends Pantalla {
 
     private void powerUpGemaAzul(){
 
+        colisionLumilFront = false;
+        colisionLumilUp = false;
+        colisionLumilDown = false;
+
         timerPowerUpGemaAzul+= Gdx.graphics.getDeltaTime();
         if(timerPowerUpGemaAzul >= tiempoParaPowerUpGemaAzul){
 
             //TODO: Blue Power Up Stuff
 
+            powerupActive = true;
             boolPowerUpGemaAzul = false;
             gemaRoja.inactive();
             timerGemas = 0;
@@ -1316,20 +1327,23 @@ public class JuegoGS extends Pantalla {
                     //System.out.println(posicionDedo);
 
 
-                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaVerde &&  powerups){
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaVerde &&  powerups && powerupActive ){
                     gemaVerde.active();
                     sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaVerde = true;
+                    powerupActive = false;
 
-                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaRoja &&powerups) {
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaRoja && powerups && powerupActive) {
                     gemaRoja.active();
                     sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaRoja = true;
+                    powerupActive = false;
 
-                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)&& activarPowerUpGemaAzul &&  powerups) {
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaAzul &&  powerups && powerupActive) {
                     gemaAzul.active();
                     sonidoPoderActivado.play(0.2f);
                     boolPowerUpGemaAzul = true;
+                    powerupActive = false;
 
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
