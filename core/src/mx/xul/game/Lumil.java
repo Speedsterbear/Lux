@@ -40,6 +40,28 @@ public class Lumil extends ObjetoAnimado
 
     }
 
+    public void moverxy(float up,float down,float ydeseada) {
+
+        float deg = 15; //son los grados que va a girar el personaje al moverse
+        float y  = ydeseada-sprite.getHeight()/2;
+
+        if (y>sprite.getY()){
+            sprite.setRotation(deg);
+            if (y-sprite.getY()>=up) {
+                sprite.setY(sprite.getY()+up);
+            }else {sprite.setY(y);}
+        }else {
+            if (y<sprite.getY()){
+                sprite.setRotation(-deg);
+                if (sprite.getY()-y>=down) {
+                    sprite.setY(sprite.getY()-down);
+                }else {sprite.setY(y);}
+
+            }else {sprite.setRotation(0);}
+        }
+
+    }
+
     //Regresa el rectángulo ajustado de Lumil, es decir, recorrido para no tomar en cuanta los bazos (no se si se va a usar mucho)
     public Rectangle getRectangle() {
         Rectangle rectangle = sprite.getBoundingRectangle();
@@ -49,7 +71,6 @@ public class Lumil extends ObjetoAnimado
         return rectangle;
     }
 
-    //Regresa un rectangulo ubicado en la parte superior del sprite
     public Rectangle getUpperRectangle() {
         float margenizq = 50;
         float margender = 10;
@@ -85,9 +106,9 @@ public class Lumil extends ObjetoAnimado
 
     //Regresa un rectangulo ubicado en la parte derecha (frontal) del sprite
     public Rectangle getFrontRectangle() {
-        float margeninf = 0;
+        float margeninf = 10;
         float margender = 10;
-        float margensup = 0;
+        float margensup = 10;
         float grosor = 10;
 
         float xrect = sprite.getX()+sprite.getWidth()-margender-grosor;

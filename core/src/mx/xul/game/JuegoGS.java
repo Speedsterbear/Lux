@@ -709,9 +709,12 @@ public class JuegoGS extends Pantalla {
                 crearShiblu();
             }*/
 
-            boolean colisionLumil = hijoOscuridadColision();
+            boolean colisionLumilFront = hijoOscuridadColisionFront();
+            boolean colisionLumilUp = hijoOscuridadColisionUp();
+            boolean colisionLumilDown = hijoOscuridadColisionDown();
+
             timerCrearBloque += delta;
-            if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumil == false) {
+            if (timerCrearBloque >= tiempoParaCrearBloque && colisionLumilFront == false && colisionLumilUp == false && colisionLumilDown == false ) {
                 timerCrearBloque = 0;
                 crearBloques();
             }
@@ -726,8 +729,8 @@ public class JuegoGS extends Pantalla {
             actualizarBrillo();
 
             //Mover Lumil
-            moverLumil(isMoving);
-            //System.out.println(isMoving);
+
+
 
             //Mover Oscuridad
             moverOscuridad(delta);
@@ -736,14 +739,47 @@ public class JuegoGS extends Pantalla {
             moverHijoOscuridad(delta);
 
             //Mover y Depurar Oscuridad
-            if (colisionLumil == false) {
+            if (colisionLumilFront == false && colisionLumilUp == false && colisionLumilDown == false) {
+                moverLumil(isMoving, DELTA_Y);
                 moverBloques(delta);
                 //Aqui creo que se debería optimizar esto para que no se esté asignando constantemente la velocidad
                 returnVelocidadBosque();
             }
 
-            if (colisionLumil) {
+            if (colisionLumilFront) {
+                moverLumil(isMoving, DELTA_Y);
                 velocidad = 0;
+                System.out.println("Frente");
+                //moverOscuridad(delta);
+                oscuridadColision();
+            }
+
+            if (colisionLumilFront && colisionLumilUp) {
+                moverLumilxy(isMoving, 0, DELTA_Y);
+                velocidad = 0;
+                System.out.println("Frente Arriba");
+                //moverOscuridad(delta);
+                oscuridadColision();
+            }
+
+            if (colisionLumilFront && colisionLumilDown) {
+                moverLumilxy(isMoving, DELTA_Y, 0);
+                velocidad = 0;
+                System.out.println("Frente Abajo");
+                //moverOscuridad(delta);
+                oscuridadColision();
+            }
+
+            if (colisionLumilDown){
+                moverLumilxy(isMoving, DELTA_Y, 0);
+                System.out.println("Abajo");
+                //moverOscuridad(delta);
+                oscuridadColision();
+            }
+
+            if (colisionLumilUp){
+                moverLumilxy(isMoving,0 ,DELTA_Y);
+                System.out.println("Arriba");
                 //moverOscuridad(delta);
                 oscuridadColision();
             }
@@ -906,14 +942,33 @@ public class JuegoGS extends Pantalla {
         }
     }
 
-    private boolean hijoOscuridadColision(){
+    private boolean hijoOscuridadColisionFront(){
         for(Bloque bloque: arrBloques){
-            if(lumil.getRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+            if(lumil.getFrontRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
                 return true;
             }
         }
         return false;
     }
+
+    private boolean hijoOscuridadColisionUp(){
+        for(Bloque bloque: arrBloques){
+            if(lumil.getUpperRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hijoOscuridadColisionDown(){
+        for(Bloque bloque: arrBloques){
+            if(lumil.getLowerRectangle().overlaps(bloque.sprite.getBoundingRectangle())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void oscuridadColision() {
         //Si la posición en X (izquierda) de Lumil es mayor que la posición en X (derecha) de la oscuridad - 100 px, quiere decir que ya lo tocó
@@ -954,9 +1009,32 @@ public class JuegoGS extends Pantalla {
         //depurarBloques();
     }
 
-    public void moverLumil(boolean Moving){
+    public void moverLumil(boolean Moving, float DELTAY){
         if (Moving){
-            lumil.mover(DELTA_Y,posicionDedo.y);
+            lumil.mover(DELTAY,posicionDedo.y);
+        } else {lumil.sprite.setRotation(0);}
+
+        //Realmente el que realiza la función de moverse y girar es Lumil (blanco), cuando se cambia de color, éstos toman la posición y la rotación de Lumil blanco.
+        switch (colorLumil){
+            case VERDE:
+                lumilG.sprite.setY(lumil.sprite.getY());
+                lumilG.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+            case ROJO:
+                lumilR.sprite.setY(lumil.sprite.getY());
+                lumilR.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+            case AZUL:
+                lumilB.sprite.setY(lumil.sprite.getY());
+                lumilB.sprite.setRotation(lumil.sprite.getRotation());
+                break;
+        }
+
+    }
+
+    public void moverLumilxy(boolean Moving, float up, float down){
+        if (Moving){
+            lumil.moverxy(up, down, posicionDedo.y);
         } else {lumil.sprite.setRotation(0);}
 
         //Realmente el que realiza la función de moverse y girar es Lumil (blanco), cuando se cambia de color, éstos toman la posición y la rotación de Lumil blanco.
