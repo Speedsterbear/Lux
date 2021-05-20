@@ -11,8 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class ObjetoAnimado {
+public class ObjetoAnimado extends Actor {
 
     //protected es para quelas clases que heredan puedan acceder a la variable
 
@@ -116,6 +118,5 @@ public class ObjetoAnimado {
     public void frameRender (SpriteBatch batch) {
         sprite.draw(batch);
     }
-
 
 }

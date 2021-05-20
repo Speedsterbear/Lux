@@ -17,10 +17,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import mx.xul.game.pantallaBienvenida.ColoresLumil;
 
@@ -140,9 +144,13 @@ public class JuegoGS extends Pantalla {
     //Estado Juego
     private EstadoJuego estado = EstadoJuego.JUGANDO;
 
-    //Esgrun
-    private Esgrun esgrun, rojel, shiblu;
+    //Personajes
+    private Esgrun esgrun;
+    private Rojel rojel;
+    private Shiblu shiblu;
     private float DX_PASO_ESGRUN=2.5f;
+    private float DX_PASO_ROJEL=2.5f;
+    private float DX_PASO_SHIBLU=2.5f;
     public static float aparicion = 0;
 
     //Luz Final
@@ -182,17 +190,34 @@ public class JuegoGS extends Pantalla {
 
     //Botones
 
+    //Gemas
+    private float timerGemas = 0;//Acumulador
+    private float tiempoParaGemas = 3f; //Se espera esos segundos en crear el bloque.
+    private boolean powerups = true;
+
     private Boton gemaVerde; //Gema verde  para activar el poder
     private Texture texturaGemaVerdeOFF;
     private Texture texturaGemaVerdeON;
+    private boolean boolPowerUpGemaVerde = false;
+    private boolean activarPowerUpGemaVerde = false;
+    private float timerPowerUpGemaVerde = 0;
+    private float tiempoParaPowerUpGemaVerde = 0.5f;
 
     private Boton gemaRoja; //Gema roja para activar el poder
     private Texture texturaGemaRojaOFF;
     private Texture texturaGemaRojaON;
+    private boolean boolPowerUpGemaRoja = false;
+    private boolean activarPowerUpGemaRoja = false;
+    private float timerPowerUpGemaRoja = 0;
+    private float tiempoParaPowerUpGemaRoja = 0.5f;
 
     private Boton gemaAzul; //Gema Azul para activar el poder
     private Texture texturaGemaAzulON;
     private Texture texturaGemaAzulOFF;
+    private boolean boolPowerUpGemaAzul = false;
+    private boolean activarPowerUpGemaAzul = false;
+    private float timerPowerUpGemaAzul = 0;
+    private float tiempoParaPowerUpGemaAzul = 0.5f;
 
     private Boton botonPausa; //Boton para activar la pausa
     private Texture texturaPausaON;//Botón de Regreso
@@ -249,6 +274,7 @@ public class JuegoGS extends Pantalla {
 
         //cargarRecursos();
         crearObjetos();
+
 
 
         //Escena y Botón
@@ -390,12 +416,12 @@ public class JuegoGS extends Pantalla {
 
     private void crearRojel(){
         Texture texturaRojel = new Texture("Personajes/Rojel.png");
-        esgrun = new Esgrun(texturaRojel, ANCHO,positionY);
+        rojel = new Rojel(texturaRojel, ANCHO,positionY);
     }
 
     private void crearShiblu(){
         Texture texturaShiblu = new Texture("Personajes/Shiblu.png");
-        esgrun = new Esgrun(texturaShiblu, ANCHO,positionY);
+        shiblu = new Shiblu(texturaShiblu, ANCHO,positionY);
     }
 
     //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
@@ -435,7 +461,8 @@ public class JuegoGS extends Pantalla {
 
         controlSonidoPrincipal(delta);
 
-        actuaizar(delta);
+        actualizar(delta);
+
 
         //Estado del juego
         if (contadorVidas == 0) {
@@ -482,9 +509,15 @@ public class JuegoGS extends Pantalla {
             bloque.animationRender(batch, tiempoLumil);
         }
 
-        //Dibujar Esgrun
+        //Dibujar
         if(esgrun!=null)
             esgrun.render(batch);
+
+        if(rojel!=null)
+            rojel.render(batch);
+
+        if(shiblu!=null)
+            shiblu.render(batch);
 
         //Dibujar enemigo oscuridad
         oscuridad.animationRender(batch, tiempoOsc);
@@ -683,7 +716,7 @@ public class JuegoGS extends Pantalla {
 
     }
 
-    private void actuaizar(float delta) {
+    private void actualizar(float delta) {
 
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
@@ -733,6 +766,7 @@ public class JuegoGS extends Pantalla {
 
 
             //Mover Oscuridad
+           // velocidadOscuridad = velocidadOscVerde;
             moverOscuridad(delta);
 
             //Mover Hijo de Oscuridad (va afuera porque se sige moviendo aunque lúmil no se mueva, es como la oscuridad grande)
@@ -749,39 +783,55 @@ public class JuegoGS extends Pantalla {
             if (colisionLumilFront) {
                 moverLumil(isMoving, DELTA_Y);
                 velocidad = 0;
-                System.out.println("Frente");
-                //moverOscuridad(delta);
+                velocidadOscuridad = velocidadOscVerde;
+
                 oscuridadColision();
             }
 
             if (colisionLumilFront && colisionLumilUp) {
                 moverLumilxy(isMoving, 0, DELTA_Y);
                 velocidad = 0;
-                System.out.println("Frente Arriba");
-                //moverOscuridad(delta);
+                velocidadOscuridad = velocidadOscVerde;
+
                 oscuridadColision();
             }
 
             if (colisionLumilFront && colisionLumilDown) {
                 moverLumilxy(isMoving, DELTA_Y, 0);
                 velocidad = 0;
-                System.out.println("Frente Abajo");
-                //moverOscuridad(delta);
+                velocidadOscuridad = velocidadOscVerde;
+
                 oscuridadColision();
             }
 
             if (colisionLumilDown){
                 moverLumilxy(isMoving, DELTA_Y, 0);
-                System.out.println("Abajo");
-                //moverOscuridad(delta);
+
+
                 oscuridadColision();
             }
 
             if (colisionLumilUp){
                 moverLumilxy(isMoving,0 ,DELTA_Y);
-                System.out.println("Arriba");
-                //moverOscuridad(delta);
+
+
                 oscuridadColision();
+            }
+
+            if(boolPowerUpGemaVerde){
+                powerUpGemaVerde();
+            }
+
+            if(boolPowerUpGemaRoja){
+                powerUpGemaRoja();
+            }
+
+            if(boolPowerUpGemaAzul){
+                powerUpGemaAzul();
+            }
+
+            if(!powerups){
+                activePowerups();
             }
 
             if(esgrun!=null){
@@ -843,6 +893,8 @@ public class JuegoGS extends Pantalla {
         }
 
     }
+
+
 
     private void cambioSeccion() {
         //Actualizan las velocidaddades de los frames en las animacioens de Lumil
@@ -914,21 +966,26 @@ public class JuegoGS extends Pantalla {
 
     }
 
+
+
     private void depurarEsgrun() {
         if(lumil.getRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
-
+            esgrun = null;
+            activarPowerUpGemaVerde = true;
         }
     }
 
     private void depurarRojel() {
         if(lumil.getRectangle().overlaps(rojel.sprite.getBoundingRectangle())){
-
+            rojel = null;
+            activarPowerUpGemaRoja = true;
         }
     }
 
     private void depurarShiblu() {
         if(lumil.getRectangle().overlaps(shiblu.sprite.getBoundingRectangle())){
-
+            shiblu = null;
+            activarPowerUpGemaAzul = true;
         }
     }
 
@@ -994,11 +1051,11 @@ public class JuegoGS extends Pantalla {
     }
 
     private void moverRojel(){
-        rojel.moverHorizontal(DX_PASO_ESGRUN);
+        rojel.moverHorizontal(DX_PASO_ROJEL);
     }
 
     private void moverShiblu(){
-        shiblu.moverHorizontal(DX_PASO_ESGRUN);
+        shiblu.moverHorizontal(DX_PASO_SHIBLU);
     }
 
     private void moverBloques(float delta){
@@ -1053,6 +1110,62 @@ public class JuegoGS extends Pantalla {
                 break;
         }
 
+    }
+
+    private void activePowerups() {
+        timerGemas += Gdx.graphics.getDeltaTime();
+        if(timerGemas >= tiempoParaGemas){
+            powerups = true;
+            timerGemas = 0;
+        }
+    }
+
+    private void powerUpGemaVerde(){
+        velocidadOscuridad = 0;
+        velocidad = velocidad*2f;
+        timerPowerUpGemaVerde += Gdx.graphics.getDeltaTime();
+        if(timerPowerUpGemaVerde >= tiempoParaPowerUpGemaVerde){
+            //Power Up
+            velocidadOscuridad = velocidadOscVerde;
+            velocidad = velocidadVerde;
+
+            //Set original values
+            boolPowerUpGemaVerde = false;
+            gemaVerde.inactive();
+            timerGemas = 0;
+            powerups = false;
+            timerPowerUpGemaVerde = 0;
+        }
+    }
+
+    private void powerUpGemaRoja(){
+
+        timerPowerUpGemaRoja += Gdx.graphics.getDeltaTime();
+        if(timerPowerUpGemaRoja >= tiempoParaPowerUpGemaRoja){
+
+            //TODO: Red Power Up Stuff
+
+            boolPowerUpGemaRoja = false;
+            gemaRoja.inactive();
+            timerGemas = 0;
+            powerups = false;
+            timerPowerUpGemaRoja = 0;
+        }
+    }
+
+    private void powerUpGemaAzul(){
+
+        timerPowerUpGemaAzul+= Gdx.graphics.getDeltaTime();
+        if(timerPowerUpGemaAzul >= tiempoParaPowerUpGemaAzul){
+
+            //TODO: Blue Power Up Stuff
+
+            boolPowerUpGemaAzul = false;
+            gemaRoja.inactive();
+            timerGemas = 0;
+            powerups = false;
+            timerPowerUpGemaAzul = 0;
+        }
     }
 
     private void moverOscuridad(float delta){
@@ -1203,16 +1316,21 @@ public class JuegoGS extends Pantalla {
                     //System.out.println(posicionDedo);
 
 
-                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaVerde &&  powerups){
                     gemaVerde.active();
                     sonidoPoderActivado.play(0.2f);
+                    boolPowerUpGemaVerde = true;
 
-                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y) && activarPowerUpGemaRoja &&powerups) {
                     gemaRoja.active();
                     sonidoPoderActivado.play(0.2f);
-                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
+                    boolPowerUpGemaRoja = true;
+
+                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)&& activarPowerUpGemaAzul &&  powerups) {
                     gemaAzul.active();
                     sonidoPoderActivado.play(0.2f);
+                    boolPowerUpGemaAzul = true;
+
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
                     //sonidoPoderActivado.play();
@@ -1303,7 +1421,7 @@ public class JuegoGS extends Pantalla {
                 estado=EstadoJuego.JUGANDO;
                  */
 
-            }else {
+            } /*else {
 
 
                 posicionDedo.x=screenX;
@@ -1387,8 +1505,8 @@ public class JuegoGS extends Pantalla {
                     System.out.println("HABILIDAD AZUL");
                 }
 
-                     */
-            }
+
+            } */
 
             isMoving = false;
 
@@ -1412,7 +1530,7 @@ public class JuegoGS extends Pantalla {
                 estado=EstadoJuego.JUGANDO;
                  */
 
-            }else {
+            }/*else {
 
                 posicionDedo.x=screenX;
                 posicionDedo.y=screenY;
@@ -1501,8 +1619,8 @@ public class JuegoGS extends Pantalla {
                     boolAzul = false;
                 }
 
-                     */
-            }
+
+            } */
 
             return true;
         }

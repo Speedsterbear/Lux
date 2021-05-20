@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Oscuridad extends ObjetoAnimado
 {
@@ -20,6 +21,10 @@ public class Oscuridad extends ObjetoAnimado
         //Al restar las velocidades se puede simular el movimiento de la oscuridad
         float dx = (velocidadObj - velocidadRef) * delta;
         sprite.setX(sprite.getX() + dx);
+    }
+
+    public void reversa(float velocidad) {
+        sprite.setX(sprite.getX() - velocidad);
     }
 
     //Secuencia para simmular que la oscuridad se come a la luz
