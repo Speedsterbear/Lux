@@ -40,7 +40,7 @@ public class Lux extends Game {
 		musicaPantallasSecundariasIntro.setVolume(VOLUMEN_DESEADO);
 	}
 
-	protected void playMusica(){
+	public void playMusica(){
 		if(musicaPantallasSecundariasIntro.isPlaying()==false && musicaPantallasSecundarias.isPlaying()==false){
 			musicaPantallasSecundariasIntro.play();
 			//volumenMusica = VOLUMEN_DESEADO;
@@ -53,7 +53,7 @@ public class Lux extends Game {
 		});
 
 	}
-	protected void fadeOutMusica(){
+	public void fadeOutMusica(){
 		if (musicaPantallasSecundarias.isPlaying()){
 			volumenMusica -= 0.04f;
 			musicaPantallasSecundarias.setVolume(volumenMusica);
@@ -65,7 +65,7 @@ public class Lux extends Game {
 		}
 
 	}
-	protected void stopMusica(){
+	public void stopMusica(){
 
 		musicaPantallasSecundarias.stop();
 		musicaPantallasSecundariasIntro.stop();

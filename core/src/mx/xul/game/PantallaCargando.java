@@ -64,7 +64,6 @@ public class PantallaCargando extends Pantalla {
         spriteCargando = new Sprite(texturaCargando);
         spriteCargando.setPosition(ANCHO / 2 - spriteCargando.getWidth() / 2,
                 ALTO / 2 - spriteCargando.getHeight() / 2);
-
          */
 
         cargarRecursosSigPantalla();
@@ -76,7 +75,6 @@ public class PantallaCargando extends Pantalla {
         cargarRecursosNosotros();
         cargarRecursosSigPantalla();
         cargarRecursosHistoria();
-
          */
 
     }
@@ -292,9 +290,9 @@ public class PantallaCargando extends Pantalla {
 
 
 
-   // private void borrarPantalla() {
-      //  Gdx.gl.glClearColor(0,0,0,0);    // r, g, b, alpha
-       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    // private void borrarPantalla() {
+    //  Gdx.gl.glClearColor(0,0,0,0);    // r, g, b, alpha
+    // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     //}
 
     private void actualizar() {

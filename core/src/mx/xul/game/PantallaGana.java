@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -74,6 +75,8 @@ public class PantallaGana extends Pantalla{
         crearBrillo();
         crearRectangulo();
         crearMensaje();
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private void crearMensaje() {
@@ -132,6 +135,11 @@ public class PantallaGana extends Pantalla{
     @Override
     public void render(float delta) {
         borrarPantalla(0,0,0);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
+        }
 
         actualizar(delta);
 

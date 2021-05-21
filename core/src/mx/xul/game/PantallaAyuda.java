@@ -2,6 +2,7 @@ package mx.xul.game;
 
 // Autores: Eduardo Alejandro García García A01338772 y Carlos Uriel Arroyo Herrera
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -131,6 +132,8 @@ public class PantallaAyuda extends Pantalla {
         crearVisuales();
         crearEstrellas();
         //cargarRecursos();
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private void crearEstrellas() {
@@ -347,6 +350,10 @@ public class PantallaAyuda extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla(0,50,125);
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaMenu(juego));
+        }
         actualizarVisuales(delta);
         actualizarEstrellas(delta);
 

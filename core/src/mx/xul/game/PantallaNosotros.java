@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -148,6 +149,8 @@ public class PantallaNosotros extends Pantalla {
         crearNosotros();
         crearCristales();
         //cargarRecursos();
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     //private void cargarRecursos() {
@@ -202,6 +205,11 @@ public class PantallaNosotros extends Pantalla {
     public void render(float delta) {
         Tiempo += Gdx.graphics.getDeltaTime(); // Tiempo que pasó entre render.
         borrarPantalla(0,50,125);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaMenu(juego));
+        }
 
         recorrerPantalla();
 

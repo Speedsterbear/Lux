@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -39,6 +40,8 @@ public class PantallaCreditos extends Pantalla {
 
         escenaMenu.addActor(btnRegresar);
         Gdx.input.setInputProcessor(escenaMenu);
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private Button crearBoton(String archivo, String archivoclick) {

@@ -7,6 +7,7 @@ Autor: Carlos Arroyo.
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -116,6 +117,8 @@ public class PantallaHistoria extends Pantalla {
         fadeNegro = new Transicion(0,0,0,1,ALTO,ANCHO);
 
         Gdx.input.setInputProcessor( new ProcesadorEntradaHistoria());
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
 
     }
 
@@ -176,6 +179,11 @@ public class PantallaHistoria extends Pantalla {
     public void render(float delta) {
 
         borrarPantalla(0,0,0);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaAyuda(juego));
+        }
 
         actualizar(delta);
 
