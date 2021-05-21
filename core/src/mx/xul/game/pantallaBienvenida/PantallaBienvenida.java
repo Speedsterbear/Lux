@@ -68,6 +68,7 @@ public class PantallaBienvenida extends Pantalla {
 
     @Override
     public void show() {
+
     }
 
 
