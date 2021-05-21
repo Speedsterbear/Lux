@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,6 +36,8 @@ public class PantallaPerdida extends Pantalla{
     public void show() {
         texturafondo = new Texture("Escenarios/Perdio.png");
         crearPerdio();
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private void crearPerdio() {
@@ -68,6 +71,11 @@ public class PantallaPerdida extends Pantalla{
     @Override
     public void render(float delta) {
         borrarPantalla(0,0,0);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaCargando(juego,Pantallasenum.JUEGOGS));
+        }
 
         batch.setProjectionMatrix(camara.combined);
 

@@ -6,6 +6,7 @@ Autor: Carlos Arroyo.
  */
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -284,6 +285,8 @@ public class JuegoGS extends Pantalla {
 
         //cargarRecursos();
         crearObjetos();
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
 
 
 
@@ -617,6 +620,10 @@ public class JuegoGS extends Pantalla {
             fadePerder();
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaPausa(juego));
+        }
     }
 
     private void controlSonidoPrincipal(float delta) {

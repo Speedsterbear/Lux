@@ -3,6 +3,7 @@ package mx.xul.game;
 // Autor: Eduardo Alejandro García García
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,6 +27,9 @@ public class PantallaAyudaHabitantes extends Pantalla {
         texturaFondo = new Texture("Ayuda/hijoOscuro.jpeg");
         // escenaMenu = new Stage(vista);
         crearAyudaHabitantes();
+
+        // Bloquear la tecla de back
+        Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private void crearAyudaHabitantes() {
@@ -56,6 +60,10 @@ public class PantallaAyudaHabitantes extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla(0, 0, 1);
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            // Regresar a la pantalla anterior (ACCION)
+            juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+        }
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         batch.draw(texturaFondo,0 ,0);

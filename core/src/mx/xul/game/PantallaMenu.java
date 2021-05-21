@@ -1,6 +1,7 @@
 package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -44,6 +45,7 @@ public class PantallaMenu extends Pantalla {
 
         //Fade
         fadeNegro = new Transicion(0,0,0,1,ALTO,ANCHO);
+        Gdx.input.setCatchKey(Input.Keys.BACK,false); // Si regresa al sistema operativo
     }
 
     private void crearMenu() {
