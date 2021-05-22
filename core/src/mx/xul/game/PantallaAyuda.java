@@ -51,7 +51,7 @@ public class PantallaAyuda extends Pantalla {
     private Texture texturaLineas;
 
     //Control del Fade
-    private final float DURACION_FADE = 1;
+    private final float DURACION_FADE = 0.2f;
 
     //Acomodo de elementos
     private final float X_CENTROS_BOTON = ANCHO/4; //X de todos los botones d ela pantalla

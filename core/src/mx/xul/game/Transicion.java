@@ -21,6 +21,7 @@ public class Transicion {
     protected float colorG=0;
     protected float colorB=0;
     protected boolean isFadeOutFinished = false;
+    protected boolean isFadeInFinished = false;
 
     protected float alfaRectangulo=0; // Representa el canal alfa del Sprite
 
@@ -79,6 +80,7 @@ public class Transicion {
             alfaRectangulo -= delta/fadeDuration;
             if (alfaRectangulo<=0){
                 alfaRectangulo =0;
+                isFadeInFinished = true;
             }
         }
 

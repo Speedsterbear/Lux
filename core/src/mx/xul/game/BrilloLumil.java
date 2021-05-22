@@ -34,6 +34,12 @@ public class BrilloLumil {
 
     }
 
+    public  void moverX (float x){
+        brilloFrente.setX(x-(brilloFrente.getWidth()/2));
+        brilloAtras.setX(x-(brilloAtras.getWidth()/2));
+
+    }
+
 
     //Sirve para hacer la ilusión de brillo
     public void actualizar (float r, float g, float b,float scaleBase){
