@@ -73,6 +73,7 @@ public class Lux extends Game {
 
 	// Método accesor de assetManager
 	public AssetManager getAssetManager() {
+
 		return assetManager;
 	}
 
