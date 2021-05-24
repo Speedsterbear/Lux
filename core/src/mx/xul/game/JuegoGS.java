@@ -18,14 +18,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import mx.xul.game.pantallaBienvenida.ColoresLumil;
 
@@ -34,6 +39,9 @@ import mx.xul.game.pantallaBienvenida.ColoresLumil;
 public class JuegoGS extends Pantalla {
 
     private Lux juego;
+
+    private EscenaPausa escenaPausa;
+    private ProcesadorEntrada procesadorEntrada;
 
     boolean boolBack   = false;
     boolean boolRojo = false;
@@ -57,15 +65,15 @@ public class JuegoGS extends Pantalla {
 
     //Velocidad normal de la oscuridad según las secciones
     private final float velocidadOscVerde = velocidadVerde; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
-    private final float velocidadOscRojo = velocidadRojo + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
-    private final float velocidadOscAzul = velocidadAzul + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
-    private final float velocidadOscBlanco = velocidadBlanco + 15; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
+    private final float velocidadOscRojo = 315; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
+    private final float velocidadOscAzul = 325; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
+    private final float velocidadOscBlanco = 335; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
     private final float velocidadHijoOscVerde = velocidadVerde + 200; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
-    private final float velocidadHijoOscRojo = velocidadRojo + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
-    private final float velocidadHijoOscAzul = velocidadAzul + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
-    private final float velocidadHijoOscBlanco = velocidadBlanco + 35; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
+    private final float velocidadHijoOscRojo = velocidadRojo; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
+    private final float velocidadHijoOscAzul = velocidadAzul; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
+    private final float velocidadHijoOscBlanco = velocidadBlanco; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
 
     //Velocidades generales
     private float velocidadInicial = velocidadVerde;
@@ -149,9 +157,11 @@ public class JuegoGS extends Pantalla {
     private Esgrun esgrun;
     private Rojel rojel;
     private Shiblu shiblu;
+    private Luz luz;
     private float DX_PASO_ESGRUN=2.5f;
     private float DX_PASO_ROJEL=2.5f;
     private float DX_PASO_SHIBLU=2.5f;
+    private float DX_PASO_LUZ=2.5f;
     public static float aparicion = 0;
 
     //Luz Final
@@ -288,6 +298,10 @@ public class JuegoGS extends Pantalla {
         // Bloquear la tecla de back
         Gdx.input.setCatchKey(Input.Keys.BACK,true);
 
+
+
+        procesadorEntrada = new ProcesadorEntrada();
+        Gdx.input.setInputProcessor(procesadorEntrada);
 
 
         //Escena y Botón
@@ -428,17 +442,22 @@ public class JuegoGS extends Pantalla {
 
     private void crearEsgrun(){
         Texture texturaEsgrun = new Texture("Personajes/Esgrun.png");
-        esgrun = new Esgrun(texturaEsgrun, ANCHO,positionY);
+        esgrun = new Esgrun(texturaEsgrun, ANCHO + texturaEsgrun.getWidth(), positionY);
     }
 
     private void crearRojel(){
         Texture texturaRojel = new Texture("Personajes/Rojel.png");
-        rojel = new Rojel(texturaRojel, ANCHO,positionY);
+        rojel = new Rojel(texturaRojel, ANCHO + texturaRojel.getWidth(), positionY);
+    }
+
+    private void crearLuz(){
+        Texture texturaLuz = new Texture("Personajes/luzFinal.png");
+        luz = new Luz(texturaLuz, ANCHO + texturaLuz.getWidth(), positionY);
     }
 
     private void crearShiblu(){
         Texture texturaShiblu = new Texture("Personajes/Shiblu.png");
-        shiblu = new Shiblu(texturaShiblu, ANCHO,positionY);
+        shiblu = new Shiblu(texturaShiblu, ANCHO + texturaShiblu.getWidth(), positionY);
     }
 
     //Este método sirve para crear los objetos que se moveran y bloquearán el paso al jugador
@@ -536,6 +555,9 @@ public class JuegoGS extends Pantalla {
         if(shiblu!=null)
             shiblu.render(batch);
 
+        if(luz!=null)
+            luz.render(batch);
+
         //Dibujar enemigo oscuridad
         oscuridad.animationRender(batch, tiempoOsc);
 
@@ -600,7 +622,7 @@ public class JuegoGS extends Pantalla {
         //Para cambiar de seccion se debe cumpir la condición de la distancia y de que chocaste con el monito
         aparicion += delta;
         //System.out.println(aparicion);
-        if (aparicion>= 20 && aparicion<40){
+        /*if (aparicion>= 20 && aparicion<40){
             seccion = EstadoSeccion.ROJO;
             //System.out.println("Rojo");
         }else if (aparicion>= 40 && aparicion<60){
@@ -609,7 +631,7 @@ public class JuegoGS extends Pantalla {
         } else if(aparicion>= 60) {
             seccion = EstadoSeccion.BLANCO;
             //System.out.println("blanco");
-        }
+        }*/
 
 
 
@@ -623,6 +645,10 @@ public class JuegoGS extends Pantalla {
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             // Regresar a la pantalla anterior (ACCION)
             juego.setScreen(new PantallaPausa(juego));
+        }
+
+        if (estado == EstadoJuego.PAUSADO && escenaPausa != null) {
+            escenaPausa.draw();
         }
     }
 
@@ -756,15 +782,9 @@ public class JuegoGS extends Pantalla {
                 crearRojel();
             }else if(aparicion>= duracionAzul*3 - 1 && aparicion<=duracionAzul*3){
                 crearShiblu();
+            }else if(aparicion>= duracionBlanco*4 - 10 && aparicion<=duracionBlanco*4){
+                crearLuz();
             }
-            /*if(seccion == EstadoSeccion.VERDE){
-                crearEsgrun();
-            }else if(seccion == EstadoSeccion.ROJO){
-                crearRojel();
-            }else if(seccion == EstadoSeccion.AZUL){
-                crearShiblu();
-            }*/
-
 
             if(!boolPowerUpGemaAzul){
                 colisionLumilFront = hijoOscuridadColisionFront();
@@ -813,21 +833,21 @@ public class JuegoGS extends Pantalla {
             if (colisionLumilFront) {
                 moverLumil(isMoving, DELTA_Y);
                 velocidad = 0;
-                velocidadOscuridad = velocidadOscVerde;
+                regresarVelocidadOscuridad(seccion);
                 oscuridadColision();
             }
 
             if (colisionLumilFront && colisionLumilUp) {
                 moverLumilxy(isMoving, 0, DELTA_Y);
                 velocidad = 0;
-                velocidadOscuridad = velocidadOscVerde;
+                regresarVelocidadOscuridad(seccion);
                 oscuridadColision();
             }
 
             if (colisionLumilFront && colisionLumilDown) {
                 moverLumilxy(isMoving, DELTA_Y, 0);
                 velocidad = 0;
-                velocidadOscuridad = velocidadOscVerde;
+                regresarVelocidadOscuridad(seccion);
                 oscuridadColision();
             }
 
@@ -859,17 +879,29 @@ public class JuegoGS extends Pantalla {
 
             if(esgrun!=null){
                 moverEsgrun();
-                depurarEsgrun();
+                if(depurarEsgrun()){
+                    seccion = EstadoSeccion.ROJO;
+                }
             }
 
             if(rojel!=null){
                 moverRojel();
-                depurarRojel();
+                if(depurarRojel()){
+                    seccion = EstadoSeccion.AZUL;
+                }
             }
 
             if(shiblu!=null){
                 moverShiblu();
-                depurarShiblu();
+                if(depurarShiblu()){
+                    seccion = EstadoSeccion.BLANCO;
+                }
+
+            }
+
+            if(luz!=null){
+                moverLuz();
+                depurarLuz();
             }
 
             // Código Ricardo
@@ -967,12 +999,24 @@ public class JuegoGS extends Pantalla {
         switch (seccion){
             case ROJO:
                 //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                velocidad = velocidadRojo;
+                velocidadOscuridad = velocidadOscRojo;
+                velocidadHijosOscuridad = velocidadHijoOscRojo;
+                tiempoParaCrearHijoOscuridad = 3;
                 break;
             case AZUL:
                 //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                velocidad = velocidadAzul;
+                velocidadOscuridad = velocidadOscAzul;
+                velocidadHijosOscuridad = velocidadHijoOscAzul;
+                tiempoParaCrearHijoOscuridad = 2;
                 break;
             case BLANCO:
                 //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
+                velocidad = velocidadBlanco;
+                velocidadOscuridad = velocidadOscBlanco;
+                velocidadHijosOscuridad = velocidadHijoOscBlanco;
+                tiempoParaCrearHijoOscuridad = 1.5f;
                 break;
         }
         seccionAnterior = seccion;
@@ -1014,35 +1058,46 @@ public class JuegoGS extends Pantalla {
                 if(!boolPowerUpGemaRoja)
                     contadorVidas --;
                 sonidoquitavidas.play();
+                continue;
             }
             if(arrHijosOscuridad!= null && hijoOscuridad.getX()>(3*ANCHO/2)) { //Logicamente necesito solo la X del objeto
                 arrHijosOscuridad.removeIndex(i);
             }
         }
-
     }
 
-
-
-    private void depurarEsgrun() {
+    private boolean depurarEsgrun() {
         if(lumil.getRectangle().overlaps(esgrun.sprite.getBoundingRectangle())){
             esgrun = null;
             activarPowerUpGemaVerde = true;
+            return true;
         }
+        return false;
     }
 
-    private void depurarRojel() {
+    private boolean depurarRojel() {
         if(lumil.getRectangle().overlaps(rojel.sprite.getBoundingRectangle())){
             rojel = null;
             activarPowerUpGemaRoja = true;
+            return true;
+        }
+        return false;
+    }
+
+    private void depurarLuz() {
+        if(lumil.getRectangle().overlaps(luz.sprite.getBoundingRectangle())){
+            luz = null;
+            estado = EstadoJuego.GANA;
         }
     }
 
-    private void depurarShiblu() {
+    private boolean depurarShiblu() {
         if(lumil.getRectangle().overlaps(shiblu.sprite.getBoundingRectangle())){
             shiblu = null;
             activarPowerUpGemaAzul = true;
+            return true;
         }
+        return false;
     }
 
     private void depurarBloques(){
@@ -1114,6 +1169,10 @@ public class JuegoGS extends Pantalla {
         shiblu.moverHorizontal(DX_PASO_SHIBLU);
     }
 
+    private void moverLuz(){
+        luz.moverHorizontal(DX_PASO_LUZ);
+    }
+
     private void moverBloques(float delta){
         //Mover los Enemigos
         for (Bloque bloque:arrBloques) {
@@ -1180,6 +1239,18 @@ public class JuegoGS extends Pantalla {
         if(timerGemas >= tiempoParaGemas){
             powerups = true;
             timerGemas = 0;
+        }
+    }
+
+    public void regresarVelocidadOscuridad(EstadoSeccion seccion){
+        if(seccion == EstadoSeccion.VERDE){
+            velocidadOscuridad = velocidadOscVerde;
+        }else if(seccion == EstadoSeccion.ROJO){
+            velocidadOscuridad = velocidadOscRojo;
+        }else if(seccion == EstadoSeccion.AZUL){
+            velocidadOscuridad = velocidadOscAzul;
+        }else if(seccion == EstadoSeccion.BLANCO){
+            velocidadOscuridad = velocidadOscBlanco;
         }
     }
 
@@ -1331,6 +1402,7 @@ public class JuegoGS extends Pantalla {
         manager.unload("Personajes/Esgrun.png");
         manager.unload("Personajes/Rojel.png");
         manager.unload("Personajes/Shiblu.png");
+        //manager.unload("Personajes/luzFinal.png");
         manager.unload("Personajes/luzPersonaje.png");
         manager.unload("Sonidos/sonidoComeOscuridad.wav");
         manager.unload("Sonidos/sonidoPoderActivado.wav");
@@ -1384,6 +1456,8 @@ public class JuegoGS extends Pantalla {
 
             }else {
 
+
+
                 posicionDedo.x=screenX;
                 posicionDedo.y=screenY;
                 camara.unproject(posicionDedo);
@@ -1423,6 +1497,12 @@ public class JuegoGS extends Pantalla {
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
                     //sonidoPoderActivado.play();
+                    if (escenaPausa == null) {      // Inicialización lazy
+                        escenaPausa = new EscenaPausa(vista);
+                    }
+                    estado = EstadoJuego.PAUSADO;
+                    // CAMBIAR el procesador de entrada
+                    Gdx.input.setInputProcessor(escenaPausa);
                 }
 
 
@@ -1491,6 +1571,8 @@ public class JuegoGS extends Pantalla {
 
                      */
             }
+
+
 
             return true; //Porque el juego ya procesó el evento (si si hacemos algo hay que regresar TRUE)
         }
@@ -1787,4 +1869,41 @@ public class JuegoGS extends Pantalla {
         }
     }
 
+    // La escena que se muestra cuendo el juagador pausa le juego
+    private class EscenaPausa extends Stage
+    {
+        private Texture texturaFondo;
+
+        public EscenaPausa(Viewport vista) {
+            super(vista);       // Pasa la vista al constructor de Stage
+            // Imagen de la ventana de pausa
+            texturaFondo = new Texture("personajes/fondoPausa.png");
+            com.badlogic.gdx.scenes.scene2d.ui.Image imgFondo = new Image(texturaFondo);
+            imgFondo.setPosition(ANCHO/2, ALTO/2, Align.center);
+            addActor(imgFondo);
+            // Botón para continuar
+            Texture texturaBtn = new Texture("Botones/pausa_ON.png");
+            TextureRegionDrawable trd = new TextureRegionDrawable(texturaBtn);
+            // Agregar la imagen inversa (presionada)
+            Button btn = new Button(trd);
+            addActor(btn);
+            btn.setPosition(ANCHO/2, 0.3f*ALTO, Align.center);
+            // Agregar el listener del botón
+            btn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    // QUITAR LA PAUSA
+                    if ( estado==EstadoJuego.PAUSADO ) {       // No es necesario
+                        estado= EstadoJuego.JUGANDO;
+                        Gdx.input.setInputProcessor(procesadorEntrada);
+                        // No es necesario hacer la escenaPausa NULL
+                    }
+                }
+            } );
+        }
+    }
+
 }
+
+
