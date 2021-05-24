@@ -1,6 +1,6 @@
 package mx.xul.game;
 /*
-Esta pantalla sirve para mostrar la información del juego y sus creadores.
+Esta pantalla sirve para mostrar la información de la aplicación y sus creadores.
 Autores: Carlos Arroyo y David
  */
 
