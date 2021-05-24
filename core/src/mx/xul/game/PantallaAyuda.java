@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 public class PantallaAyuda extends Pantalla {
     private Lux juego;
@@ -59,6 +60,7 @@ public class PantallaAyuda extends Pantalla {
 
     //Estrellas
     private Texture texturaEstrella;
+    private Array<BrilloLumil> arrEstrellas;
     //Las esttellas estan numeradas porque todas reoresentan lo mismo y solo es para separarlas
     private BrilloLumil estrellaUno;
     private BrilloLumil estrellaDos;
@@ -66,7 +68,7 @@ public class PantallaAyuda extends Pantalla {
     private BrilloLumil estrellaCuatro;
     private BrilloLumil estrellaCinco;
 
-    private final float VALOR_MINIMO_ESCALA = 0.02f;
+    private final float VALOR_MINIMO_ESCALA = 0.04f;
     private final float VALOR_MAXIMO_ESCALA = 0.13f;
 
     private final float ESCALA_ESTRELLA_UNO = MathUtils.random(VALOR_MINIMO_ESCALA,VALOR_MAXIMO_ESCALA);
@@ -137,7 +139,15 @@ public class PantallaAyuda extends Pantalla {
     }
 
     private void crearEstrellas() {
+
+        arrEstrellas = new Array<>();
         texturaEstrella =manager.get("Utileria/brilloLumil.png");
+        for (int  i=0; i<=35; i++){
+            System.out.println("crear Estrella");
+            BrilloLumil estrella = new BrilloLumil(texturaEstrella, MathUtils.random(0,ANCHO),MathUtils.random(0,ALTO));
+            arrEstrellas.add(estrella);
+        }
+
         estrellaUno = new BrilloLumil(texturaEstrella, MathUtils.random(0,ANCHO),MathUtils.random(0,ALTO));
         estrellaDos = new BrilloLumil(texturaEstrella, MathUtils.random(0,ANCHO),MathUtils.random(0,ALTO));
         estrellaTres = new BrilloLumil(texturaEstrella, MathUtils.random(0,ANCHO),MathUtils.random(0,ALTO));
@@ -368,6 +378,12 @@ public class PantallaAyuda extends Pantalla {
         estrellaTres.render(batch);
         estrellaCuatro.render(batch);
         estrellaCinco.render(batch);
+        if (arrEstrellas!=null){
+            for(BrilloLumil estrella: arrEstrellas){
+                estrella.render(batch);
+            }
+
+        }
 
         //Dibujar los elementos Visuales
         visualLumil.render(batch);
@@ -384,6 +400,12 @@ public class PantallaAyuda extends Pantalla {
     }
 
     private void actualizarEstrellas(float delta) {
+        if(arrEstrellas!=null){
+            for(BrilloLumil estrella: arrEstrellas){
+                estrella.actualizar(1,1,1,0.02f+MathUtils.random(0,.03f));
+            }
+
+        }
         estrellaUno.actualizar(1,1,1,ESCALA_ESTRELLA_UNO+MathUtils.random(0,.03f));
         estrellaDos.actualizar(1,1,1,ESCALA_ESTRELLA_DOS+MathUtils.random(0,.03f));
         estrellaTres.actualizar(1,1,1,ESCALA_ESTRELLA_TRES+MathUtils.random(0,.03f));

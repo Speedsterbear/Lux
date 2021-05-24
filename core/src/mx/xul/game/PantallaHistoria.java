@@ -396,7 +396,7 @@ public class PantallaHistoria extends Pantalla {
                     versoSeis.sprite.setY(versoSeis.sprite.getY()+dy);
                 }
                 break;
-            case 7:
+            default:
                 fadeNegro.fadeOut(delta,duracionTransicionSeccion);
                 break;
         }
