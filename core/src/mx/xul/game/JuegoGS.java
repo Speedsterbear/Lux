@@ -1072,6 +1072,9 @@ public class JuegoGS extends Pantalla {
             activarPowerUpGemaVerde = true;
             return true;
         }
+        if(rojel.sprite.getX()>(3*ANCHO/2)) {
+            estado = EstadoJuego.PIERDE;
+        }
         return false;
     }
 
@@ -1081,6 +1084,9 @@ public class JuegoGS extends Pantalla {
             activarPowerUpGemaRoja = true;
             return true;
         }
+        if(rojel.sprite.getX()>(3*ANCHO/2)) {
+            estado = EstadoJuego.PIERDE;
+        }
         return false;
     }
 
@@ -1089,6 +1095,9 @@ public class JuegoGS extends Pantalla {
             luz = null;
             estado = EstadoJuego.GANA;
         }
+        if(rojel.sprite.getX()>(3*ANCHO/2)) {
+            estado = EstadoJuego.PIERDE;
+        }
     }
 
     private boolean depurarShiblu() {
@@ -1096,6 +1105,9 @@ public class JuegoGS extends Pantalla {
             shiblu = null;
             activarPowerUpGemaAzul = true;
             return true;
+        }
+        if(rojel.sprite.getX()>(3*ANCHO/2)) {
+            estado = EstadoJuego.PIERDE;
         }
         return false;
     }
