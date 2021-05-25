@@ -51,17 +51,17 @@ public class JuegoGS extends Pantalla {
 
     //Duración de las secciones
     private float duracionVerde = 10; //Valor que representa los segundos de duración aproximados de la sección 1.
-    private float duracionRojo = 20; //Valor que representa los segundos de duración aproximados de la sección 2.
-    private float duracionAzul = 20; //Valor que representa los segundos de duración aproximados de la sección 3.
-    private float duracionBlanco = 20; //Valor que representa los segundos de duración aproximados de la sección 4.
+    private float duracionRojo = 10; //Valor que representa los segundos de duración aproximados de la sección 2.
+    private float duracionAzul = 10; //Valor que representa los segundos de duración aproximados de la sección 3.
+    private float duracionBlanco = 10; //Valor que representa los segundos de duración aproximados de la sección 4.
 
 
 
     //Velocidad normal de las secciones
     private final float velocidadVerde = 300; //Valor que repreenta la velocidad normal de la sección 1.
-    private final float velocidadRojo = 400; //Valor que repreenta la velocidad normal de la sección 2.
-    private final float velocidadAzul = 500; //Valor que repreenta la velocidad normal de la sección 3.
-    private final float velocidadBlanco = 600; //Valor que repreenta la velocidad normal de la sección 4.
+    private final float velocidadRojo = 430; //Valor que repreenta la velocidad normal de la sección 2.
+    private final float velocidadAzul = 560; //Valor que repreenta la velocidad normal de la sección 3.
+    private final float velocidadBlanco = 690; //Valor que repreenta la velocidad normal de la sección 4.
 
 
     //Distancia
@@ -72,19 +72,16 @@ public class JuegoGS extends Pantalla {
 
     //Velocidad normal de la oscuridad según las secciones
     private final float velocidadOscVerde = velocidadVerde; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 1.
-    private final float velocidadOscRojo = velocidadRojo*1.1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
-    private final float velocidadOscAzul = velocidadAzul*1.1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
-    private final float velocidadOscBlanco = velocidadBlanco*1.1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
+    private final float velocidadOscRojo = velocidadRojo*1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 2.
+    private final float velocidadOscAzul = velocidadAzul*1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 3.
+    private final float velocidadOscBlanco = velocidadBlanco*1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
-    private final float velocidadHijoOscVerde = velocidadVerde*1.2f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
-    private final float velocidadHijoOscRojo = velocidadRojo*1.2f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
-    private final float velocidadHijoOscAzul = velocidadAzul*1.2f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
-    private final float velocidadHijoOscBlanco = velocidadBlanco*1.2f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
+    private final float velocidadHijoOscVerde = velocidadVerde*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscRojo = velocidadRojo*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
+    private final float velocidadHijoOscAzul = velocidadAzul*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
+    private final float velocidadHijoOscBlanco = velocidadBlanco*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
 
-    //Velocidades generales
-    private float velocidadInicial = velocidadVerde;
-    private float velocidad = velocidadVerde;
 
     //Escena para Botones
     //private Stage escenaJuego;
@@ -146,6 +143,14 @@ public class JuegoGS extends Pantalla {
     private float positionY = ALTO/2;
     private long startTimeOscuridad = 0;
     //private EstadoOscuridad estadoOscuridad = EstadoOscuridad.QUIETO;
+
+    //Velocidades generales
+    private float velocidadInicial = velocidadVerde;
+    private float velocidad = velocidadVerde;
+    private float velocidadOscuridadInicial = velocidadOscVerde;
+    private float velocidadHijosOscuridadInicial = velocidadOscVerde;
+
+
 
     //General
     //private float velocidad = velocidadBosque;
@@ -335,7 +340,7 @@ public class JuegoGS extends Pantalla {
         sonidoquitavidas = manager.get("Sonidos/sonidoquitavidas.wav");
         sonidoTocaLuzBlanca = manager.get("Sonidos/sonidoTocaLuzBlanca.wav");
         musicaFondo = manager.get("Sonidos/musicaJuego.mp3");
-        sonidoJuego = manager.get("Sonidos/musicaJugar.ogg");
+        sonidoJuego = manager.get("Sonidos/JugarLoop.mp3");
 
         musicaFondo.setLooping(true);
         musicaFondo.setVolume(0.2f);
@@ -503,6 +508,8 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void render(float delta) {
+
+        System.out.println(velocidad);
 
         controlSonidoPrincipal(delta);
 
@@ -1036,6 +1043,7 @@ public class JuegoGS extends Pantalla {
                 velocidadHijosOscuridad = velocidadHijoOscRojo;
                 tiempoParaCrearBloque = 3.5f;
                 tiempoParaCrearHijoOscuridad = 3;
+                tiempoParaCrearBloque = 3;
                 break;
             case AZUL:
                 //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
@@ -1044,6 +1052,7 @@ public class JuegoGS extends Pantalla {
                 velocidadHijosOscuridad = velocidadHijoOscAzul;
                 tiempoParaCrearBloque = 3f;
                 tiempoParaCrearHijoOscuridad = 2;
+                tiempoParaCrearBloque = 2.7f;
                 break;
             case BLANCO:
                 //Aqui pueden asignarse los nuevos valores de velocidad para lumil, la oscuridad y los hijos de la oscuridad.
@@ -1052,6 +1061,7 @@ public class JuegoGS extends Pantalla {
                 velocidadHijosOscuridad = velocidadHijoOscBlanco;
                 tiempoParaCrearBloque = 2.5f;
                 tiempoParaCrearHijoOscuridad = 1.5f;
+                tiempoParaCrearBloque= 2;
                 break;
         }
         seccionAnterior = seccion;
@@ -1489,7 +1499,7 @@ public class JuegoGS extends Pantalla {
         manager.unload("Sonidos/sonidoquitavidas.wav");
         manager.unload("Sonidos/sonidoTocaLuzBlanca.wav");
         manager.unload("Sonidos/musicaJuego.mp3");
-        manager.unload("Sonidos/musicaJugar.ogg");
+        manager.unload("Sonidos/JugarLoop.mp3");
 
         texturaLumilJugando.dispose();
         texturaOscuridad.dispose();

@@ -252,6 +252,7 @@ public class PantallaCargando extends Pantalla {
         manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
         manager.load("Sonidos/musicaJuego.mp3", Music.class);
         manager.load("Sonidos/musicaJugar.ogg",Sound.class);
+        manager.load("Sonidos/JugarLoop.mp3",Sound.class);
     }
 
     @Override

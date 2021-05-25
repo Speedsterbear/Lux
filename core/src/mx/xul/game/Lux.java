@@ -31,12 +31,11 @@ public class Lux extends Game {
 	}
 
 	private void crearMusica() {
-
-		musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
+		musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaMenuLoop.mp3"));
 		musicaPantallasSecundarias.setLooping(true);
 		musicaPantallasSecundarias.setVolume(VOLUMEN_DESEADO);
 
-		musicaPantallasSecundariasIntro = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundariasIntro.ogg"));
+		musicaPantallasSecundariasIntro = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaMenuIntro.mp3"));
 		musicaPantallasSecundariasIntro.setVolume(VOLUMEN_DESEADO);
 	}
 
@@ -48,6 +47,7 @@ public class Lux extends Game {
 		musicaPantallasSecundariasIntro.setOnCompletionListener(new Music.OnCompletionListener() {
 			@Override
 			public void onCompletion(Music music) {
+				musicaPantallasSecundariasIntro.stop();
 				musicaPantallasSecundarias.play();
 			}
 		});
