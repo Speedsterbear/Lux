@@ -15,6 +15,7 @@ public class PantallaPausa extends Pantalla{
     private Lux juego;
     private Texture texturafondo;
     private Stage escenaPausa;
+    private boolean musicaON = true;
 
     public PantallaPausa(Lux juego) {
         this.juego=juego;
@@ -40,6 +41,7 @@ public class PantallaPausa extends Pantalla{
     private void crearPausa() {
         texturafondo= new Texture("Escenarios/Pausa.png");
         escenaPausa = new Stage(vista);
+        juego.playMusica();
 
         Button btnresumen = crearBoton("Botones/btnResumen.png","Botones/btnResumenClick.png");
         btnresumen.setPosition(ANCHO/2, ALTO/2f, Align.center);
@@ -51,7 +53,6 @@ public class PantallaPausa extends Pantalla{
             }
         });
 
-
         Button btnExit = crearBoton("Botones/btnExit.png","Botones/btnExitClick.png");
         btnExit.setPosition(ANCHO/2, ALTO/2.7f, Align.center);
         escenaPausa.addActor(btnExit);
@@ -62,6 +63,36 @@ public class PantallaPausa extends Pantalla{
             }
         });
 
+        Texture texturaON = new Texture("Botones/VolumeON.png");
+        Texture texturaOFF = new Texture("Botones/volumeOFF.png");
+        TextureRegionDrawable trdON = new TextureRegionDrawable(texturaON);
+        TextureRegionDrawable trdOFF =  new TextureRegionDrawable(texturaOFF);
+
+        Button.ButtonStyle estiloON = new Button.ButtonStyle(trdON, trdOFF, trdOFF);
+
+        Button btnVolumen = crearBoton("Botones/volumenON.png", "Botones/volumenOFF.png");
+        btnVolumen.setStyle(estiloON);
+        btnVolumen.setPosition(ANCHO/2, ALTO/2, Align.center);
+        btnVolumen.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+                // isTransicionFadingOut = true;
+                // pantallaSiguienteMenu = PantallaSiguienteMenu.HELP;
+                if (musicaON == true){ // Si la musica esta prendida
+                    juego.stopMusica();
+                    musicaON = false;
+                }else { // La musica esta apagada
+                    juego.playMusica();
+                    musicaON = true;
+
+                }
+                // Guardar en las preferencias la variable musicaON
+            }
+            //musicaON
+        });
+
+        escenaPausa.addActor(btnVolumen);
         Gdx.input.setInputProcessor(escenaPausa);
     }
 
