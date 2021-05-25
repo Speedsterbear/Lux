@@ -77,10 +77,10 @@ public class JuegoGS extends Pantalla {
     private final float velocidadOscBlanco = velocidadBlanco*1f; //Valor que repreenta la velocidad normal de la Oscuridad de la sección 4.
 
     //Velocidad normal de los hijos de la oscuridad según las secciones
-    private final float velocidadHijoOscVerde = velocidadVerde*1.5f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
-    private final float velocidadHijoOscRojo = velocidadRojo*1.5f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
-    private final float velocidadHijoOscAzul = velocidadAzul*1.5f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
-    private final float velocidadHijoOscBlanco = velocidadBlanco*1.5f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
+    private final float velocidadHijoOscVerde = velocidadVerde*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 1.
+    private final float velocidadHijoOscRojo = velocidadRojo*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 2.
+    private final float velocidadHijoOscAzul = velocidadAzul*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 3.
+    private final float velocidadHijoOscBlanco = velocidadBlanco*1.4f; //Valor que repreenta la velocidad normal de los hijos de la Oscuridad de la sección 4.
 
 
     //Escena para Botones
