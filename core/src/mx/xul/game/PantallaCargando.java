@@ -212,6 +212,14 @@ public class PantallaCargando extends Pantalla {
 
     // Carga los recursos a través del administrador de assets (siguiente pantalla)
     private void cargarRecursosJuego() {
+        manager.load("Pausa/pausaBlanca.png", Texture.class);
+        manager.load("Pausa/pausaVerde.png", Texture.class);
+        manager.load("Pausa/pausaRoja.png", Texture.class);
+        manager.load("Pausa/pausaAzul.png", Texture.class);
+        manager.load("Pausa/btnResume_OFF.png", Texture.class);
+        manager.load("Pausa/btnResume_ON.png", Texture.class);
+        manager.load("Pausa/btnQuit_OFF.png", Texture.class);
+        manager.load("Pausa/btnQuit_ON.png", Texture.class);
         manager.load("Escenarios/bosque_fondo.jpg", Texture.class);
         manager.load("Escenarios/bosque_atras.png", Texture.class);
         manager.load("Escenarios/bosque_medio.png", Texture.class);
@@ -244,6 +252,7 @@ public class PantallaCargando extends Pantalla {
         manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
         manager.load("Sonidos/musicaJuego.mp3", Music.class);
         manager.load("Sonidos/musicaJugar.ogg",Sound.class);
+        manager.load("Sonidos/JugarLoop.mp3",Sound.class);
     }
 
     @Override

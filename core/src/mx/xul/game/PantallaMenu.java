@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.Align;
 public class PantallaMenu extends Pantalla {
     private Lux juego;
     private Texture texturafondo;
+    private  Texture texturaON;
+    private  Texture texturaOFF;
     private Stage escenaMenu;
 
     //Para el Fade
@@ -120,15 +122,15 @@ public class PantallaMenu extends Pantalla {
             }
         });
 
-        Texture texturaON = new Texture("Botones/VolumeON.png");
-        Texture texturaOFF = new Texture("Botones/volumeOFF.png");
+         texturaON = new Texture("Botones/VolumeON.png");
+         texturaOFF = new Texture("Botones/VolumeOFF.png");
         TextureRegionDrawable trdON = new TextureRegionDrawable(texturaON);
         TextureRegionDrawable trdOFF =  new TextureRegionDrawable(texturaOFF);
 
         Button.ButtonStyle estiloON = new Button.ButtonStyle(trdON, trdOFF, trdOFF);
         // Button.ButtonStyle estiloOFF = new Button.ButtonStyle(trdOFF, trdON, trdON);
 
-        final Button btnVolumen = crearBoton("Botones/volumeON.png", "Botones/volumeOFF.png");
+        final Button btnVolumen = crearBoton("Botones/VolumeON.png", "Botones/VolumeOFF.png");
         btnVolumen.setStyle(estiloON);
         btnVolumen.setPosition(9.7f*ANCHO/10.2f, ALTO/1.1f, Align.center);
         btnVolumen.addListener(new ClickListener(){
