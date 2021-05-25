@@ -50,7 +50,7 @@ public class BrilloLumil {
 
         brilloFrente.rotate(-0.3f);
         brilloFrente.setScale(scaleBase*0.7f + (MathUtils.sinDeg(angulo)*(scaleBase/9f)));
-        brilloAtras.setAlpha(0.6f + (MathUtils.sinDeg(angulo)*0.1f));
+        brilloAtras.setAlpha(0.5f + (MathUtils.sinDeg(angulo)*0.1f));
 
     }
 

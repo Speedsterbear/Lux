@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -32,6 +33,7 @@ public class PantallaMenu extends Pantalla {
     private Music musicaPantallasSecundariasIntro;
 
  */
+   private boolean musicaON = true;
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
@@ -57,6 +59,8 @@ public class PantallaMenu extends Pantalla {
         escenaMenu=new Stage(vista);
 
         //Musica
+       // Leer de las preferencias si la musica quedo prendida o apagada
+        // Si el valo leído es musica prendida entonces se ejecuta...
         juego.playMusica();
         /*
 
@@ -116,11 +120,42 @@ public class PantallaMenu extends Pantalla {
             }
         });
 
+        Texture texturaON = new Texture("Botones/VolumeON.png");
+        Texture texturaOFF = new Texture("Botones/volumeOFF.png");
+        TextureRegionDrawable trdON = new TextureRegionDrawable(texturaON);
+        TextureRegionDrawable trdOFF =  new TextureRegionDrawable(texturaOFF);
+
+        Button.ButtonStyle estiloON = new Button.ButtonStyle(trdON, trdOFF, trdOFF);
+        // Button.ButtonStyle estiloOFF = new Button.ButtonStyle(trdOFF, trdON, trdON);
+
+        final Button btnVolumen = crearBoton("Botones/volumeON.png", "Botones/volumeOFF.png");
+        btnVolumen.setStyle(estiloON);
+        btnVolumen.setPosition(9.7f*ANCHO/10.2f, ALTO/1.1f, Align.center);
+        btnVolumen.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
+                // isTransicionFadingOut = true;
+                // pantallaSiguienteMenu = PantallaSiguienteMenu.HELP;
+                if (musicaON == true){ // Si la musica esta prendida
+                    juego.stopMusica();
+                    musicaON = false;
+                }else { // La musica esta apagada
+                    juego.playMusica();
+                    musicaON = true;
+
+                }
+                // Guardar en las preferencias la variable musicaON
+            }
+            //musicaON
+        });
 
         // Agregar a la escena el boton
         escenaMenu.addActor(btnJuego);
         escenaMenu.addActor(btnNosotros);
         escenaMenu.addActor(btnAyuda);
+        escenaMenu.addActor(btnVolumen);
+        // escenaMenu.addActor(btnVolumenOFF);
 
         // Escena se encarga de atender los eventos de entrada
         Gdx.input.setInputProcessor(escenaMenu);
