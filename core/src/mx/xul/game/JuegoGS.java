@@ -511,6 +511,9 @@ public class JuegoGS extends Pantalla {
 
         }
 
+        if(estado == EstadoJuego.PAUSADO)
+            velocidad = 0;
+
 
         System.out.println(velocidad);
 
@@ -845,7 +848,7 @@ public class JuegoGS extends Pantalla {
                 //Aqui creo que se debería optimizar esto para que no se esté asignando constantemente la velocidad
                 returnVelocidadBosque();
             }
-
+            oscuridadColision();
             //Mover y Depurar Oscuridad
             if (colisionLumilFront) {
                 moverLumil(isMoving, DELTA_Y);
@@ -1568,7 +1571,7 @@ public class JuegoGS extends Pantalla {
 
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
-                    velocidad= 0;
+
                     //sonidoPoderActivado.play();
                     /*
                     if (escenaPausa == null) {      // Inicialización lazy
@@ -1957,7 +1960,6 @@ public class JuegoGS extends Pantalla {
     {
 
         private Texture texturaFondo;
-
         public EscenaPausa(Viewport vista) {
             super(vista);       // Pasa la vista al constructor de Stage
             // Imagen de la ventana de pausa
