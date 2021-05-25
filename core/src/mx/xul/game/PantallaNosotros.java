@@ -120,8 +120,8 @@ public class PantallaNosotros extends Pantalla {
             }
         });
 
-        Button btnCreditos = crearBoton("Nosotros/flechaDerOff.png", "Nosotros/flechaDerOn.png");
-        btnCreditos.setPosition(ANCHO-400,150, Align.center);
+        Button btnCreditos = crearBoton("Nosotros/btnFlechaDer_OFF.png", "Nosotros/btnFlechaDer_ON.png");
+        btnCreditos.setPosition(ANCHO-450,150, Align.center);
         btnCreditos.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -133,8 +133,8 @@ public class PantallaNosotros extends Pantalla {
             }
         });
 
-        Button btnNosotros = crearBoton("Nosotros/flechaIzqOff.png", "Nosotros/flechaIzqOn.png");
-        btnNosotros.setPosition(ANCHO+400,150, Align.center);
+        Button btnNosotros = crearBoton("Nosotros/btnFlechaIzq_OFF.png", "Nosotros/btnFlechaIzq_ON.png");
+        btnNosotros.setPosition(ANCHO+450,150, Align.center);
         btnNosotros.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -149,7 +149,7 @@ public class PantallaNosotros extends Pantalla {
 
         //Probar El Cambio de color no se va usar
 
-        Button btnC = crearBoton("Nosotros/flechaArrOff.png", "Nosotros/flechaArrOn.png");
+        Button btnC = crearBoton("Nosotros/btnFlechaArriba_OFF.png", "Nosotros/btnFlechaArriba_ON.png");
         btnC.setPosition(2*ANCHO - 100,150, Align.center);
         btnC.addListener(new ClickListener(){
             @Override
@@ -406,23 +406,26 @@ public class PantallaNosotros extends Pantalla {
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
-                //batch.draw(texturaAndrea,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaAndrea,ANCHO*3/2-400,ALTO/2-250);
                 break;
             case 2:
                 cristalY.animationRender(batch, Tiempo);
-                //batch.draw(texturaDavid,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaDavid,ANCHO*3/2-400,ALTO/2-250);
                 break;
             case 3:
                 cristalG.animationRender(batch, Tiempo);
-                //batch.draw(texturaCarlos,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaCarlos,ANCHO*3/2-400,ALTO/2-250);
                 break;
             case 4:
                 cristalC.animationRender(batch, Tiempo);
-                //batch.draw(texturaEduardo,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaEduardo,ANCHO*3/2-400,ALTO/2-250);
                 break;
             case 5:
                 cristalB.animationRender(batch, Tiempo);
-                //batch.draw(texturaRicardo,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaRicardo,ANCHO*3/2-400,ALTO/2-250);
+
+
+
                 break;
             default :
                 cristalW.animationRender(batch, Tiempo);
