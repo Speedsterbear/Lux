@@ -425,7 +425,7 @@ public class PantallaNosotros extends Pantalla {
         switch (cristalColor) {
             case 0:
                 cristalW.animationRender(batch, Tiempo);
-                //batch.draw(texturaInicial,ANCHO*3/2-200,ALTO/2-400);
+                batch.draw(texturaInicial,ANCHO*3/2-400,ALTO/2-250);
                 break;
             case 1:
                 cristalR.animationRender(batch, Tiempo);
@@ -496,12 +496,12 @@ public class PantallaNosotros extends Pantalla {
         manager.unload("Nosotros/fondoAbout.jpg");
         manager.unload("Menu/buttonback.png");
         manager.unload("Menu/clickback.png");
-        manager.unload("Nosotros/flechaDerOff.png");
-        manager.unload("Nosotros/flechaDerOn.png");
-        manager.unload("Nosotros/flechaIzqOff.png");
-        manager.unload("Nosotros/flechaIzqOn.png");
-        manager.unload("Nosotros/flechaArrOff.png");
-        manager.unload("Nosotros/flechaArrOn.png");
+        manager.unload("Nosotros/btnFlechaDer_OFF.png");
+        manager.unload("Nosotros/btnFlechaDer_ON.png");
+        manager.unload("Nosotros/btnFlechaIzq_OFF.png");
+        manager.unload("Nosotros/btnFlechaIzq_ON.png");
+        manager.unload("Nosotros/btnFlechaArriba_OFF.png");
+        manager.unload("Nosotros/btnFlechaArriba_ON.png");
         manager.unload("Nosotros/Cristales-W.png");
         manager.unload("Nosotros/Cristales-G.png");
         manager.unload("Nosotros/Cristales-R.png");

@@ -655,9 +655,12 @@ public class JuegoGS extends Pantalla {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            // Regresar a la pantalla anterior (ACCION)
-            //juego.setScreen(new PantallaPausa(juego));
+            if (escenaPausa == null) {      // Inicialización lazy
+                escenaPausa = new EscenaPausa(vista);
+            }
             estado = EstadoJuego.PAUSADO;
+            // CAMBIAR el procesador de entrada
+            Gdx.input.setInputProcessor(escenaPausa);
         }
 
         if (estado == EstadoJuego.PAUSADO && escenaPausa != null) {
