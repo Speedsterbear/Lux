@@ -55,6 +55,10 @@ public class PantallaNosotros extends Pantalla {
     private Texture texturaCarlos;
     private Texture texturaInicial;
 
+    private Texture texturaD;
+    private Texture texturaI;
+    private Texture texturaA;
+
     //Para crear el El cristal
     private Cristal cristalW;
     private Cristal cristalG;
@@ -85,6 +89,10 @@ public class PantallaNosotros extends Pantalla {
     private Texture texturaRomboPerder;
     private Objeto rombo;
     private final float DY_ROMBO = 10;
+
+    private Objeto flechaD;
+    private Objeto flechaI;
+    private Objeto flechaA;
 
 
 
@@ -121,7 +129,7 @@ public class PantallaNosotros extends Pantalla {
         });
 
         Button btnCreditos = crearBoton("Nosotros/btnFlechaDer_OFF.png", "Nosotros/btnFlechaDer_ON.png");
-        btnCreditos.setPosition(ANCHO-450,150, Align.center);
+        btnCreditos.setPosition(ANCHO-450,ALTO-150, Align.center);
         btnCreditos.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -134,7 +142,7 @@ public class PantallaNosotros extends Pantalla {
         });
 
         Button btnNosotros = crearBoton("Nosotros/btnFlechaIzq_OFF.png", "Nosotros/btnFlechaIzq_ON.png");
-        btnNosotros.setPosition(ANCHO+450,150, Align.center);
+        btnNosotros.setPosition(ANCHO+450,  ALTO-150, Align.center);
         btnNosotros.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -229,6 +237,16 @@ public class PantallaNosotros extends Pantalla {
         texturaCristalC = manager.get("Nosotros/Cristales-C.png");
         cristalC = new Cristal(texturaCristalC,texturafondo.getWidth()/2,texturaCristalC.getHeight()/2,7,1,1/4f,1);
 
+        texturaD = manager.get("Nosotros/flechaColorSolidoDer.png");
+        texturaI= manager.get("Nosotros/flechaColorSolidoIzq.png");
+        texturaA = manager.get("Nosotros/flechaColorSolidoArriba.png");
+
+        flechaD = new Objeto(texturaD,ANCHO-450,ALTO-150);
+        flechaI = new Objeto(texturaI, ANCHO+450,ALTO-150);
+        flechaA = new Objeto(texturaA,2*ANCHO - 100,150);
+
+        flechaD.sprite.setColor(.7f,.7f,.7f,1);
+
         texturaAndrea = manager.get("Nosotros/andrea.png");
         texturaCarlos = manager.get("Nosotros/carlos.png");
         texturaDavid = manager.get("Nosotros/david.png");
@@ -268,6 +286,9 @@ public class PantallaNosotros extends Pantalla {
 
         batch.begin();
         batch.draw(texturafondo,0,0);
+        flechaD.render(batch);
+        flechaA.render(batch);
+        flechaI.render(batch);
         batch.draw(androidImage,75,350);
         batch.draw(tecImage, 25,100);
         batch.draw(mailImage, 75,0);
@@ -381,6 +402,8 @@ public class PantallaNosotros extends Pantalla {
         brilloCentroFrente.actualizar(colorR,colorG,colorB,0.6f);
         // Cambiar color del rombo
         rombo.sprite.setColor(0.8f+(colorR*.2f),0.8f+(colorG*.2f),0.8f+(colorB*.2f),1);
+        flechaI.sprite.setColor(colorR*.7f, colorG*.7f,colorB*.7f,1);
+        flechaA.sprite.setColor(colorR*.7f, colorG*.7f,colorB*.7f,1);
         //rombo.sprite.setColor(colorR,colorG,colorB,1);
 
         brilloHorizontal.actualizar(colorR,colorG,colorB,SCALA_INICIAL-0.2f+((MathUtils.sinDeg(-(angulo-90))*CAMBIO_ESCALA)));

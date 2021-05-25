@@ -136,6 +136,9 @@ public class PantallaCargando extends Pantalla {
         manager.load("Nosotros/btnFlechaIzq_ON.png", Texture.class);
         manager.load("Nosotros/btnFlechaArriba_OFF.png", Texture.class);
         manager.load("Nosotros/btnFlechaArriba_ON.png", Texture.class);
+        manager.load("Nosotros/flechaColorSolidoArriba.png", Texture.class);
+        manager.load("Nosotros/flechaColorSolidoDer.png", Texture.class);
+        manager.load("Nosotros/flechaColorSolidoIzq.png", Texture.class);
         manager.load("Nosotros/Cristales-W.png", Texture.class);
         manager.load("Nosotros/Cristales-G.png", Texture.class);
         manager.load("Nosotros/Cristales-R.png", Texture.class);
