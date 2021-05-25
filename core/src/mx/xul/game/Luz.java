@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import mx.xul.game.Objeto;
-
+// Implementa a luz del final del juego
+// Autor: Carlos Arroyo
 public class Luz extends Objeto {
 
     public Luz(Texture textura, float x, float y){

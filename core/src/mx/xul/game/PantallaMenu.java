@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
+// Pantalla que implementa el menu del juego
+// Autor: Andrea, Carlos y Eduardo
+
 public class PantallaMenu extends Pantalla {
     private Lux juego;
     private Texture texturafondo;
@@ -39,8 +42,6 @@ public class PantallaMenu extends Pantalla {
 
     public PantallaMenu(Lux juego) {
         this.juego=juego;
-
-       // Gdx.app.log("Juego:", String.valueOf(juego));
     }
 
     @Override
@@ -53,7 +54,6 @@ public class PantallaMenu extends Pantalla {
     }
 
     private void crearMenu() {
-
         //Fondo
         texturafondo= new Texture("Menu/fondo.jpg");
 
@@ -105,7 +105,6 @@ public class PantallaMenu extends Pantalla {
         btnNosotros.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLANOSOTROS));
                 isTransicionFadingOut = true;
                 pantallaSiguienteMenu = PantallaSiguienteMenu.ABOUT_US;
             }
@@ -116,7 +115,6 @@ public class PantallaMenu extends Pantalla {
         btnAyuda.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
                 isTransicionFadingOut = true;
                 pantallaSiguienteMenu = PantallaSiguienteMenu.HELP;
             }
@@ -235,7 +233,9 @@ public class PantallaMenu extends Pantalla {
 
     @Override
     public void dispose() {
-
+    texturafondo.dispose();
+    texturaOFF.dispose();
+    texturaON.dispose();
 
     }
 

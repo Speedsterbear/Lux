@@ -57,26 +57,7 @@ public class PantallaCargando extends Pantalla {
         // El objeto que administra los trazos gráficos
         batch = new SpriteBatch();
         crearBarra();
-
-        // Cargar recursos
-        /*
-        texturaCargando = new Texture(Gdx.files.internal("cargando.png"));
-        spriteCargando = new Sprite(texturaCargando);
-        spriteCargando.setPosition(ANCHO / 2 - spriteCargando.getWidth() / 2,
-                ALTO / 2 - spriteCargando.getHeight() / 2);
-         */
-
         cargarRecursosSigPantalla();
-
-        /*
-        cargarRecursosJuego();
-        cargarRecursosAyuda();
-        cargarRecursosGana();
-        cargarRecursosNosotros();
-        cargarRecursosSigPantalla();
-        cargarRecursosHistoria();
-         */
-
     }
 
     private void crearBarra() {
@@ -153,17 +134,6 @@ public class PantallaCargando extends Pantalla {
         manager.load("Nosotros/CasoInicial.png", Texture.class);
     }
 
-   // private void cargarRecursosGana() {
-     //   manager.load("PantallaGanar/mensajeGanar.png", Texture.class);
-       // manager.load("Escenarios/fondo_dia.jpg", Texture.class);
-       // manager.load("Escenarios/dia_atras.png", Texture.class);
-       // manager.load("Escenarios/dia_medio.png", Texture.class);
-       // manager.load("Escenarios/dia_frente.png", Texture.class);
-       // manager.load("Personajes/Lumil_Sprites.png", Texture.class);
-       // manager.load("Utileria/brilloLumil.png", Texture.class);
-       // manager.load("Botones/btnHome_OFF.png", Texture.class);
-        //manager.load("Botones/btnHome_ON.png", Texture.class);
-    //}
 
     private void cargarRecursosAyuda() {
         manager.load("PantallaAyuda/fondoAyuda.jpg", Texture.class);    // Cargar imagen ded fondo
@@ -187,27 +157,6 @@ public class PantallaCargando extends Pantalla {
         manager.load("Menu/clickback.png", Texture.class);
         manager.load("Utileria/brilloLumil.png",Texture.class);
 
-        /*
-        manager.load("PantallaAyuda/btnAyudaHistoriaOFF.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaHistoriaON.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaHijosOFF.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaHijosON.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaLumilOFF.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaLumilON.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaOscuridadOFF.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaOscuridadON.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaPrimariosOFF.png", Texture.class);
-        manager.load("PantallaAyuda/btnAyudaPrimariosON.png", Texture.class);
-
-        manager.load("Botones/LumilB.png", Texture.class);
-        manager.load("Botones/OscuridaB.png", Texture.class);
-        manager.load("Botones/btnhijos.png", Texture.class);
-        manager.load("Botones/PrimariosB.png", Texture.class);
-        manager.load("Menu/buttonback.png", Texture.class);
-        manager.load("Menu/clickback.png", Texture.class);
-        manager.load("Menu/fondo.jpg", Texture.class);
-
-         */
     }
 
     // Carga los recursos a través del administrador de assets (siguiente pantalla)
@@ -303,12 +252,6 @@ public class PantallaCargando extends Pantalla {
     }
 
 
-
-    // private void borrarPantalla() {
-    //  Gdx.gl.glClearColor(0,0,0,0);    // r, g, b, alpha
-    // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    //}
-
     private void actualizar() {
 
         if (manager.update()==false) {
@@ -352,7 +295,6 @@ public class PantallaCargando extends Pantalla {
 
     @Override
     public void dispose() {
-        //texturaCargando.dispose();
         texturaCarga.dispose();
         // Los assets de PantallaJuego se liberan en el método dispose de PantallaJuego
     }

@@ -1,6 +1,7 @@
 package mx.xul.game;
 
-// Autor: Eduardo Alejandro García García
+// Pantalla que implmenta la información de ayuda de enemigos
+// Autor: Eduardo Alejandro García y Carlos Arroyo
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -99,6 +100,9 @@ public class PantallaAyudaHabitantes extends Pantalla {
 
     @Override
     public void dispose() {
-
+        texturaBloque.dispose();
+        texturaFondo.dispose();
+        texturaHijoOscuro.dispose();
+        texturaInfo.dispose();
     }
 }

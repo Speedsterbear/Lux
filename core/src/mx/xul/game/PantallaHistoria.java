@@ -95,12 +95,6 @@ public class PantallaHistoria extends Pantalla {
     //Para el Fade
     private Transicion fadeNegro;
 
-
-
-
-
-
-
     public PantallaHistoria(Lux juego) {
         this.juego=juego;
         manager = juego.getAssetManager();
@@ -137,7 +131,6 @@ public class PantallaHistoria extends Pantalla {
 
         texturaVersoCinco = manager.get("PantallaHistoria/Letras_5.png");
         versoCinco = new Objeto(texturaVersoCinco,posicionXInicialVerso,posicionYInicialVerso);
-
 
         texturaVersoSeis = manager.get("PantallaHistoria/Letras_6.png");
         versoSeis = new Objeto(texturaVersoSeis,posicionXInicialVerso,posicionYInicialVerso);

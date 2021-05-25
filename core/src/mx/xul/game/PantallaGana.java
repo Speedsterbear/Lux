@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 // Clase que implementa la pantalla cuando el jugador gana
-// Autor: Andrea Espinosa Azuela
+// Autor: Carlos, Andrea, David
 
 public class PantallaGana extends Pantalla{
 
@@ -232,15 +232,13 @@ public class PantallaGana extends Pantalla{
 
     @Override
     public void dispose() {
-       // manager.unload("PantallaGanar/mensajeGanar.png");
-       // manager.unload("Escenarios/fondo_dia.jpg");
-       // manager.unload("Escenarios/dia_atras.png");
-       // manager.unload("Escenarios/dia_medio.png");
-       // manager.unload("Escenarios/dia_frente.png");
-       // manager.unload("Personajes/Lumil_Sprites.png");
-        //manager.unload("Utileria/brilloLumil.png");
-        //manager.unload("Botones/btnHome_OFF.png");
-        //manager.unload("Botones/btnHome_ON.png");
+    bosqueAtrasDia.dispose();
+    bosqueFondoDia.dispose();
+    bosqueFrenteDia.dispose();
+    bosqueMedioDia.dispose();
+    texturaBrillo.dispose();
+    texturaLumilJugando.dispose();
+    mensajeGanar.dispose();
     }
 }
 

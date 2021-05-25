@@ -10,7 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-
+// Pantalla que implementa la información de ayuda de la oscuridad
+// Autor: Eduardo Alejandro García y Carlos Arroyo
 public class PantallaAyudaOscuridad extends Pantalla {
     private Lux juego;
     private Texture texturaFondo;
@@ -91,6 +92,8 @@ public class PantallaAyudaOscuridad extends Pantalla {
 
     @Override
     public void dispose() {
-
+        texturaFondo.dispose();
+        texturaInfo.dispose();
+        texturaOscuridad.dispose();
     }
 }

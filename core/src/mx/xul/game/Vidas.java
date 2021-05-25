@@ -3,7 +3,8 @@ package mx.xul.game;
 
 /*
 Representa al conjunto de vidas que tiene el personaje.
-El personaje solo tendrá solamente 3 vidas.
+El personaje solo tendrá  3 vidas.
+Autor: Carlos Uriel Arroyo
  */
 
 import com.badlogic.gdx.graphics.Texture;
@@ -12,21 +13,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Vidas
 {
     // Para las Vidas
-    //Izquierda
+
+    // Vida de hasta la izquierda
     protected LuzVida vidaUno;
 
-    //Centro
+    // Vida que va en medio
     protected LuzVida vidaDos;
 
-    //Derecha
+    // Vida de hasta la derecha
     protected LuzVida vidaTres;
 
     //Contador de la vida
     protected boolean inicial = false; //Se coloca en true luego de que aparecen las tres Vidas iniciales.
 
-
+    // Método que posisiciona las vidas en la pantalla
     public Vidas(Texture textura, float x, float y) {
-
         vidaTres =  new LuzVida(textura,x,y,5,1,1/8f,6);
 
         vidaDos =  new LuzVida(textura,x-(textura.getWidth()*3/10f),y,5,1,1/8f,6);
@@ -35,7 +36,6 @@ public class Vidas
     }
 
     public void vidasRender (int numeroVida, SpriteBatch batch) {
-
         switch (numeroVida){
             case 3:
                 casoInicial(batch);

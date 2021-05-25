@@ -27,7 +27,8 @@ import mx.xul.game.PantallaCargando;
 import mx.xul.game.PantallaGana;
 import mx.xul.game.PantallaMenu;
 import mx.xul.game.Pantallasenum;
-
+// Representa el Splash Screen
+// Autor: Andrea Espinosa Azuela
 public class PantallaBienvenida extends Pantalla {
 
     private Lux juego;

@@ -51,7 +51,7 @@ public class Transicion {
 
     }
 
-    //modifica el valor de Alfa hasta ser 1, por lo tanto sirve para desvanecer a negro
+    // Modifica el valor de Alfa hasta ser 1, por lo tanto sirve para desvanecer a negro
     public void fadeOut(float delta, float fadeDuration) {
 
 
@@ -73,7 +73,7 @@ public class Transicion {
          */
     }
 
-    //modifica el valor de Alfa hasta ser 0, por lo tanto sirve para pasar de un fondo negro a uno con colores
+    // Modifica el valor de Alfa hasta ser 0, por lo tanto sirve para pasar de un fondo negro a uno con colores
     public void fadeIn(float delta, float fadeDuration) {
 
         if (alfaRectangulo>0){
@@ -83,8 +83,5 @@ public class Transicion {
                 isFadeInFinished = true;
             }
         }
-
     }
-
-
 }
