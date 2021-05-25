@@ -1427,6 +1427,11 @@ public class JuegoGS extends Pantalla {
                 barraGS.renderEstatico(camara);
                 barraRS.renderEstatico(camara);
                 barraBS.renderEstatico(camara);
+                if(distanciaRecorridaW<=distanciaBlanco){
+                    distanciaRecorridaW += velocidad *delta;
+                }else if(luz==null){
+                    crearLuz();
+                }
                 if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
                     barraWS.renderEstatico(camara);
                     estado = EstadoJuego.GANA;
