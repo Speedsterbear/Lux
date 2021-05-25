@@ -40,6 +40,7 @@ public class PantallaBienvenida extends Pantalla {
 
     public PantallaBienvenida(Lux lux) {
         this.juego=lux;
+        juego.playMusica();
         texturaLogo= new Texture(Gdx.files.internal("PantallaBienvenida/logo_Lux.jpg"));
         //texturaLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Image image = new Image(texturaLogo);
