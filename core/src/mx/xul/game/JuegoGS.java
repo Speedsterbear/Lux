@@ -20,8 +20,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -29,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import mx.xul.game.pantallaBienvenida.ColoresLumil;
@@ -248,6 +246,7 @@ public class JuegoGS extends Pantalla {
     //Fade a Negro
     private ShapeRenderer rectNegro;
     private float alfaRectanguloNegro = 0;
+    private boolean isQuitPressed = false;
 
     //Sonidos y musica
     private Sound sonidocomeOscuridad;
@@ -497,7 +496,11 @@ public class JuegoGS extends Pantalla {
 
         controlSonidoPrincipal(delta);
 
-        actualizar(delta);
+        if (estado != EstadoJuego.PAUSADO){
+            actualizar(delta);
+
+        }
+
 
 
         //Estado del juego
@@ -638,18 +641,20 @@ public class JuegoGS extends Pantalla {
         //Dibujar barra progreso
         dibujarBarras(delta);
 
-        if (oscuridad.getYaMordio()){
-            fadePerder();
+        if (oscuridad.getYaMordio() || isQuitPressed ){
+            fadeNegro();
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             // Regresar a la pantalla anterior (ACCION)
-            juego.setScreen(new PantallaPausa(juego));
+            //juego.setScreen(new PantallaPausa(juego));
+            estado = EstadoJuego.PAUSADO;
         }
 
         if (estado == EstadoJuego.PAUSADO && escenaPausa != null) {
+            escenaPausa.act();
             escenaPausa.draw();
-        }
+        } else {escenaPausa=null;}
     }
 
     private void controlSonidoPrincipal(float delta) {
@@ -726,7 +731,7 @@ public class JuegoGS extends Pantalla {
 
     }
 
-    private void fadePerder() {
+    private void fadeNegro() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         rectNegro.setProjectionMatrix(camara.combined);
@@ -739,7 +744,11 @@ public class JuegoGS extends Pantalla {
 
         if (alfaRectanguloNegro >= 1){
             sonidoJuego.stop();//Detener por completo el sonido del juego principal de fondo
-            juego.setScreen(new PantallaPerdida(juego));
+            if (estado==EstadoJuego.PIERDE){
+                juego.setScreen(new PantallaPerdida(juego));
+            } else {
+                juego.setScreen(new PantallaMenu(juego));
+            }
         }
 
     }
@@ -1497,12 +1506,15 @@ public class JuegoGS extends Pantalla {
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
                     //sonidoPoderActivado.play();
+                    /*
                     if (escenaPausa == null) {      // Inicialización lazy
                         escenaPausa = new EscenaPausa(vista);
                     }
                     estado = EstadoJuego.PAUSADO;
                     // CAMBIAR el procesador de entrada
                     Gdx.input.setInputProcessor(escenaPausa);
+
+                     */
                 }
 
 
@@ -1624,7 +1636,14 @@ public class JuegoGS extends Pantalla {
                     colorLumil=ColoresLumil.AZUL; //Cambia de color a Lumil
                     powerupActive = false;
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)) {
-                    juego.setScreen(new PantallaPausa(juego));
+
+                    if (escenaPausa == null) {      // Inicialización lazy
+                        escenaPausa = new EscenaPausa(vista);
+                    }
+                    estado = EstadoJuego.PAUSADO;
+                    // CAMBIAR el procesador de entrada
+                    Gdx.input.setInputProcessor(escenaPausa);
+
                 }
             }
 
@@ -1872,35 +1891,138 @@ public class JuegoGS extends Pantalla {
     // La escena que se muestra cuendo el juagador pausa le juego
     private class EscenaPausa extends Stage
     {
+
         private Texture texturaFondo;
 
         public EscenaPausa(Viewport vista) {
             super(vista);       // Pasa la vista al constructor de Stage
             // Imagen de la ventana de pausa
-            texturaFondo = new Texture("personajes/fondoPausa.png");
-            com.badlogic.gdx.scenes.scene2d.ui.Image imgFondo = new Image(texturaFondo);
+            switch (seccion){
+                case VERDE:
+                    texturaFondo = manager.get("Pausa/pausaBlanca.png");
+                    break;
+                case ROJO:
+                    texturaFondo = manager.get("Pausa/pausaVerde.png");
+                    break;
+                case AZUL:
+                    texturaFondo = manager.get("Pausa/pausaRoja.png");
+                    break;
+                case BLANCO:
+                    texturaFondo = manager.get("Pausa/pausaAzul.png");
+                    break;
+            }
+            //texturaFondo = new Texture("personajes/fondoPausa.png");
+            final com.badlogic.gdx.scenes.scene2d.ui.Image imgFondo = new Image(texturaFondo);
             imgFondo.setPosition(ANCHO/2, ALTO/2, Align.center);
             addActor(imgFondo);
+
+            imgFondo.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
+
             // Botón para continuar
-            Texture texturaBtn = new Texture("Botones/pausa_ON.png");
+            /*
+            Texture texturaBtn = new Texture("Pausa/btnResume_OFF","Pausa/btnResume_ON");
             TextureRegionDrawable trd = new TextureRegionDrawable(texturaBtn);
             // Agregar la imagen inversa (presionada)
-            Button btn = new Button(trd);
+            final Button btn = new Button(trd);
+
+             */
+
+            //Boton Quit
+            final Button btnQuit = crearBoton("Pausa/btnQuit_OFF.png","Pausa/btnQuit_ON.png");
+            btnQuit.setPosition(ANCHO-350, 320, Align.center);
+            addActor(btnQuit);
+            btnQuit.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
+
+            //Boton Resume
+            final Button btn = crearBoton("Pausa/btnResume_OFF.png","Pausa/btnResume_ON.png");
+            btn.setPosition(350, 320, Align.center);
             addActor(btn);
-            btn.setPosition(ANCHO/2, 0.3f*ALTO, Align.center);
+            btn.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
             // Agregar el listener del botón
             btn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     // QUITAR LA PAUSA
-                    if ( estado==EstadoJuego.PAUSADO ) {       // No es necesario
+                    // No es necesario
+                        imgFondo.addAction(Actions.fadeOut(0.6f));
+                        btnQuit.addAction(Actions.fadeOut(0.6f));
+                        //btn.addAction(Actions.fadeOut(1f));
+                        btn.addAction(Actions.sequence(Actions.fadeOut(0.6f),Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    botonPausa.inactive();
+                                    estado = EstadoJuego.JUGANDO;
+                                    Gdx.input.setInputProcessor(procesadorEntrada);
+                                    //escenaPausa.dispose();
+                                }
+                            })
+                    ));
+
+
+                        /*
+                        if (isFadeFinished){
+                            estado = EstadoJuego.JUGANDO;
+                            Gdx.input.setInputProcessor(procesadorEntrada);
+                            escenaPausa=null;
+                        }
+
+                         */
+                        /*
+                        btn.addAction(Actions.sequence(Actions.fadeOut(1),Actions.run(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        estado = EstadoJuego.JUGANDO;
+                                        Gdx.input.setInputProcessor(procesadorEntrada);
+                                        //escenaPausa=null;
+
+                                    }
+                                })
+                        ));
+
+                         */
+
+
+
+                        //estado= EstadoJuego.JUGANDO;
+                        //escenaPausa=null;
+                       // Gdx.input.setInputProcessor(procesadorEntrada);;
+                        /*
                         estado= EstadoJuego.JUGANDO;
+                        escenaPausa=null;
                         Gdx.input.setInputProcessor(procesadorEntrada);
+
+
+                         */
                         // No es necesario hacer la escenaPausa NULL
-                    }
+
                 }
             } );
+
+            btnQuit.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    // QUITAR LA PAUSA
+                    // No es necesario
+                    imgFondo.addAction(Actions.fadeOut(0.2f));
+                    btn.addAction(Actions.fadeOut(0.2f));
+                    btnQuit.addAction(Actions.sequence(Actions.fadeOut(0.2f),Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    isQuitPressed = true;
+                                    botonPausa.inactive();
+                                    //estado = EstadoJuego.JUGANDO;
+                                    //Gdx.input.setInputProcessor(procesadorEntrada);
+                                    //escenaPausa.dispose();
+                                }
+                            })
+                    ));
+                }
+            } );
+
+
+
         }
     }
 
