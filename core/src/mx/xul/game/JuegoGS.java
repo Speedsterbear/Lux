@@ -1079,7 +1079,7 @@ public class JuegoGS extends Pantalla {
     }
 
     private boolean luzPierde(){
-        if(luz.sprite.getX()<(0)) {
+        if(luz != null && luz.sprite.getX()<(0)) {
             return true;
         }
         return false;
@@ -1387,11 +1387,11 @@ public class JuegoGS extends Pantalla {
                 }else if(luz==null){
                     crearLuz();
                 }
-                if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
-                    barraWS.renderEstatico(camara);
-                    estado = EstadoJuego.GANA;
+               // if (distanciaRecorridaW>=velocidadBlanco*duracionBlanco){
+                   // barraWS.renderEstatico(camara);
+                   // estado = EstadoJuego.GANA;
                     //System.out.println("GANASTE!");
-                }else{barraWS.renderAvance(distanciaRecorridaW,camara);}
+                barraWS.renderAvance(distanciaRecorridaW,camara);
                 break;
         }
     }
