@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+// Autor: Andrea Espinosa Azuela
+
 public abstract class Pantalla implements Screen {
     // Atributos disponibles en todas las clases del proyecto
     public static final float ANCHO = 1280;

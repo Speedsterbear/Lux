@@ -1,6 +1,6 @@
 package mx.xul.game;
-
-// Autores: Eduardo Alejandro García García A01338772 y Carlos Uriel Arroyo Herrera
+// Pantalla que implmenta el menu de ayuda
+// Autor: Eduardo Alejandro García y Carlos Arroyo
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
@@ -83,38 +83,6 @@ public class PantallaAyuda extends Pantalla {
         manager = juego.getAssetManager();
     }
 
-    /*
-    private void crearAyuda(){
-        texturafondo= new Texture("Menu/Fondo_Montana.jpg");
-        escenaMenu=new Stage(vista);
-        help= new Sprite(new Texture("Menu/clickayuda.png"));
-        help.setPosition(ANCHO/2-help.getWidth(),ALTO/2-help.getHeight());
-        help.setSize(794,454);
-
-        Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
-        btnRegresar.setPosition(160,ALTO-80, Align.center);
-        btnRegresar.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Juego
-                juego.setScreen(new PantallaMenu(juego));
-            }
-        });
-
-        escenaMenu.addActor(btnRegresar);
-        Gdx.input.setInputProcessor(escenaMenu);
-    }
-     */
-
-    // Carga los recursos a través del administrador de assets
-    //private void cargarRecursos() {
-        // Cargar las texturas/mapas
-       // AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
-
-
-        // Se bloquea hasta que cargue todos los recursos
-        //assetManager.finishLoading();
-   // }
 
     private Button crearBoton(String archivo, String archivoclick) {
         // Texture texturaBoton = new Texture("Personajes/Lumil.png");
@@ -129,17 +97,15 @@ public class PantallaAyuda extends Pantalla {
 
     @Override
     public void show() {
-        //texturafondo = manager.get("Menu/fondo.jpg");
         crearAyuda();
         crearVisuales();
         crearEstrellas();
-        //cargarRecursos();
+
         // Bloquear la tecla de back
         Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
     private void crearEstrellas() {
-
         arrEstrellas = new Array<>();
         texturaEstrella =manager.get("Utileria/brilloLumil.png");
         for (int  i=0; i<=35; i++){
@@ -158,7 +124,6 @@ public class PantallaAyuda extends Pantalla {
     private void crearVisuales() {
         //Normal
         texturaLineas = manager.get("PantallaAyuda/ayudaLineas.png");
-
 
         //Lumil
         texturaLumil = manager.get("PantallaAyuda/ayudaLumil.png");
@@ -456,14 +421,6 @@ public class PantallaAyuda extends Pantalla {
 
     @Override
     public void dispose() {
-        // Los assets se liberan a través del assetManager
-        //manager.unload("Menu/Fondo_Montana.jpg");
-        //manager.unload("Botones/LumilB.png");
-        //manager.unload("Botones/OscuridaB.png");
-        //manager.unload("Botones/btnhijos.png");
-        //manager.unload("Botones/PrimariosB.png");
-        //manager.unload("Menu/buttonback.png");
-        //manager.unload("Menu/clickback.png");
 
         manager.unload("PantallaAyuda/fondoAyuda.jpg");
         manager.unload("PantallaAyuda/ayudaHijosOscuridad.png");

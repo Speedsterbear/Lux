@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+// Clase del personaje primario azul
+// Autor: Carlos Uriel Arroyo
+
 public class Shiblu extends Objeto {
 
     public Shiblu(Texture textura, float x, float y){

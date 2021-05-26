@@ -1,6 +1,5 @@
 package mx.xul.game;
 
-
 /*
 Representa objetos en el juego (Personajes, enemigos, etc..)
 Es particularmente para los no animados

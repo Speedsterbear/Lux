@@ -1,5 +1,6 @@
 package mx.xul.game;
-// ESTA ES UNA PRUEBA DE HACER PUSH :)
+// // Administra la carga de los assets del juego
+// Autor: Ricardo Solis y Carlos Arroyo
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import mx.xul.game.pantallaBienvenida.PantallaBienvenida;
 
 public class Lux extends Game {
-	// Administra la carga de los assets del juego
 
 	//Musica
 	private Music musicaPantallasSecundarias;

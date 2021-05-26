@@ -138,7 +138,6 @@ public class PantallaPerdida extends Pantalla{
         borrarPantalla(0,0,0);
         actualizar(delta);
 
-
         // Para controlar la tecla de Atras del telefono
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             // Regresar a la pantalla anterior (ACCION)
@@ -200,7 +199,6 @@ public class PantallaPerdida extends Pantalla{
     }
 
     private void actualizaTransicion(float delta) {
-
         switch (estadoPantalla){
             case MISMA_PANTALLA:
                 fadeNegro.fadeIn(delta,DURACION_FADE);
@@ -250,7 +248,10 @@ public class PantallaPerdida extends Pantalla{
 
     @Override
     public void dispose() {
-
+     texturaBrillo.dispose();
+     texturaCristalPerder.dispose();
+     texturaFondo.dispose();
+     texturaHumo.dispose();
     }
 
     //Mientras no se oprima algun botón, el estado es misma_pantalla, los otros estados son para cada botón.

@@ -3,6 +3,9 @@ package mx.xul.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+// Pantalla que implmenta la oscuridad
+// Autor: Ricardo Solis y Carlos Arroyo
+
 public class Oscuridad extends ObjetoAnimado
 {
 

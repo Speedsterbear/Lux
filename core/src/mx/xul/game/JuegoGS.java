@@ -257,6 +257,7 @@ public class JuegoGS extends Pantalla {
     private Texture texturaPausaON;//Botón de Regreso
     private Texture texturaPausaOFF;
 
+
     //Fade a Negro
     private ShapeRenderer rectNegro;
     private float alfaRectanguloNegro = 0;
@@ -281,7 +282,6 @@ public class JuegoGS extends Pantalla {
     private final float VALOR_MAXIMO_PITCH=1.09f;
     private final float VOLUMEN_MAXIMO_SONIDOJUEGO = 0.5f;
     private final float TIEMPO_FADE_SONIDOJUEGO = 10; //Tiempo que tarda en realizar los fade in y out.
-    private boolean musicaON = true;
 
     //private float valPitch =1;
     //private boolean bolPitch=false;
@@ -610,6 +610,7 @@ public class JuegoGS extends Pantalla {
         gemaAzul.render(batch);
 
         botonPausa.render(batch);
+
         /* Codigo Antiguo de Gemas
 
         if (boolAzul ==true) {

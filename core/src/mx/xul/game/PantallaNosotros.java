@@ -27,9 +27,9 @@ public class PantallaNosotros extends Pantalla {
 
     private Texture androidImage;
 
-    private  Texture tecImage;
+    private Texture tecImage;
 
-    private  Texture mailImage;
+    private Texture mailImage;
     //Para controlar el movimiento de las pantallas
     private int mover = 0;
     private float avancePantalla = 20;
@@ -101,27 +101,18 @@ public class PantallaNosotros extends Pantalla {
         manager = juego.getAssetManager();
     }
     private void crearNosotros(){
-
         androidImage= manager.get("Nosotros/Androidst.png");
-
         tecImage = manager.get("Nosotros/tecst.png");
-
         texturafondo= manager.get("Nosotros/fondoAbout.jpg");
-
         mailImage = manager.get("Nosotros/mailst.png");
-
-        //texturaUs = new   Texture("");
         escenaMenu=new Stage(vista);
-        //aboutus= new Sprite(new Texture("Menu/clicknosotros.png"));
-        //aboutus.setPosition(ANCHO/2-aboutus.getWidth(),ALTO/2-aboutus.getHeight());
-        //aboutus.setSize(1190,454);
 
         Button btnRegresar = crearBoton("Menu/buttonback.png", "Menu/clickback.png");
         btnRegresar.setPosition(160,ALTO-80, Align.center);
         btnRegresar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Cambiar de pantalla a Juego
+                // Cambiar de pantalla a Menu
                 juego.setScreen(new PantallaMenu(juego));
 
 
@@ -155,7 +146,6 @@ public class PantallaNosotros extends Pantalla {
             }
         });
 
-        //Probar El Cambio de color no se va usar
 
         Button btnC = crearBoton("Nosotros/btnFlechaArriba_OFF.png", "Nosotros/btnFlechaArriba_ON.png");
         btnC.setPosition(2*ANCHO - 100,150, Align.center);
@@ -185,8 +175,6 @@ public class PantallaNosotros extends Pantalla {
         crearNosotros();
         crearCristales();
         crearRombo();
-        //cargarRecursos();
-        // Bloquear la tecla de back
         Gdx.input.setCatchKey(Input.Keys.BACK,true);
     }
 
@@ -209,16 +197,7 @@ public class PantallaNosotros extends Pantalla {
 
     }
 
-    //private void cargarRecursos() {
-        // Cargar las texturas/mapas
-        //AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
-
-        // Se bloquea hasta que cargue todos los recursos
-        //assetManager.finishLoading();
-    //}
-
     private void crearCristales() {
-
         texturaCristalW = manager.get("Nosotros/Cristales-W.png");
         cristalW = new Cristal(texturaCristalW,texturafondo.getWidth()/2,texturaCristalW.getHeight()/2,7,1,1/4f,1);
 
@@ -257,7 +236,6 @@ public class PantallaNosotros extends Pantalla {
     }
 
     private Button crearBoton(String archivo, String archivoclick) {
-       // Texture texturaBoton=new Texture(archivo);
         Texture texturaBoton= manager.get(archivo);
         TextureRegionDrawable trdBtnRunner=new TextureRegionDrawable(texturaBoton);
 
@@ -293,10 +271,9 @@ public class PantallaNosotros extends Pantalla {
         batch.draw(tecImage, 25,100);
         batch.draw(mailImage, 75,0);
 
-        //aboutus.draw(batch);
         dibujarCristales();
 
-        dibujarBtillo();
+        dibujarBrillo();
 
         batch.end();
 
@@ -308,10 +285,9 @@ public class PantallaNosotros extends Pantalla {
         brilloCentro.mover((5*ALTO/8)+((MathUtils.sinDeg(angulo)*DY_ROMBO)));
         brilloCentroMedio.mover((5*ALTO/8)+((MathUtils.sinDeg(angulo)*DY_ROMBO)));
         brilloCentroFrente.mover((5*ALTO/8)+((MathUtils.sinDeg(angulo)*DY_ROMBO)));
-
     }
 
-    private void dibujarBtillo() {
+    private void dibujarBrillo() {
 
         if (angulo>=90 && angulo <180) {
             brilloHorizontal.render(batch);
@@ -446,17 +422,12 @@ public class PantallaNosotros extends Pantalla {
             case 5:
                 cristalB.animationRender(batch, Tiempo);
                 batch.draw(texturaRicardo,ANCHO*3/2-400,ALTO/2-250);
-
-
-
                 break;
             default :
                 cristalW.animationRender(batch, Tiempo);
                 break;
         }
-
     }
-    //Case3 Carlos
 
     private void recorrerPantalla() {
         //Si se oprimen los botones para deslizar la pantalla comienza a cambiar la posición
@@ -464,17 +435,13 @@ public class PantallaNosotros extends Pantalla {
 
             if (mover==1){
                 if (camara.position.x <ANCHO*1.5f) {
-
                     camara.position.x += avancePantalla;
                 } else {mover=0;}
             } else {
                 if (camara.position.x >ANCHO/2) {
-
                     camara.position.x -= avancePantalla;
                 } else {mover=0;}
             }
-
-
             camara.update();
         }
     }

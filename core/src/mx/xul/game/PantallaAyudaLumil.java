@@ -1,6 +1,7 @@
 package mx.xul.game;
 
-// Autor: Eduardo Alejnadro García García
+// Pantalla que implementa la información de ayuda de los colores primarios
+// Autor: Eduardo Alejandro García y Carlos Arroyo
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -123,6 +124,9 @@ public class PantallaAyudaLumil extends Pantalla {
 
     @Override
     public void dispose() {
-
+        texturaBrillo.dispose();
+        texturaFondo.dispose();
+        texturaInfo.dispose();
+        textureLumil.dispose();
     }
 }

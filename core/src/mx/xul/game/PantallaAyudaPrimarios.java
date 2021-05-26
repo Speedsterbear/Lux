@@ -1,6 +1,6 @@
 package mx.xul.game;
-
-// Autor: Eduardo Alejandro García Grac
+// Pantalla que implementa la información de ayuda de los colores primarios
+// Autor: Eduardo Alejandro García y Carlos Arroyo
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -257,7 +257,14 @@ public class PantallaAyudaPrimarios extends Pantalla {
 
     @Override
     public void dispose() {
-
+    texturaFondo.dispose();
+    texturaInfo.dispose();
+    texturaInfoEsgrun.dispose();
+    texturaInfoRojel.dispose();
+    texturaInfoShiblu.dispose();
+    textureEsgrun.dispose();
+    textureRojel.dispose();
+    texturaShiblu.dispose();
     }
 
     private enum MostrarPrimario
