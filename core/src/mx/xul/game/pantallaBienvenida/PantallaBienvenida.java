@@ -80,8 +80,8 @@ public class PantallaBienvenida extends Pantalla {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stageLogo.act();
-        stageLogo.draw();
+       stageLogo.act();
+       stageLogo.draw();
     }
 
     @Override
