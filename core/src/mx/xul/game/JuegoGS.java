@@ -1,8 +1,8 @@
 package mx.xul.game;
 
 /*
-Esta clase representa la sección verde (Green Section) del juego, por eso se llama GS
-Autor: Carlos Arroyo.
+Esta clase representa el juego
+Autor: Carlos Arroyo - Ricardo Solis - Andrea Espinosa
  */
 
 import com.badlogic.gdx.Gdx;
@@ -257,7 +257,6 @@ public class JuegoGS extends Pantalla {
     private Texture texturaPausaON;//Botón de Regreso
     private Texture texturaPausaOFF;
 
-
     //Fade a Negro
     private ShapeRenderer rectNegro;
     private float alfaRectanguloNegro = 0;
@@ -283,8 +282,6 @@ public class JuegoGS extends Pantalla {
     private final float VOLUMEN_MAXIMO_SONIDOJUEGO = 0.5f;
     private final float TIEMPO_FADE_SONIDOJUEGO = 10; //Tiempo que tarda en realizar los fade in y out.
 
-    //private float valPitch =1;
-    //private boolean bolPitch=false;
 
 
     public JuegoGS (Lux juego) {
@@ -312,18 +309,8 @@ public class JuegoGS extends Pantalla {
         // Bloquear la tecla de back
         Gdx.input.setCatchKey(Input.Keys.BACK,true);
 
-
-
         procesadorEntrada = new ProcesadorEntrada();
         Gdx.input.setInputProcessor(procesadorEntrada);
-
-
-        //Escena y Botón
-        //escenaJuego=new Stage(vista);
-
-
-        // escenaJuego.addActor(btnRegresar);
-        //Gdx.input.setInputProcessor(escenaJuego);
 
         //Ahora la misma pantalla RECIBE y PROCESA los eventos
         Gdx.input.setInputProcessor( new ProcesadorEntrada());
@@ -363,30 +350,25 @@ public class JuegoGS extends Pantalla {
     }
 
     private void crearBotones() {
-
         //Gema Verde
         texturaGemaVerdeON= manager.get("BotonesGemas/gemaVerde_ON.png");
         texturaGemaVerdeOFF = manager.get("BotonesGemas/gemaVerde_OFF.png");
         gemaVerde = new Boton(texturaGemaVerdeOFF,texturaGemaVerdeON,margen+(texturaGemaVerdeOFF.getWidth()/2),margen+(texturaGemaVerdeOFF.getHeight()/2));
         gemaVerde.boton.sprite.setAlpha(0);
-
         //Gema Roja
         texturaGemaRojaON = manager.get("BotonesGemas/gemaRoja_ON.png");
         texturaGemaRojaOFF = manager.get("BotonesGemas/gemaRoja_OFF.png");
         gemaRoja = new Boton(texturaGemaRojaOFF, texturaGemaRojaON,margen+(3*texturaGemaRojaOFF.getWidth()/2),margen+(texturaGemaRojaOFF.getHeight()/2));
         gemaRoja.boton.sprite.setAlpha(0);
-
         //Gema Azul
         texturaGemaAzulON =manager.get("BotonesGemas/gemaAzul_ON.png");
         texturaGemaAzulOFF = manager.get("BotonesGemas/gemaAzul_OFF.png");
         gemaAzul = new Boton(texturaGemaAzulOFF, texturaGemaAzulON,margen+(texturaGemaVerdeOFF.getWidth()),(3*texturaGemaVerdeOFF.getHeight()/2)-10);
         gemaAzul.boton.sprite.setAlpha(0);
-
         //Boton Pausa
         texturaPausaON = manager.get("Botones/pausa_ON.png");
         texturaPausaOFF = manager.get("Botones/pausa_OFF.png");
         botonPausa = new Boton(texturaPausaOFF,texturaPausaON,margen+(texturaGemaVerdeOFF.getWidth()),ALTO-(margen/2) -(texturaPausaOFF.getHeight()/2));
-
     }
 
     private void crearBarra() {
@@ -589,19 +571,6 @@ public class JuegoGS extends Pantalla {
         // Dibuja el marcador
         //texto.mostrarMensaje(batch, "SCORE", ANCHO / 2, ALTO - 25);
 
-        //Botones
-        //escenaJuego.draw();
-
-        /* Cidogo Antiguo
-
-        // Dibujar back
-        if (boolBack == true){
-            batch.draw(texturaPausaOFF,margen-20,ALTO-margen- texturaPausaOFF.getHeight()+20);
-        }else {
-            batch.draw(texturaPausaON,margen-20,ALTO-margen- texturaPausaON.getHeight()+20);
-        }
-
-         */
 
         // Dibujar gemas
 
@@ -611,25 +580,6 @@ public class JuegoGS extends Pantalla {
 
         botonPausa.render(batch);
 
-        /* Codigo Antiguo de Gemas
-
-        if (boolAzul ==true) {
-            batch.draw(texturaGemaAzul, margen+(texturaGemaAzul.getWidth()/2), texturaGemaVerdeOFF.getHeight());
-        }else{
-            batch.draw(texturaGemaAzulOn, margen+(texturaGemaAzul.getWidth()/2), texturaGemaVerdeOFF.getHeight());
-        }
-       if (boolRojo == true) {
-           batch.draw(texturaGemaRoja, texturaGemaRoja.getWidth()+margen, margen);
-       }else{
-           batch.draw(texturaGemaRojaOn, texturaGemaRojaOn.getWidth()+margen, margen);
-       }
-       if (boolVerde == true){
-           batch.draw(texturaGemaVerdeON,margen,margen);
-       }else{
-           batch.draw(texturaGemaVerdeOFF,margen,margen);
-       }
-
-         */
 
         //Dibujar vidas
         vidas.vidasRender(contadorVidas, batch);
@@ -704,12 +654,7 @@ public class JuegoGS extends Pantalla {
             }
 
             sonidoJuego.setPitch(idSonidoJuego,valorPitch); //asignar el nuevo valor del pitch
-
-
-
         }
-
-
     }
 
     private void sonidoPricipalFadeOut(float delta) {
@@ -723,9 +668,7 @@ public class JuegoGS extends Pantalla {
                 isSonidoJuegoFadingOut=false;
             }
             sonidoJuego.setVolume(idSonidoJuego,volumenSonidoPrincipal);//Asignar el nuevo valor de volumen.
-
         }
-
     }
 
     private void sonidoPrincipalFadeIn(float delta) {
@@ -1353,7 +1296,6 @@ public class JuegoGS extends Pantalla {
     }
 
     private void powerUpGemaRoja(){
-
         timerPowerUpGemaRoja += Gdx.graphics.getDeltaTime();
         //colorLumil = ColoresLumil.ROJO;
         if(timerPowerUpGemaRoja >= tiempoParaPowerUpGemaRoja){

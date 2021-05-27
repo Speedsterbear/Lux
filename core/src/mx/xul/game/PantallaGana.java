@@ -49,6 +49,9 @@ public class PantallaGana extends Pantalla{
     //Mensaje Victoria
     private Texture mensajeGanar; //Textura que muestra el mensaje de que se ganó el juego
 
+    // Texto
+    private Texto texto; //Muestra los valores en la pantalla
+
     // AssetManager
    // private AssetManager manager;
 
@@ -75,8 +78,13 @@ public class PantallaGana extends Pantalla{
         crearBrillo();
         crearRectangulo();
         crearMensaje();
+        crearTexto();
         // Bloquear la tecla de back
         Gdx.input.setCatchKey(Input.Keys.BACK,true);
+    }
+
+    private void crearTexto() {
+        texto = new Texto();
     }
 
     private void crearMensaje() {
@@ -119,7 +127,7 @@ public class PantallaGana extends Pantalla{
         escenaGana = new Stage(vista);
 
         Button btnExit = crearBoton("Botones/btnHome_OFF.png","Botones/btnHome_ON.png");
-        btnExit.setPosition(3*ANCHO/4, 160, Align.center);
+        btnExit.setPosition((ANCHO/2)+207.5f, 160, Align.center);
         escenaGana.addActor(btnExit);
         btnExit.addListener(new ClickListener() {
             @Override
@@ -154,6 +162,11 @@ public class PantallaGana extends Pantalla{
 
         //Dibujar Mensjae de Ganar
         batch.draw(mensajeGanar,ANCHO/2,0);
+
+        //Mostrar Tiempo Usado
+        //System.out.println(Float.toString(tiempoLumil));
+        texto.mostrarMensaje(batch,"TIME SPENT",(ANCHO/2)+420f, 70 + (210*2/3f));
+        texto.mostrarMensaje(batch,juego.getCuentaSegundos(),(ANCHO/2)+420f, 70 + (210/3));
 
         batch.end();
 

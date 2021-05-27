@@ -61,6 +61,7 @@ public class PantallaBienvenida extends Pantalla {
                     @Override
                     public void run() {
                         ((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaMenu(juego));
+                        //((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaGana(juego));
                         //((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaCargando(juego, Pantallasenum.PANTALLAHISTORIA));
                     }
                 })

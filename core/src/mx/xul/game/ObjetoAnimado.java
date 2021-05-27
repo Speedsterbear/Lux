@@ -6,6 +6,7 @@ puede usarse tanto para los animados como para los no animados
 Autor: Carlos Uriel Arroyo Herrera
  */
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -94,12 +95,14 @@ public class ObjetoAnimado extends Actor {
         float Y = sprite.getY();
         float scaleX = sprite.getScaleX();
         float scaleY = sprite.getScaleY();
+        float alfa = sprite.getColor().a;
 
         frameActual = (TextureRegion) animation.getKeyFrame(tiempo);
         sprite = new Sprite(frameActual);
         sprite.setPosition(X,Y);
         sprite.setRotation(Deg);
         sprite.setScale(scaleX,scaleY);
+        sprite.setAlpha(alfa);
         sprite.draw(batch);
 
     }

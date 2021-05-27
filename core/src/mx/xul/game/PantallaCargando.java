@@ -161,6 +161,10 @@ public class PantallaCargando extends Pantalla {
 
     // Carga los recursos a través del administrador de assets (siguiente pantalla)
     private void cargarRecursosJuego() {
+        manager.load("Escenarios/efectoAzulAtras.png", Texture.class);
+        manager.load("Escenarios/efectoAzulFrente.png", Texture.class);
+        manager.load("Escenarios/efectoRojoAtras.png", Texture.class);
+        manager.load("Escenarios/efectoRojoFrente.png", Texture.class);
         manager.load("Pausa/pausaBlanca.png", Texture.class);
         manager.load("Pausa/pausaVerde.png", Texture.class);
         manager.load("Pausa/pausaRoja.png", Texture.class);
@@ -184,7 +188,7 @@ public class PantallaCargando extends Pantalla {
         manager.load("Utileria/atrasBarraAvance.png", Texture.class);
         manager.load("Utileria/brilloLumil.png", Texture.class);
         manager.load("Utileria/vida.png", Texture.class);
-        manager.load("Personajes/Lumil_Sprites.png", Texture.class);
+        manager.load("Personajes/LumilJuego.png", Texture.class);
         manager.load("Personajes/lumilG.png", Texture.class);
         manager.load("Personajes/lumilR.png", Texture.class);
         manager.load("Personajes/lumilB.png", Texture.class);
@@ -199,9 +203,10 @@ public class PantallaCargando extends Pantalla {
         manager.load("Sonidos/sonidoPoderActivado.wav", Sound.class);
         manager.load("Sonidos/sonidoquitavidas.wav", Sound.class);
         manager.load("Sonidos/sonidoTocaLuzBlanca.wav", Sound.class);
-        manager.load("Sonidos/musicaJuego.mp3", Music.class);
+       // manager.load("Sonidos/JugarLoop.mp3", Music.class);
         manager.load("Sonidos/musicaJugar.ogg",Sound.class);
         manager.load("Sonidos/JugarLoop.mp3",Sound.class);
+        manager.load("Sonidos/musicaMenuLoop.mp3",Sound.class);
     }
 
     @Override
