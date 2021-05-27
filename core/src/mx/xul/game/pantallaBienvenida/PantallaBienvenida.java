@@ -2,6 +2,7 @@ package mx.xul.game.pantallaBienvenida;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -41,7 +42,13 @@ public class PantallaBienvenida extends Pantalla {
 
     public PantallaBienvenida(Lux lux) {
         this.juego=lux;
-        juego.playMusica();
+        Preferences prefs = Gdx.app.getPreferences("MusicPrefernce");
+        boolean musicaON = prefs.getBoolean("musicON", true);
+        System.out.println("musica ON " + musicaON);
+        // Si el valo leído es musica prendida entonces se ejecuta...
+        if (musicaON == true){
+            juego.playMusica();
+        }
         texturaLogo= new Texture(Gdx.files.internal("PantallaBienvenida/logo_Lux.jpg"));
         //texturaLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Image image = new Image(texturaLogo);

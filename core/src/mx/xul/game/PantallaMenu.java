@@ -2,6 +2,7 @@ package mx.xul.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -62,8 +63,13 @@ public class PantallaMenu extends Pantalla {
 
         //Musica
        // Leer de las preferencias si la musica quedo prendida o apagada
+        Preferences prefs = Gdx.app.getPreferences("MusicPrefernce");
+        musicaON = prefs.getBoolean("musicON", true);
+        System.out.println("musica ON " + musicaON);
         // Si el valo leído es musica prendida entonces se ejecuta...
-        juego.playMusica();
+        if (musicaON == true){
+            juego.playMusica();
+        }
         /*
 
         musicaPantallasSecundarias = Gdx.audio.newMusic(Gdx.files.internal("Sonidos/musicaPantallasSecundarias.ogg"));
@@ -126,10 +132,17 @@ public class PantallaMenu extends Pantalla {
         TextureRegionDrawable trdOFF =  new TextureRegionDrawable(texturaOFF);
 
         Button.ButtonStyle estiloON = new Button.ButtonStyle(trdON, trdOFF, trdOFF);
-        // Button.ButtonStyle estiloOFF = new Button.ButtonStyle(trdOFF, trdON, trdON);
+        Button.ButtonStyle estiloOFF = new Button.ButtonStyle(trdOFF, trdON, trdON);
 
-        final Button btnVolumen = crearBoton("Botones/VolumeON.png", "Botones/VolumeOFF.png");
-        btnVolumen.setStyle(estiloON);
+        Button btnVolumen = crearBoton("Botones/VolumeON.png", "Botones/VolumeOFF.png");
+        prefs = Gdx.app.getPreferences("MusicPrefernce");
+        musicaON = prefs.getBoolean("musicON", true);
+        if (musicaON == false){
+          btnVolumen.setStyle(estiloOFF);
+          System.out.println("Estilo OFF");
+        }else {
+            btnVolumen.setStyle(estiloON);
+        }
         btnVolumen.setPosition(9.7f*ANCHO/10.2f, ALTO/1.1f, Align.center);
         btnVolumen.addListener(new ClickListener(){
             @Override
@@ -137,12 +150,18 @@ public class PantallaMenu extends Pantalla {
                 //juego.setScreen(new PantallaCargando(juego,Pantallasenum.PANTALLAAYUDA));
                 // isTransicionFadingOut = true;
                 // pantallaSiguienteMenu = PantallaSiguienteMenu.HELP;
-                if (musicaON == true){ // Si la musica esta prendida
+                Preferences prefs = Gdx.app.getPreferences("MusicPrefernce");
+                musicaON = prefs.getBoolean("musicON", true);
+                if (musicaON){ // Si la musica esta prendida
+                    prefs.putBoolean("musicON", false);
+                    prefs.flush();
                     juego.stopMusica();
-                    musicaON = false;
+                    // musicaON = false;
                 }else { // La musica esta apagada
+                    prefs.putBoolean("musicON", true);
+                    prefs.flush();
                     juego.playMusica();
-                    musicaON = true;
+                    // musicaON = true;
 
                 }
                 // Guardar en las preferencias la variable musicaON
