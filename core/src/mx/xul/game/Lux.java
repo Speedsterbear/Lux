@@ -19,6 +19,7 @@ public class Lux extends Game {
 	private Music musicaPantallasSecundariasIntro;
 	private final float VOLUMEN_DESEADO = 0.7f;
 	private float volumenMusica=VOLUMEN_DESEADO;
+	private float tiempoJugando =0;// Acumulador para saber cuanto tiempo se tardó pasar el juego.
 
 	private final AssetManager assetManager = new AssetManager();
 
@@ -69,6 +70,19 @@ public class Lux extends Game {
 
 		musicaPantallasSecundarias.stop();
 		musicaPantallasSecundariasIntro.stop();
+	}
+
+	public void inicializarCuentaSegundos(){
+		tiempoJugando =0;
+	}
+
+	public void incrementarCuentaSegundos(float delta){
+		tiempoJugando +=delta;
+	}
+
+	public String getCuentaSegundos(){
+		//String string = Float.toString(tiempoJugando);;
+		return String.format("%.2f",tiempoJugando);
 	}
 
 	// Método accesor de assetManager

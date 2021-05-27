@@ -105,6 +105,36 @@ public class JuegoGS extends Pantalla {
     private Texture bosquefrente;
     private FondoEnMovimiento bosque;
 
+    private Texture bosqueCapaCero;
+    private Texture bosqueCapaUno;
+    private Texture bosqueCapaDos;
+    private Texture bosqueCapaTresSimple;
+    private Texture bosqueCapaTresCompleta;
+    private Texture bosqueCapaCuatroSimple;
+    private Texture bosqueCapaCuatroCompleta;
+    private Texture bosqueCapaEstatica;
+    private FondoParallax bosqueParallax;
+
+    private Texture bosqueCapaFrente;
+    private Texture bosqueCapaFrenteVerde;
+
+    private Texture nubeFondo;
+    private Texture texturaLuna;
+    private Objeto luna;
+
+    private Texture texturaEfectoAzulFrente;
+    private Texture texturaEfectoAzulAtras;
+    private Texture texturaEfectoRojoFrente;
+    private Texture texturaEfectoRojoAtras;
+
+    private Objeto efectoAzulFrente;
+    private Objeto efectoAzulAtras;
+    private Objeto efectoRojoFrente;
+    private Objeto efectoRojoAtras;
+
+    //Estrellas
+    private Array<BrilloLumil> arrEstrellas;
+
     // Texto
     //Muestra los valores en la pantalla
     private Texto texto;
@@ -163,7 +193,7 @@ public class JuegoGS extends Pantalla {
 
 
     //Estado Juego
-    private EstadoJuego estado = EstadoJuego.JUGANDO;
+    private EstadoJuego estado = EstadoJuego.INICIANDO;
 
     //Personajes
     private Esgrun esgrun;
@@ -258,9 +288,12 @@ public class JuegoGS extends Pantalla {
     private Texture texturaPausaOFF;
 
     //Fade a Negro
+    private Transicion transicionFade;
+    private final float DURACION_FADE = 6;
     private ShapeRenderer rectNegro;
     private float alfaRectanguloNegro = 0;
     private boolean isQuitPressed = false;
+    private float  contadorInicial = 0; //Acumulador para aparecer elementos al inicio
 
     //Sonidos y musica
     private Sound sonidocomeOscuridad;
@@ -292,7 +325,9 @@ public class JuegoGS extends Pantalla {
 
     @Override
     public void show() {
+        juego.inicializarCuentaSegundos();
         posicionDedo = new Vector3(0, 0, 0); //Posición del dedo
+        crearTransicion();
         crearFondo();
         crearPersonajes();
         crearBrillo();
@@ -302,7 +337,9 @@ public class JuegoGS extends Pantalla {
         crearBarra();
         crearBotones();
         crearRectangulo();
+        crearEstrellas();
         crearSonidos();
+        crearTexto();
 
         //cargarRecursos();
         crearObjetos();
@@ -317,6 +354,22 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    private void crearTexto() {
+        texto = new Texto();
+    }
+
+    private void crearEstrellas() {
+        arrEstrellas = new Array<>();
+        for (int  i=0; i<=35; i++){
+            BrilloLumil estrella = new BrilloLumil(texturaBrillo, MathUtils.random(0,ANCHO),MathUtils.random(ALTO/3,ALTO));
+            arrEstrellas.add(estrella);
+        }
+    }
+
+    private void crearTransicion() {
+        transicionFade = new Transicion(0,0,0,1,ALTO,ANCHO);
+    }
+
     private void crearObjetos() {
     }
 
@@ -326,11 +379,11 @@ public class JuegoGS extends Pantalla {
         //sonidoPoderActivado.setVolume(0.5f,0.2f);
         sonidoquitavidas = manager.get("Sonidos/sonidoquitavidas.wav");
         sonidoTocaLuzBlanca = manager.get("Sonidos/sonidoTocaLuzBlanca.wav");
-        musicaFondo = manager.get("Sonidos/musicaJuego.mp3");
+        //musicaFondo = manager.get("Sonidos/JugarLoop.mp3");
         sonidoJuego = manager.get("Sonidos/JugarLoop.mp3");
 
-        musicaFondo.setLooping(true);
-        musicaFondo.setVolume(0.2f);
+        //musicaFondo.setLooping(true);
+        //musicaFondo.setVolume(0.2f);
         //musicaFondo.play();
         idSonidoJuego= sonidoJuego.play();
         sonidoJuego.setVolume(idSonidoJuego,0);
@@ -346,7 +399,8 @@ public class JuegoGS extends Pantalla {
 
     private void crearBrillo() {
         texturaBrillo = manager.get("Utileria/brilloLumil.png");
-        brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/2+(texturaBrillo.getWidth()/6),ALTO/2);
+        brilloLumil = new BrilloLumil(texturaBrillo,ANCHO/2+(texturaBrillo.getWidth()/7),ALTO/2);
+        brilloLumil.actualizar(1,1,1,0.7f);
     }
 
     private void crearBotones() {
@@ -398,7 +452,7 @@ public class JuegoGS extends Pantalla {
 
     private void crearPersonajes() {
         //Personaje principal: Lumil (Blanco)
-        texturaLumilJugando = new Texture ("Personajes/Lumil_Sprites.png");
+        texturaLumilJugando = new Texture ("Personajes/LumilJuego.png");
         lumil = new Lumil(texturaLumilJugando,ANCHO/2, ALTO/2,4,1,duracionFrameLumil,1);
 
         //Personaje principal: Lumil (Verde)
@@ -486,6 +540,44 @@ public class JuegoGS extends Pantalla {
         bosquemedio = new Texture("Escenarios/bosque_medio.png");
         bosquefrente = new Texture("Escenarios/bosque_frente.png");
         bosque = new FondoEnMovimiento(bosquefondo,bosqueatras,bosquemedio,bosquefrente);
+
+        //Crear elementos del bosque en movimiento
+
+        bosqueCapaCero = new Texture("Escenarios/capa0.png");
+        bosqueCapaUno = new Texture("Escenarios/capa1.png");
+        bosqueCapaDos = new Texture("Escenarios/capa2.png");
+        bosqueCapaTresSimple = new Texture("Escenarios/capa3Simple.png");
+        bosqueCapaTresCompleta = new Texture("Escenarios/capa3Completa.png");
+        bosqueCapaCuatroSimple = new Texture("Escenarios/capa4Simple.png");
+        bosqueCapaCuatroCompleta = new Texture("Escenarios/capa4Completa.png");
+        bosqueCapaEstatica = new Texture("Escenarios/capaEstatica.png");
+        bosqueCapaFrente = new Texture("Escenarios/capaFrente.png");
+        bosqueCapaFrenteVerde = new Texture("Escenarios/capaFrenteVerde.png");
+
+        bosqueParallax = new FondoParallax(bosqueCapaCero,bosqueCapaEstatica,bosqueCapaUno,bosqueCapaDos,
+                bosqueCapaTresSimple,bosqueCapaTresCompleta,bosqueCapaCuatroSimple,bosqueCapaCuatroCompleta,
+                bosqueCapaFrente,bosqueCapaFrenteVerde);
+
+        //Crear elementos del fondo del bosque
+        nubeFondo = new Texture ("Escenarios/nubes.png");
+        texturaLuna = new Texture("Escenarios/Luna.png");
+        luna = new Objeto(texturaLuna,0,0);
+
+        texturaEfectoAzulAtras = manager.get("Escenarios/efectoAzulAtras.png");
+        texturaEfectoAzulFrente = manager.get("Escenarios/efectoAzulFrente.png");
+        texturaEfectoRojoAtras = manager.get("Escenarios/efectoRojoAtras.png");
+        texturaEfectoRojoFrente = manager.get("Escenarios/efectoRojoFrente.png");
+
+        efectoAzulAtras = new Objeto(texturaEfectoAzulAtras,ANCHO/2,ALTO/2);
+        efectoAzulAtras.sprite.setAlpha(0);
+        efectoAzulFrente = new Objeto(texturaEfectoAzulFrente,ANCHO/2,ALTO/2);
+        efectoAzulFrente.sprite.setAlpha(0);
+        efectoRojoAtras = new Objeto(texturaEfectoRojoAtras,ANCHO/2,ALTO/2);
+        efectoRojoAtras.sprite.setAlpha(0);
+        efectoRojoFrente = new Objeto(texturaEfectoRojoFrente,ANCHO/2,ALTO/2);
+        efectoRojoFrente.sprite.setAlpha(0);
+
+
     }
 
     @Override
@@ -516,14 +608,36 @@ public class JuegoGS extends Pantalla {
         //Tiempo que pasó entre render.
         tiempoOsc += Gdx.graphics.getDeltaTime();
 
-        borrarPantalla(0, 1, 0);
+        borrarPantalla(0.14f, 0.14f, 0.14f);
         batch.setProjectionMatrix(camara.combined);
 
         //Se dibujan los elementos
         batch.begin();
 
+        //Dibujar Estrellas
+        if (arrEstrellas!=null){
+            for(BrilloLumil estrella: arrEstrellas){
+                estrella.render(batch);
+            }
+
+        }
+
         //Dibujar elementos del bosque
-        bosque.movSeccionesCompletas(velocidad, delta, batch, true);
+        //bosque.movSeccionesCompletas(velocidad, delta, batch, true);
+        //Dibujar elementos del bosque
+        batch.draw(nubeFondo,0,0);
+        luna.render(batch);
+
+        //Dibujar Efectos Fondo Atras
+        efectoRojoAtras.render(batch);
+        efectoAzulAtras.render(batch);
+
+        bosqueParallax.render(batch,seccion);
+
+        //Dibujar Efectos Fondo Frente
+        efectoRojoFrente.render(batch);
+        efectoAzulFrente.render(batch);
+
 
         //Dibujar brillo del personaje principal
         brilloLumil.render(batch);
@@ -571,6 +685,8 @@ public class JuegoGS extends Pantalla {
         // Dibuja el marcador
         //texto.mostrarMensaje(batch, "SCORE", ANCHO / 2, ALTO - 25);
 
+        //Dibujar los elementos del bosque de frente
+        bosqueParallax.renderFrente(batch);
 
         // Dibujar gemas
 
@@ -582,10 +698,23 @@ public class JuegoGS extends Pantalla {
 
 
         //Dibujar vidas
-        vidas.vidasRender(contadorVidas, batch);
+        if (transicionFade.isFadeInFinished){
+            vidas.vidasRender(contadorVidas, batch);
+        }
+        /*
+        if (contadorInicial>=DURACION_FADE/2){
+            vidas.vidasRender(contadorVidas, batch);
+        }
+
+         */
 
        //Dibujar lo de atras de la barra de avance
         batch.draw(fondoBarra,(ANCHO/4)-4,ALTO-fondoBarra.getHeight());
+
+        //Mostrar mensaje
+        //System.out.println(Float.toString(tiempoLumil));
+        texto.mostrarMensaje(batch,"TIME",ANCHO*7/8f, ALTO-(fondoBarra.getHeight()/5));
+        texto.mostrarMensaje(batch,juego.getCuentaSegundos(),ANCHO*7/8f, ALTO-(fondoBarra.getHeight()/2f));
 
         batch.end();
 
@@ -598,19 +727,26 @@ public class JuegoGS extends Pantalla {
 
 
         //Dibujar barra progreso
-        dibujarBarras(delta);
+        if(estado!=EstadoJuego.INICIANDO){
+            dibujarBarras(delta);
+        }
 
         if (oscuridad.getYaMordio() || isQuitPressed ){
             fadeNegro();
         }
 
+        //Dibujar el Fade de entrada
+        transicionFade.render(camara);
+
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            if (escenaPausa == null) {      // Inicialización lazy
-                escenaPausa = new EscenaPausa(vista);
+            if (estado != EstadoJuego.INICIANDO){
+                if (escenaPausa == null) {      // Inicialización lazy
+                    escenaPausa = new EscenaPausa(vista);
+                }
+                estado = EstadoJuego.PAUSADO;
+                // CAMBIAR el procesador de entrada
+                Gdx.input.setInputProcessor(escenaPausa);
             }
-            estado = EstadoJuego.PAUSADO;
-            // CAMBIAR el procesador de entrada
-            Gdx.input.setInputProcessor(escenaPausa);
         }
 
         if (estado == EstadoJuego.PAUSADO && escenaPausa != null) {
@@ -729,8 +865,23 @@ public class JuegoGS extends Pantalla {
 
     private void actualizar(float delta) {
 
+        actualizarBosque(delta);
+        actualizarEstrellas();
+        if (estado == EstadoJuego.INICIANDO){
+            contadorInicial +=delta;
+            transicionFade.fadeIn(delta,DURACION_FADE);
+            introFondo(delta);
+
+            if (transicionFade.isFadeInFinished){
+                estado = EstadoJuego.JUGANDO;
+            }
+
+        }
+
         //Cuando la velocidad sea = 0, la oscuridad avanzará rápido por nuestro personaje.
         if (estado == EstadoJuego.JUGANDO) {
+            juego.incrementarCuentaSegundos(delta);
+            actualizarFondo(delta);
 
             actualizarGemas(delta);
 
@@ -934,6 +1085,73 @@ public class JuegoGS extends Pantalla {
 
     }
 
+    private void actualizarEstrellas() {
+        if (arrEstrellas != null) {
+            for (BrilloLumil estrella : arrEstrellas) {
+                estrella.actualizar(1, 1, 1, 0.02f + MathUtils.random(0, .03f));
+            }
+        }
+    }
+
+    private void actualizarFondo(float delta) {
+        switch (seccion){
+            case VERDE:
+                if(esgrun==null){
+                    float dxLunaG = (ANCHO/4)/(duracionVerde/delta);
+                    float dyLunaG = (ALTO/4)/(duracionVerde/delta);
+                    luna.sprite.setX(luna.sprite.getX()+dxLunaG);
+                    luna.sprite.setY(luna.sprite.getY()+dyLunaG);
+                }
+                break;
+            case ROJO:
+                if (rojel==null){
+                    float dxLunaR = (ANCHO/8)/(duracionRojo/delta);
+                    float dyLunaR = (ALTO/6)/(duracionRojo/delta);
+                    float dScaleLunaR = (0.3f)/(duracionRojo/delta);
+                    luna.sprite.setX(luna.sprite.getX()+dxLunaR);
+                    luna.sprite.setY(luna.sprite.getY()+dyLunaR);
+                    luna.sprite.setScale(luna.sprite.getScaleX()-dScaleLunaR,luna.sprite.getScaleY()-dScaleLunaR);
+                }
+                break;
+            case AZUL:
+                if (shiblu==null){
+                    float dxLunaA = (ANCHO/10)/(duracionAzul/delta);
+                    float dyLunaA = (ALTO/10)/(duracionAzul/delta);
+                    float dScaleLunaA = (0.2f)/(duracionAzul/delta);
+                    luna.sprite.setX(luna.sprite.getX()+dxLunaA);
+                    luna.sprite.setY(luna.sprite.getY()+dyLunaA);
+                    luna.sprite.setScale(luna.sprite.getScaleX()-dScaleLunaA,luna.sprite.getScaleY()-dScaleLunaA);
+                }
+                efectoRojoAtras.fadeIn(delta,DURACION_FADE);
+                efectoRojoFrente.fadeIn(delta,DURACION_FADE);
+                break;
+            case BLANCO:
+                if (luz==null){
+                    float dxLunaW = (ANCHO/10)/(duracionBlanco/delta);
+                    float dyLunaW = (ALTO/10)/(duracionBlanco/delta);
+                    float dScaleLunaW = (0.15f)/(duracionBlanco/delta);
+                    luna.sprite.setX(luna.sprite.getX()+dxLunaW);
+                    luna.sprite.setY(luna.sprite.getY()+dyLunaW);
+                    luna.sprite.setScale(luna.sprite.getScaleX()-dScaleLunaW,luna.sprite.getScaleY()-dScaleLunaW);
+                }
+                efectoAzulAtras.fadeIn(delta,DURACION_FADE);
+                efectoAzulFrente.fadeIn(delta,DURACION_FADE);
+                break;
+
+        }
+    }
+
+    private void introFondo(float delta) {
+        float dxLunaInicial = (ANCHO/4)/(DURACION_FADE/delta);
+        float dyLunaInicial = (ALTO/4)/(DURACION_FADE/delta);
+        luna.sprite.setX(luna.sprite.getX()+dxLunaInicial);
+        luna.sprite.setY(luna.sprite.getY()+dyLunaInicial);
+    }
+
+    private void actualizarBosque(float delta) {
+        bosqueParallax.actualizar(velocidad,delta,seccion);
+    }
+
     private void actualizarGemas(float delta) {
         //Aparecer las Gemas
         if (activarPowerUpGemaVerde){
@@ -1020,16 +1238,16 @@ public class JuegoGS extends Pantalla {
         //Asignar Color de brillo y simular la acción del brillo
         switch (colorLumil) {
             case VERDE:
-                brilloLumil.actualizar(0,1,0,0.9f);
+                brilloLumil.actualizar(0,1,0,0.75f);
                 break;
             case ROJO:
-                brilloLumil.actualizar(1,0,0,0.9f);
+                brilloLumil.actualizar(1,0,0,0.75f);
                 break;
             case AZUL:
-                brilloLumil.actualizar(0,0,1,0.9f);
+                brilloLumil.actualizar(0,0,1,0.75f);
                 break;
             case BLANCO:
-                brilloLumil.actualizar(1,1,1,0.9f);
+                brilloLumil.actualizar(1,1,1,0.75f);
                 break;
         }
 
@@ -1427,7 +1645,7 @@ public class JuegoGS extends Pantalla {
         manager.unload("Utileria/atrasBarraAvance.png");
         manager.unload("Utileria/brilloLumil.png");
         manager.unload("Utileria/vida.png");
-        manager.unload("Personajes/Lumil_Sprites.png");
+        manager.unload("Personajes/LumilJuego.png");
         manager.unload("Personajes/lumilG.png");
         manager.unload("Personajes/lumilR.png");
         manager.unload("Personajes/lumilB.png");
@@ -1443,7 +1661,7 @@ public class JuegoGS extends Pantalla {
         manager.unload("Sonidos/sonidoPoderActivado.wav");
         manager.unload("Sonidos/sonidoquitavidas.wav");
         manager.unload("Sonidos/sonidoTocaLuzBlanca.wav");
-        manager.unload("Sonidos/musicaJuego.mp3");
+        //manager.unload("Sonidos/musicaJuego.mp3");
         manager.unload("Sonidos/JugarLoop.mp3");
 
         texturaLumilJugando.dispose();
@@ -1529,7 +1747,7 @@ public class JuegoGS extends Pantalla {
 
                      */
 
-                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)&& estado != EstadoJuego.INICIANDO) {
                     botonPausa.active();
 
                     //sonidoPoderActivado.play();
@@ -1662,7 +1880,7 @@ public class JuegoGS extends Pantalla {
                     boolPowerUpGemaAzul = true;
                     colorLumil=ColoresLumil.AZUL; //Cambia de color a Lumil
                     powerupActive = false;
-                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)) {
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)&& estado != EstadoJuego.INICIANDO) {
 
                     if (escenaPausa == null) {      // Inicialización lazy
                         escenaPausa = new EscenaPausa(vista);
@@ -1797,7 +2015,7 @@ public class JuegoGS extends Pantalla {
                     gemaRoja.active();
                 } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x, posicionDedo.y)&& activarPowerUpGemaAzul &&  powerups && powerupActive) {
                     gemaAzul.active();
-                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)) {
+                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x, posicionDedo.y)&& estado != EstadoJuego.INICIANDO) {
                     botonPausa.active();
                 } else {
                     gemaVerde.inactive();
