@@ -8,6 +8,7 @@ Autor: Carlos Arroyo - Ricardo Solis - Andrea Espinosa
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -332,7 +333,15 @@ public class JuegoGS extends Pantalla {
         musicaFondo.setLooping(true);
         musicaFondo.setVolume(0.2f);
         //musicaFondo.play();
-        idSonidoJuego= sonidoJuego.play();
+        Preferences prefs = Gdx.app.getPreferences("MusicPrefernce");
+        boolean musicaON = prefs.getBoolean("musicON", true);
+        // Si el valo leído es musica prendida entonces se ejecuta...
+        if (musicaON == true){
+            // juego.playMusica();
+            idSonidoJuego= sonidoJuego.play();
+            // musicaFondo.play();
+        }
+        // idSonidoJuego= sonidoJuego.play();
         sonidoJuego.setVolume(idSonidoJuego,0);
         sonidoJuego.setLooping(idSonidoJuego,true);
         isSonidoJuegoFadingIn=true; //Se inicializa la entrada
