@@ -25,7 +25,7 @@ public class PantallaNosotros extends Pantalla {
     private Sprite aboutus;
     private Lux juego;
 
-    private Texture androidImage;
+    //private Texture androidImage;
 
     private Texture tecImage;
 
@@ -101,7 +101,7 @@ public class PantallaNosotros extends Pantalla {
         manager = juego.getAssetManager();
     }
     private void crearNosotros(){
-        androidImage= manager.get("Nosotros/Androidst.png");
+       //androidImage= manager.get("Nosotros/Androidst.png");
         tecImage = manager.get("Nosotros/tecst.png");
         texturafondo= manager.get("Nosotros/fondoAbout.jpg");
         mailImage = manager.get("Nosotros/mailst.png");
@@ -267,8 +267,8 @@ public class PantallaNosotros extends Pantalla {
         flechaD.render(batch);
         flechaA.render(batch);
         flechaI.render(batch);
-        batch.draw(androidImage,75,350);
-        batch.draw(tecImage, 25,100);
+       //batch.draw(androidImage,75,350);
+        batch.draw(tecImage, 25,200);
         batch.draw(mailImage, 75,0);
 
         dibujarCristales();
@@ -459,7 +459,7 @@ public class PantallaNosotros extends Pantalla {
     @Override
     public void dispose() {
         // Los assets se liberan a través del assetManager
-        manager.unload("Nosotros/Androidst.png");
+       //manager.unload("Nosotros/Androidst.png");
         manager.unload("Nosotros/fondoAbout.jpg");
         manager.unload("Menu/buttonback.png");
         manager.unload("Menu/clickback.png");

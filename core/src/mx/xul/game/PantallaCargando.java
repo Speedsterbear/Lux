@@ -107,7 +107,7 @@ public class PantallaCargando extends Pantalla {
         manager.load("Utileria/brilloLumil.png", Texture.class);
         manager.load("Nosotros/mailst.png",Texture.class);
         manager.load("Nosotros/tecst.png",Texture.class);
-        manager.load("Nosotros/Androidst.png", Texture.class);
+       //manager.load("Nosotros/Androidst.png", Texture.class);
         manager.load("Nosotros/fondoAbout.jpg", Texture.class);
         manager.load("Menu/buttonback.png", Texture.class);
         manager.load("Menu/clickback.png", Texture.class);
