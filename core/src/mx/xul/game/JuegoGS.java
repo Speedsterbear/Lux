@@ -749,15 +749,6 @@ public class JuegoGS extends Pantalla {
             }*/
             System.out.println(distanciaRecorrida);
 
-            /*
-            if(distanciaRecorridaG >= distanciaVerde && esgrun != null){
-                crearEsgrun();
-            }
-
-            if(distanciaRecorridaR >=  distanciaRojo && distanciaRecorridaR <= distanciaRojo + (velocidad*delta+1)){
-                crearRojel();
-            }
-            */
 
             if(!boolPowerUpGemaRoja){
                 colisionLumilFront = hijoOscuridadColisionFront();
@@ -781,9 +772,6 @@ public class JuegoGS extends Pantalla {
 
             //Actualizar el Brillo (Posición y forma)
             actualizarBrillo();
-
-            //Mover Lumil
-
 
 
             //Mover Oscuridad
@@ -888,24 +876,10 @@ public class JuegoGS extends Pantalla {
                     estado = EstadoJuego.PIERDE;
                 }
             }
-
-            // Código Ricardo
-            /*
-            if (hijoOscuridad != null) {
-                moverHijoOscuridad(delta);
-            }
-
-             */
             //Depurar Elementos
             depurarBloques();
             depurarHijosOscuridad();
 
-            /*Codigo de Ricardo (Hijos)
-            if (hijoOscuridad != null) {
-                depurarHijosOscuridad();
-            }
-
-             */
 
 
         } //----------------------------------------------------------------------------------------
@@ -1165,15 +1139,6 @@ public class JuegoGS extends Pantalla {
             sonidocomeOscuridad.play();
             isSonidoJuegoFadingOut=true; //Comenzar el fade de la musica principal del juego
         }
-
-
-        /* Código Anterior (Antes del 5 de Mayo)
-        if(lumil.sprite.getBoundingRectangle().overlaps(oscuridad.sprite.getBoundingRectangle())){
-            contadorVidas=0;//Muere =(
-            Gdx.app.log("Vidas", Integer.toString(contadorVidas));
-        }
-
-         */
     }
 
     private void moverEsgrun(){
@@ -1531,84 +1496,7 @@ public class JuegoGS extends Pantalla {
 
                 } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
                     botonPausa.active();
-
-                    //sonidoPoderActivado.play();
-                    /*
-                    if (escenaPausa == null) {      // Inicialización lazy
-                        escenaPausa = new EscenaPausa(vista);
-                    }
-                    estado = EstadoJuego.PAUSADO;
-                    // CAMBIAR el procesador de entrada
-                    Gdx.input.setInputProcessor(escenaPausa);
-
-                     */
                 }
-
-
-                /*Codigo Antiguo
-
-                float anchoBack = texturaPausaON.getWidth();
-                float altoBack = texturaPausaON.getHeight();
-                float xBack = margen-20;
-                float yBack = ALTO-margen- texturaPausaON.getHeight()+20;
-
-                // Boton Gema Roja
-                float anchoRoja = texturaGemaRojaOFF.getWidth();
-                float altoRoja = texturaGemaRojaOFF.getHeight();
-                float xRoja = texturaGemaRojaOFF.getWidth()-50;
-                float yRoja = 20;
-
-                // Boton Gema Verde
-                float anchoVerde = texturaGemaVerdeON.getWidth();
-                float altoVerde = texturaGemaVerdeON.getHeight();
-                float xVerde = texturaGemaVerdeON.getWidth();
-                float yVerde = texturaGemaVerdeON.getHeight();
-
-                // Boton Gema Azul
-                float anchoAzul = texturaGemaAzulON.getWidth();
-                float altoAzul = texturaGemaAzulON.getHeight();
-                float xAzul = texturaGemaAzulON.getWidth()+50;
-                float yAzul =20;
-
-                //margen-20,ALTO-margen-texturaBack.getHeight()+20
-
-                posicionDedo.x=screenX;
-                posicionDedo.y=screenY;
-                camara.unproject(posicionDedo);
-
-                // Vamos a verificar el botón de back
-                Rectangle rectBack = new Rectangle(xBack, yBack, anchoBack, altoBack);
-
-                // Vamos a verificar el botón de la gema roja
-                Rectangle rectRoja = new Rectangle(xRoja, yRoja, anchoRoja, altoRoja);
-
-                // Vamos a verificar el botón de la gema verde
-                Rectangle rectVerde = new Rectangle(xVerde, yVerde, anchoVerde, altoVerde);
-
-                // Vamos a verificar el botón de la gema azul
-                Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
-
-                /*
-
-                    /*Antiguo de Gemas
-
-                 // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
-                }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolBack = true;
-                    //juego.setScreen(new PantallaPausa(juego));
-                }else if (rectRoja.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolRojo = true;
-                   // System.out.println("HABILIDAD ROJA");
-                }else if (rectVerde.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolVerde = true;
-                    //System.out.println("HABILIDAD VERDE");
-                }
-                else if (rectAzul.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolAzul = true;
-                    //System.out.println("HABILIDAD AZUL");
-                }
-
-                     */
             }
 
 
@@ -1622,15 +1510,6 @@ public class JuegoGS extends Pantalla {
             if(estado==EstadoJuego.PIERDE){
                 velocidad =0;
                 velocidadOscuridad =0;
-                //Creo que esto puede sacarse del touch Down y estar junto a los otros estados.
-
-                //Codigo Ricardo
-                /*
-                contadorVidas = 3;
-                oscuridad.sprite.setX(positionXStart);
-                estado=EstadoJuego.JUGANDO;
-                 */
-
             } else {
 
 
@@ -1673,98 +1552,8 @@ public class JuegoGS extends Pantalla {
 
                 }
             }
-
-            /*else {
-
-
-                posicionDedo.x=screenX;
-                posicionDedo.y=screenY;
-                camara.unproject(posicionDedo);
-
-                if (posicionDedo.x>=ANCHO/4) {
-                    //isMoving = true;
-
-                } else if (gemaVerde.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
-                    //gemaVerde.active();
-                    //System.out.println("Poder Verde");
-                } else if (gemaRoja.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
-                    //gemaRoja.active();
-                    //System.out.println("Poder Rojo");
-                } else if (gemaAzul.getRectangle(20).contains(posicionDedo.x,posicionDedo.y)) {
-                    //gemaAzul.active();
-                    //System.out.println("Poder Azul");
-                } else if (botonPausa.getRectangle(10).contains(posicionDedo.x,posicionDedo.y)) {
-                    juego.setScreen(new PantallaPausa(juego));
-                }
-
-                /*
-                float anchoBack = texturaPausaON.getWidth();
-                float altoBack = texturaPausaON.getHeight();
-                float xBack = margen-20;
-                float yBack = ALTO-margen- texturaPausaON.getHeight()+20;
-
-                // Boton Gema Roja
-                float anchoRoja = texturaGemaRojaOFF.getWidth();
-                float altoRoja = texturaGemaRojaOFF.getHeight();
-                float xRoja = texturaGemaRojaOFF.getWidth()-50;
-                float yRoja = 20;
-
-                // Boton Gema Verde
-                float anchoVerde = texturaGemaVerdeON.getWidth();
-                float altoVerde = texturaGemaVerdeON.getHeight();
-                float xVerde = texturaGemaVerdeON.getWidth();
-                float yVerde = texturaGemaVerdeON.getHeight();
-
-                // Boton Gema Azul
-                float anchoAzul = texturaGemaAzulON.getWidth();
-                float altoAzul = texturaGemaAzulON.getHeight();
-                float xAzul = texturaGemaAzulON.getWidth()+50;
-                float yAzul =20;
-
-                //margen-20,ALTO-margen-texturaBack.getHeight()+20
-
-                posicionDedo.x=screenX;
-                posicionDedo.y=screenY;
-                camara.unproject(posicionDedo);
-
-                // Vamos a verificar el botón de back
-                Rectangle rectBack = new Rectangle(xBack, yBack, anchoBack, altoBack);
-
-                // Vamos a verificar el botón de la gema roja
-                Rectangle rectRoja = new Rectangle(xRoja, yRoja, anchoRoja, altoRoja);
-
-                // Vamos a verificar el botón de la gema verde
-                Rectangle rectVerde = new Rectangle(xVerde, yVerde, anchoVerde, altoVerde);
-
-                // Vamos a verificar el botón de la gema azul
-                Rectangle rectAzul = new Rectangle(xAzul, yAzul, anchoAzul, altoAzul);
-
-                */
-
-                    /* Codigo Antiguo
-                    // a partir del Else if se van a poner los rectangulos de los botones para detectarlos.
-                }else if (rectBack.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolBack = true;
-                    juego.setScreen(new PantallaPausa(juego));
-                }else if (rectRoja.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolRojo = true;
-                    System.out.println("HABILIDAD ROJA");
-                }else if (rectVerde.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolVerde = true;
-                    System.out.println("HABILIDAD VERDE");
-                }
-                else if (rectAzul.contains(posicionDedo.x,posicionDedo.y)) {
-                    boolAzul = true;
-                    System.out.println("HABILIDAD AZUL");
-                }
-
-
-            } */
-
             isMoving = false;
-
             return true;
-
         }
 
         //Cuando arrastro el dedo por la pantalla
